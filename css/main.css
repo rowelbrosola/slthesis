@@ -1,0 +1,79 @@
+html {
+  width: 100%
+}
+body {
+    padding-bottom: 0;
+}
+body {
+  overflow-x: hidden!important
+}
+
+body.show-spinner>main {
+  overflow: hidden!important
+}
+
+body.show-spinner>* {
+  opacity: 0
+}
+
+body.show-spinner::after {
+  content: " ";
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border: 2px solid rgba(0, 0, 0, .2);
+  border-radius: 50%;
+  border-top-color: rgba(0, 0, 0, .3);
+  animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite;
+  left: calc(50% - 15px);
+  top: calc(50% - 15px);
+  position: fixed;
+  z-index: 1
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg)
+  }
+}
+
+@-webkit-keyframes spin {
+  to {
+    -webkit-transform: rotate(360deg)
+  }
+}
+
+/*******  APPEND STYLES ******/
+#app-container.menu-hidden main, #app-container.menu-sub-hidden main, #app-container.sub-hidden main {
+    margin-left: 120px;
+}
+.navbar {
+    height: 70px;
+    padding: 14px 0;
+}
+.menu {
+    padding-top: 72px;
+}
+.menu .main-menu {
+    width: 100px;
+    height: calc(100%);
+    padding: 10px 0;
+}
+.menu .sub-menu {
+    width: 210px;
+    left: 100px;
+    height: calc(100%);
+}
+.menu .main-menu ul li a {
+    height: 80px;
+}
+.menu .main-menu ul li.active:after {
+    width: 4px;
+    height: 78px;
+    top: 46%;
+}
+main {
+    margin-top: 95px;
+    margin-right: 40px;
+}
