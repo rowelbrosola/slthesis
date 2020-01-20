@@ -2068,20 +2068,24 @@ $.fn.addCommas = function(e) {
                 $("#rightModal").on("shown.bs.modal", function(e) {
                     $("#addToDatatableForm").validate({
                         rules: {
-                            Sales: {
+                            // Sales: {
+                            //     required: !0,
+                            //     number: !0,
+                            //     min: 3e3
+                            // },
+                            // Stock: {
+                            //     required: !0,
+                            //     number: !0
+                            // },
+                            // Category: {
+                            //     required: !0
+                            // },
+                            client: {
+                                required: !0
+                            },
+                            amount: {
                                 required: !0,
                                 number: !0,
-                                min: 3e3
-                            },
-                            Stock: {
-                                required: !0,
-                                number: !0
-                            },
-                            Category: {
-                                required: !0
-                            },
-                            Name: {
-                                required: !0
                             }
                         }
                     })
