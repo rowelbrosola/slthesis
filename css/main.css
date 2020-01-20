@@ -58,7 +58,7 @@ body.show-spinner::after {
 .menu .main-menu {
     width: 100px;
     height: calc(100%);
-    padding: 10px 0;
+    padding: 0px 0;
 }
 .menu .sub-menu {
     width: 210px;
@@ -71,9 +71,25 @@ body.show-spinner::after {
 .menu .main-menu ul li.active:after {
     width: 4px;
     height: 78px;
-    top: 46%;
+    top: 49%;
 }
 main {
     margin-top: 95px;
     margin-right: 40px;
+}
+
+.dashboard-list-with-thumbs {
+  height: 283px;
+}
+.dashboard-list-with-thumbs .list-thumbnail {
+  height: 55px;
+}
+.dashboard-list-with-thumbs .list-item-heading {
+  margin-bottom: 0;
+}
+.navbar #iconMenuDropdown {
+  height: auto;
+}
+.navbar .header-icon#notificationButton .count {
+  top: 0px;
 }
