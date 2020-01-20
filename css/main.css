@@ -93,3 +93,18 @@ main {
 .navbar .header-icon#notificationButton .count {
   top: 0px;
 }
+.menu .main-menu ul li.dd-menu:before {
+  font-family: "iconsminds";
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+  content: "\e836";
+  color: #3a3a3a;
+  position: absolute;
+  right: 44%;
+  bottom: -2px;
+}
+
+.menu .main-menu ul li.dd-menu.active:before {
+  color: #145388;
+}
