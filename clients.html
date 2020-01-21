@@ -113,9 +113,9 @@
                     <ul class="list-unstyled">
                         <li><a href="index.html"><i class="iconsminds-home-1"></i> <span>Dashboard</span></a></li>
                         <li class="dd-menu"><a href="#reports"><i class="iconsminds-digital-drawing"></i> Reports</a></li>
-                        <li class="active"><a href="payments.html"><i class="iconsminds-cash-register-2"></i> Payments</a></li>
+                        <li><a href="payments.html"><i class="iconsminds-cash-register-2"></i> Payments</a></li>
                         <li><a href="appointments.html"><i class="iconsminds-calendar-1"></i> Appointments</a></li>
-                        <li><a href="clients.html"><i class="iconsminds-user"></i> Clients</a></li>
+                        <li class="active"><a href="clients.html"><i class="iconsminds-user"></i> Clients</a></li>
                     </ul>
                 </div>
             </div>
@@ -134,28 +134,26 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
-                        <h1>Payments</h1>
+                        <h1>Clients</h1>
                         <div class="top-right-button-container">
                             <button type="button" class="btn btn-outline-primary btn-lg top-right-button mr-1" data-toggle="modal" data-target="#rightModal">ADD NEW</button>
                             <div class="modal fade modal-right" id="rightModal" tabindex="-1" role="dialog" aria-labelledby="rightModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="rightModalLabel">Add Payment</h5>
+                                            <h5 class="modal-title" id="rightModalLabel">Add Client</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                         </div>
                                         <div class="modal-body">
                                             <p>Submitting below form will add the data to Data Table and rows will be updated.</p>
                                             <form class="tooltip-right-top" id="addToDatatableForm" novalidate>
                                                 <div class="form-group position-relative">
-                                                    <label>Client</label> 
-                                                    <div class="input-group">
-                                                        <input type="text" class="form-control typeahead" name="client" id="client" placeholder="Start typing client to search..." data-provide="typeahead" autocomplete="off">
-                                                    </div>
+                                                    <label>Name</label>
+                                                    <input type="text" class="form-control" name="name" placeholder="Name">
                                                 </div>
-                                                <div class="form-group mb-3">
-                                                    <label>Payment for month of </label>
-                                                    <div class="input-daterange input-group" id="datepicker"><input type="text" class="input-sm form-control" name="start" placeholder="Start"> <span class="input-group-addon"></span> <input type="text" class="input-sm form-control" name="end" placeholder="End"></div>
+                                                <div class="form-group position-relative">
+                                                    <label>Address</label>
+                                                    <input type="text" class="form-control" name="address" placeholder="Address">
                                                 </div>
                                                 <div class="form-group position-relative">
                                                     <label>Category</label> 
@@ -166,7 +164,6 @@
                                                         <option value="Desserts">Desserts</option>
                                                     </select>
                                                 </div>
-                                                <div class="form-group position-relative"><label>Amount</label> <input type="number" name="amount" class="form-control"></div>
                                             </form>
                                         </div>
                                         <div class="modal-footer">
