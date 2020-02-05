@@ -1,0 +1,116 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "39501fd4b800058c5c157f1d5d4f1af6",
+    "packages": [
+        {
+            "name": "vlucas/spot",
+            "version": "0.9.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/vlucas/Spot.git",
+                "reference": "d1eaa84842703b2370d48303c8809edb8e727a6b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/vlucas/Spot/zipball/d1eaa84842703b2370d48303c8809edb8e727a6b",
+                "reference": "d1eaa84842703b2370d48303c8809edb8e727a6b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "vlucas/valitron": "1.x"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Spot": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD"
+            ],
+            "authors": [
+                {
+                    "name": "Vance Lucas",
+                    "email": "vance@vancelucas.com",
+                    "homepage": "http://www.vancelucas.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "DataMapper ORM for PHP 5.3+",
+            "homepage": "https://github.com/vlucas/Spot",
+            "keywords": [
+                "database",
+                "datamapper",
+                "entity",
+                "mapper",
+                "model",
+                "mysql",
+                "orm"
+            ],
+            "time": "2014-01-18T18:21:39+00:00"
+        },
+        {
+            "name": "vlucas/valitron",
+            "version": "v1.4.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/vlucas/valitron.git",
+                "reference": "a03072bed1679660200766d134507a30193eaf6d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/vlucas/valitron/zipball/a03072bed1679660200766d134507a30193eaf6d",
+                "reference": "a03072bed1679660200766d134507a30193eaf6d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.35 || ^5.5 || ^6.5"
+            },
+            "suggest": {
+                "ext-mbstring": "It can support the multiple bytes string length."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Valitron\\": "src/Valitron"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Vance Lucas",
+                    "email": "vance@vancelucas.com",
+                    "homepage": "http://www.vancelucas.com"
+                }
+            ],
+            "description": "Simple, elegant, stand-alone validation library with NO dependencies",
+            "homepage": "http://github.com/vlucas/valitron",
+            "keywords": [
+                "valid",
+                "validation",
+                "validator"
+            ],
+            "time": "2019-08-29T19:49:43+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}
