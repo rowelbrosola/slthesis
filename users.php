@@ -26,7 +26,7 @@ $active = 'users';
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
-                        <h1>Clients</h1>
+                        <h1>Users</h1>
                         <div class="top-right-button-container">
                             <button type="button" class="btn btn-outline-primary btn-lg top-right-button mr-1" data-toggle="modal" data-target="#rightModal">ADD NEW</button>
                             <div class="modal fade modal-right" id="rightModal" tabindex="-1" role="dialog" aria-labelledby="rightModalLabel" aria-hidden="true">
