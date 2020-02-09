@@ -2,5 +2,7 @@
 
 class Redirect
 {
-    
+    function to($path) {
+        
+    }
 }
