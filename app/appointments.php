@@ -39,6 +39,8 @@ $active = 'appointments';
                                             <div class="modal-body">
                                                 <form>
                                                     <div class="form-group"><label>Title</label> <input type="text" class="form-control" placeholder=""></div>
+                                                    <div class="form-group"><label>Title</label> <input type="text" class="form-control" placeholder=""></div>
+                                                    
                                                     <div class="form-group"><label>Details</label> <textarea class="form-control" rows="2"></textarea></div>
                                                     <!-- <div class="form-group">
                                                         <label>Category</label> 
@@ -85,25 +87,25 @@ $active = 'appointments';
                                             <thead>
                                                 <tr>
                                                     <th>Name</th>
-                                                    <th>Category</th>
+                                                    <th>Date</th>
+                                                    <th>Time</th>
                                                     <th>Office</th>
                                                     <th>Age</th>
-                                                    <th>Start date</th>
-                                                    <th>Salary</th>
+                                                    <th>Status</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                             <?php
-                                                include 'account-data.php';
+                                                include 'appointment-data.php';
                                                 foreach ($array as $value):
                                             ?>
                                                 <tr>
                                                     <td><a href="user.php?id=<?= $value[0] ?>"><?= $value[1]; ?></a></td>
-                                                    <td><?= $value[2]; ?></td>
-                                                    <td><?= $value[3]; ?></td>
-                                                    <td><?= $value[4]; ?></td>
                                                     <td><?= $value[5]; ?></td>
-                                                    <td>₱<?= $value[6]; ?></td>
+                                                    <td><?= $value[6]; ?></td>
+                                                    <td><?= $value[2]; ?></td>
+                                                    <td><?= $value[4]; ?></td>
+                                                    <td><?= $value[6] > 6 ? 'Completed' : 'Pending'; ?></td>
                                                 </tr>
                                             <?php endforeach; ?>
                                             </tbody>

@@ -92,11 +92,11 @@ $active = 'users';
                                     <thead>
                                         <tr>
                                             <th>Name</th>
-                                            <th>Category</th>
-                                            <th>Office</th>
+                                            <th>Email</th>
+                                            <th>Advisor</th>
                                             <th>Age</th>
-                                            <th>Start date</th>
-                                            <th>Salary</th>
+                                            <th>Unit Name</th>
+                                            <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -106,7 +106,7 @@ $active = 'users';
                                     ?>
                                         <tr>
                                             <td><a href="user.php?id=<?= $value[0] ?>"><?= $value[1]; ?></a></td>
-                                            <td><?= $value[2]; ?></td>
+                                            <td><?= strtolower(str_replace(' ', '', $value[1])).'@gmail.com'; ?></td>
                                             <td><?= $value[3]; ?></td>
                                             <td><?= $value[4]; ?></td>
                                             <td><?= $value[5]; ?></td>
