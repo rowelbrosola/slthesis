@@ -9,8 +9,7 @@ error_reporting(E_ALL);
 // start session
 session_start();
 
-// var_dump(__DIR__);exit;
-require_once 'vendor/autoload.php';
+require_once '../vendor/autoload.php';
 
 $capsule = new Capsule;
 
