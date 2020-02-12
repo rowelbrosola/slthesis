@@ -2,5 +2,4 @@
 
 require_once 'app/init.php';
 
-echo "<pre>";
-var_dump(env("APP_NAME"));
+Redirect::to('app/login.php');
