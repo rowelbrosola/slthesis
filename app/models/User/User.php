@@ -7,7 +7,7 @@ class User extends Eloquent
     public static function login($email = null, $password = null)
 	{
         $user = self::where('email',$email)->first();
-        
+        // var_dump($user);exit;
 		if($user)
 		{
 			if(Hash::verifyPassword($password, $user->password))

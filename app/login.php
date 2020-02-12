@@ -1,8 +1,19 @@
+<?php
+include __DIR__.'/init.php';
+if ($_SERVER['REQUEST_METHOD'] == 'POST') 
+{
+	$email = $_POST['email'];
+	$password = $_POST['password'];
+
+	User::login($email, $password);
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Title here</title>
+        <title>Login - Personal Production and Client Monitoring System for Financial Advisors</title>
         <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
         <link rel="stylesheet" href="font/iconsmind-s/css/iconsminds.css">
         <link rel="stylesheet" href="font/simple-line-icons/css/simple-line-icons.css">
@@ -24,8 +35,15 @@
                             </div>
                             <div class="form-side">
                                 <h6 class="mb-4">Login</h6>
-                                <form>
-                                    <label class="form-group has-float-label mb-4"><input class="form-control"> <span>E-mail</span></label> <label class="form-group has-float-label mb-4"><input class="form-control" type="password" placeholder=""> <span>Password</span></label>
+                                <form method="post">
+                                    <label class="form-group has-float-label mb-4">
+                                        <input class="form-control" name="email">
+                                        <span>E-mail</span>
+                                    </label>
+                                    <label class="form-group has-float-label mb-4">
+                                        <input class="form-control" type="password" name="password" placeholder="">
+                                        <span>Password</span>
+                                    </label>
                                     <div class="d-flex justify-content-between align-items-center"><!-- <a href="#">Forget password?</a> --> <button class="btn btn-primary btn-lg btn-shadow" type="submit">LOGIN</button></div>
                                 </form>
                             </div>
