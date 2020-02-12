@@ -14,16 +14,16 @@ require_once '../vendor/autoload.php';
 $capsule = new Capsule;
 
 //dev
-$capsule->addConnection([
-    'driver'    => 'mysql',
-    'host'      => 'localhost',
-    'database'  => 'ppcm',
-    'username'  => 'root',
-    'password'  => 'root',
-    'charset'   => 'utf8',
-    'collation' => 'utf8_unicode_ci',
-    'prefix'    => '',
-]);
+// $capsule->addConnection([
+//     'driver'    => 'mysql',
+//     'host'      => 'localhost',
+//     'database'  => 'ppcm',
+//     'username'  => 'root',
+//     'password'  => 'root',
+//     'charset'   => 'utf8',
+//     'collation' => 'utf8_unicode_ci',
+//     'prefix'    => '',
+// ]);
 
 //production
 $capsule->addConnection([
