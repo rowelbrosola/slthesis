@@ -13,7 +13,6 @@ require_once '../vendor/autoload.php';
 
 $capsule = new Capsule;
 
-
 //dev
 $capsule->addConnection([
     'driver'    => 'mysql',
