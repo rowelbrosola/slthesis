@@ -9,9 +9,31 @@ error_reporting(E_ALL);
 // start session
 session_start();
 
-require_once '../vendor/autoload.php';
+function listFolderFiles($dir){
+    $ffs = scandir($dir);
 
-$capsule = new Capsule;
+    unset($ffs[array_search('.', $ffs, true)]);
+    unset($ffs[array_search('..', $ffs, true)]);
+
+    // prevent empty ordered elements
+    if (count($ffs) < 1)
+        return;
+
+    echo '<ol>';
+    foreach($ffs as $ff){
+        echo '<li>'.$ff;
+        if(is_dir($dir.'/'.$ff)) listFolderFiles($dir.'/'.$ff);
+        echo '</li>';
+    }
+    echo '</ol>';
+}
+
+listFolderFiles('app');
+
+// var_dump(__DIR__);exit;
+// require_once '../vendor/autoload.php';
+
+// $capsule = new Capsule;
 
 
 // dev
@@ -27,22 +49,22 @@ $capsule = new Capsule;
 // ]);
 
 // production
-$capsule->addConnection([
-    'driver'    => 'mysql',
-    'host'      => 'us-cdbr-iron-east-04.cleardb.net',
-    'database'  => 'heroku_02dfbe5bfd390b9',
-    'username'  => 'b19dc4f4a9c5a7',
-    'password'  => '0bd4cf8c',
-    'charset'   => 'utf8',
-    'collation' => 'utf8_unicode_ci',
-    'prefix'    => '',
-]);
+// $capsule->addConnection([
+//     'driver'    => 'mysql',
+//     'host'      => 'us-cdbr-iron-east-04.cleardb.net',
+//     'database'  => 'heroku_02dfbe5bfd390b9',
+//     'username'  => 'b19dc4f4a9c5a7',
+//     'password'  => '0bd4cf8c',
+//     'charset'   => 'utf8',
+//     'collation' => 'utf8_unicode_ci',
+//     'prefix'    => '',
+// ]);
 
-// Make this Capsule instance available globally via static methods... (optional)
-$capsule->setAsGlobal();
+// // Make this Capsule instance available globally via static methods... (optional)
+// $capsule->setAsGlobal();
 
-// Setup the Eloquent ORM... (optional; unless you've used setEventDispatcher())
-$capsule->bootEloquent();
+// // Setup the Eloquent ORM... (optional; unless you've used setEventDispatcher())
+// $capsule->bootEloquent();
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
+// $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+// $dotenv->load();
