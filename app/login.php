@@ -1,8 +1,7 @@
 <?php
 require_once 'init.php';
-// require_once 'models/Session.php';
-// require_once 'models/User.php';
-
+use User;
+use Session;
 // if (Session::exists('user_id')) {
 //     Redirect::to('index.php');
 // }
