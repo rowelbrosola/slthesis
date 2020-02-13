@@ -40,7 +40,7 @@
                 <a class="dropdown-item" href="#">Payment</a>
                 <a class="dropdown-item" href="#">History</a>
                 <a class="dropdown-item" href="#">Support</a>
-                <a class="dropdown-item" href="#">Sign out</a>
+                <a class="dropdown-item" href="index.php?logout=true">Sign out</a>
             </div>
         </div>
     </div>

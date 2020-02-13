@@ -1,5 +1,16 @@
 <?php
 $active = 'dashboard';
+require_once 'init.php';
+use App\Redirect;
+use App\User;
+use App\Session;
+
+if(isset($_GET['logout'])) {
+    User::logout();
+}
+if (!Session::exists('user_id')) {
+    Redirect::to('login.php');
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

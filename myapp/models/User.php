@@ -37,8 +37,8 @@ class User extends Eloquent
 		}
 	}
 
-	public static function logout($session) {
+	public static function logout() {
 		Session::delete('user_id');
-		Redirect::to('index.php');
+		Redirect::to('login.php');
 	}
 }
