@@ -1,5 +1,6 @@
 <?php
-require_once('app/init.php');
+require_once('myapp/init.php');
+use App\Redirect;
 
 $redirect = new Redirect;
 $redirect->name = 'Rowl';
