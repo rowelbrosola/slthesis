@@ -1,5 +1,5 @@
 <?php
-include 'app/init.php';
+include 'init.php';
 // require_once 'models/Session.php';
 // require_once 'models/User.php';
 
