@@ -1,4 +1,4 @@
-<?php namespace models;
+<?php
 
 class Redirect
 {
