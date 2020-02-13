@@ -1,11 +1,11 @@
 <?php
-// include 'app/init.php';
-require_once 'models/Session.php';
-require_once 'models/User.php';
+include 'app/init.php';
+// require_once 'models/Session.php';
+// require_once 'models/User.php';
 
-if (Session::exists('user_id')) {
-    Redirect::to('index.php');
-}
+// if (Session::exists('user_id')) {
+//     Redirect::to('index.php');
+// }
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
 	$email = $_POST['email'];
