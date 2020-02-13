@@ -1,6 +1,8 @@
-<?php
+<?php namespace App;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use App\Session;
+use App\Redirect;
 
 class User extends Eloquent
 {
@@ -33,5 +35,10 @@ class User extends Eloquent
 			Session::flash('error', 'You\'re trying to login a non-existent account.');
 			Redirect::to('login.php');
 		}
+	}
+
+	public static function logout($session) {
+		Session::delete('user_id');
+		Redirect::to('index.php');
 	}
 }

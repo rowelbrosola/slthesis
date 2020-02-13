@@ -1,10 +1,11 @@
 <?php
 require_once 'init.php';
-use User;
-use Session;
-// if (Session::exists('user_id')) {
-//     Redirect::to('index.php');
-// }
+use App\Redirect;
+use App\Session;
+use App\User;
+if (Session::exists('user_id')) {
+    Redirect::to('index.php');
+}
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
 	$email = $_POST['email'];
