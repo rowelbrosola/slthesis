@@ -1,5 +1,8 @@
 <?php
-include 'init.php';
+// include 'app/init.php';
+require_once 'models/Session.php';
+require_once 'models/User.php';
+
 if (Session::exists('user_id')) {
     Redirect::to('index.php');
 }
