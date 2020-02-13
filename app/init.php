@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__.'/../vendor/autoload.php';
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 // To display php erros
@@ -9,21 +10,19 @@ error_reporting(E_ALL);
 // start session
 session_start();
 
-require_once '../vendor/autoload.php';
-
 $capsule = new Capsule;
 
-//dev
-// $capsule->addConnection([
-//     'driver'    => 'mysql',
-//     'host'      => 'localhost',
-//     'database'  => 'ppcm',
-//     'username'  => 'root',
-//     'password'  => 'root',
-//     'charset'   => 'utf8',
-//     'collation' => 'utf8_unicode_ci',
-//     'prefix'    => '',
-// ]);
+// //dev
+// // $capsule->addConnection([
+// //     'driver'    => 'mysql',
+// //     'host'      => 'localhost',
+// //     'database'  => 'ppcm',
+// //     'username'  => 'root',
+// //     'password'  => 'root',
+// //     'charset'   => 'utf8',
+// //     'collation' => 'utf8_unicode_ci',
+// //     'prefix'    => '',
+// // ]);
 
 //production
 $capsule->addConnection([

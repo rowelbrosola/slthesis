@@ -7,7 +7,6 @@ class User extends Eloquent
     public static function login($email = null, $password = null)
 	{
         $user = self::where('email',$email)->first();
-        // var_dump($user);exit;
 		if($user)
 		{
 			if(Hash::verifyPassword($password, $user->password))
@@ -26,13 +25,13 @@ class User extends Eloquent
 			else
 			{
 				Session::flash('error', 'Your username and password did not match');
-				Redirect::to('index.php');
+				Redirect::to('login.php');
 			}
 		}
 		else
 		{
 			Session::flash('error', 'You\'re trying to login a non-existent account.');
-			Redirect::to('index.php');
+			Redirect::to('login.php');
 		}
 	}
 }
