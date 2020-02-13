@@ -1,5 +1,5 @@
 <?php
 require_once 'app/init.php';
-// use models\Redirect;
+use Redirect;
 
 Redirect::to('app/login.php');
