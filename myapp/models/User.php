@@ -7,7 +7,7 @@ use App\UserProfile;
 
 class User extends Eloquent
 {
-	protected $fillable = array('firstname', 'lastname', 'email', 'password', 'role_id');
+	protected $fillable = array('email', 'password', 'role_id');
 
     public static function login($email = null, $password = null)
 	{
@@ -46,11 +46,7 @@ class User extends Eloquent
 	}
 
 	public static function add($request) {
-		// echo "<pre>";
-		// print_r($request);exit;
 		$user = self::create([
-			'firstname' => $request['firstname'],
-			'lastname' => $request['lastname'],
 			'role_id' => $request['role'],
 		]);
 		
@@ -68,8 +64,13 @@ class User extends Eloquent
 		Redirect::to('users.php');
 	}
 
-	public function userProfiles()
+	public function profile()
     {
         return $this->hasOne('App\UserProfile');
-    }
+	}
+	
+	public function role()
+    {
+        return $this->hasOne('App\Role', 'id', 'role_id');
+	}
 }

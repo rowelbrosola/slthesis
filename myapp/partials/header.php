@@ -1,3 +1,9 @@
+<?php
+require_once 'init.php';
+use App\User;
+use App\Session;
+$account = User::find(Session::get('user_id'));
+?>
 <nav class="navbar fixed-top">
     <div class="d-flex align-items-center navbar-left">
         <a href="#" class="menu-button d-none d-md-block">
@@ -34,7 +40,7 @@
             <button class="header-icon btn btn-empty d-none d-sm-inline-block" type="button" id="fullScreenButton"><i class="simple-icon-size-fullscreen"></i> <i class="simple-icon-size-actual"></i></button>
         </div>
         <div class="user d-inline-block">
-            <button class="btn btn-empty p-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="name">Sarah Celeste</span> <span><img alt="Profile Picture" src="img/profile-pic-l.jpg"></span></button>
+            <button class="btn btn-empty p-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="name"><?= $account->firstname.' '.$account->lastname ?></span> <span><img alt="Profile Picture" src="img/no-photo.png"></span></button>
             <div class="dropdown-menu dropdown-menu-right mt-3">
                 <a class="dropdown-item" href="#">My Account</a>
                 <a class="dropdown-item" href="#">Payment</a>

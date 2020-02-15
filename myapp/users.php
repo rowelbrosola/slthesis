@@ -10,7 +10,8 @@ use App\Session;
 $roles = Role::all();
 $status = Status::all();
 $units = Unit::all();
-$users = User::whereIn('role_id', [4, 2, 3])->get();
+$advisors = User::whereIn('role_id', [4, 2, 3])->with('profile')->get();
+$users = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status')->get();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
     User::add($_POST);
@@ -32,6 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         <link rel="stylesheet" href="css/vendor/bootstrap.rtl.only.min.css">
         <link rel="stylesheet" href="css/vendor/component-custom-switch.min.css">
         <link rel="stylesheet" href="css/vendor/perfect-scrollbar.css">
+        <link rel="stylesheet" href="css/vendor/select2.min.css">
+        <link rel="stylesheet" href="css/vendor/select2-bootstrap.min.css">
         <link rel="stylesheet" href="css/main.css">
         <style>
             .alert-success {
@@ -87,8 +90,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                     <label>Advisor Name</label>
                                                     <select class="form-control select2-single" name="advisor" data-width="100%" required>
                                                         <option value="">Select Advisor</option>
-                                                        <?php foreach($users as $key => $value): ?>
-                                                            <option value="<?= $value->id ?>"><?= $value->firstname.' '.$value->lastname ?></option>
+                                                        <?php foreach($advisors as $key => $value): ?>
+                                                            <option value="<?= $value->id ?>"><?= $value->profile->firstname.' '.$value->profile->lastname ?></option>
                                                         <?php endforeach; ?>
                                                     </select>
                                                 </div>
@@ -163,23 +166,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                             <th>Name</th>
                                             <th>Email</th>
                                             <th>Advisor</th>
-                                            <th>Age</th>
                                             <th>Unit Name</th>
                                             <th>Status</th>
+                                            <th>Role</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                     <?php
                                         include 'account-data.php';
-                                        foreach ($array as $value):
+                                        foreach ($users as $key => $value):
                                     ?>
                                         <tr>
-                                            <td><a href="user.php?id=<?= $value[0] ?>"><?= $value[1]; ?></a></td>
-                                            <td><?= strtolower(str_replace(' ', '', $value[1])).'@gmail.com'; ?></td>
-                                            <td><?= $value[3]; ?></td>
-                                            <td><?= $value[4]; ?></td>
-                                            <td><?= $value[5]; ?></td>
-                                            <td>₱<?= $value[6]; ?></td>
+                                            <td><a href="profile.php?id=<?= $value->id ?>"><?= $value->profile->firstname.' '.$value->profile->lastname ?></a></td>
+                                            <td><?= $value->email ?></td>
+                                            <td><?=
+                                                isset($value->profile->advisor)
+                                                ? $value->profile->advisor->firstname.' '.$value->profile->advisor->lastname
+                                                : null
+                                                ?>
+                                            </td>
+                                            <td><?=
+                                                isset($value->profile->unit->name)
+                                                ? $value->profile->unit->name
+                                                : null
+                                                ?>
+                                            </td>
+                                            <td><?=
+                                                isset($value->profile->status)
+                                                ? $value->profile->status->name
+                                                : null
+                                                ?>
+                                            </td>
+                                            <td><?= $value->role->name ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                     </tbody>
@@ -201,6 +219,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         <script src="js/vendor/bootstrap-tagsinput.min.js"></script>
         <script src="js/vendor/typeahead.bundle.js"></script>
         <script src="js/dore.script.js"></script>
+        <script src="js/vendor/select2.full.js"></script>
         <script src="js/scripts.js"></script>
         <script>            
             $(function(){
