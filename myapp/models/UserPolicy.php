@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class Unit extends Eloquent
+class UserPolicy extends Eloquent
 {
-    protected $table = 'unit';
+    protected $table = 'user_policy'; 
 }

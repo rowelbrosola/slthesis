@@ -1,5 +1,20 @@
 <?php
 $active = 'users';
+require_once 'init.php';
+use App\Status;
+use App\Role;
+use App\User;
+use App\UserProfile;
+use App\Unit;
+use App\Session;
+$roles = Role::all();
+$status = Status::all();
+$units = Unit::all();
+$users = User::whereIn('role_id', [4, 2, 3])->get();
+if ($_SERVER['REQUEST_METHOD'] == 'POST') 
+{
+    User::add($_POST);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,6 +33,19 @@ $active = 'users';
         <link rel="stylesheet" href="css/vendor/component-custom-switch.min.css">
         <link rel="stylesheet" href="css/vendor/perfect-scrollbar.css">
         <link rel="stylesheet" href="css/main.css">
+        <style>
+            .alert-success {
+                z-index: 10;
+                position: absolute;
+                top: 0;
+                width: 50%;
+                text-align: center;
+                margin-left: auto;
+                margin-right: auto;
+                left: 0;
+                right: 0;
+            }
+        </style>
     </head>
     <body id="app-container" class="menu-default show-spinner">
         <?php include 'partials/header.php' ?>
@@ -26,6 +54,11 @@ $active = 'users';
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
+                        <?php if(Session::exists('success')): ?>
+                        <div class="alert alert-success" role="alert">
+                            <?= Session::flash('success') ?>
+                        </div>
+                        <?php endif; ?>
                         <h1>Users</h1>
                         <div class="top-right-button-container">
                             <button type="button" class="btn btn-outline-primary btn-lg top-right-button mr-1" data-toggle="modal" data-target="#rightModal">ADD NEW</button>
@@ -33,33 +66,69 @@ $active = 'users';
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="rightModalLabel">Add Client</h5>
+                                            <h5 class="modal-title" id="rightModalLabel">Add User</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                         </div>
                                         <div class="modal-body">
-                                            <p>Submitting below form will add the data to Data Table and rows will be updated.</p>
-                                            <form class="tooltip-right-top" id="addToDatatableForm" novalidate>
+                                            <p>Submitting below form will add the data to Data Table and rows will be updateda.</p>
+                                            <form class="tooltip-right-top" id="addToDatatableForm" method="POST" novalidate>
                                                 <div class="form-group position-relative">
-                                                    <label>Name</label>
-                                                    <input type="text" class="form-control" name="name" placeholder="Name">
-                                                </div>
-                                                <div class="form-group position-relative">
-                                                    <label>Address</label>
-                                                    <input type="text" class="form-control" name="address" placeholder="Address">
-                                                </div>
-                                                <div class="form-group position-relative">
-                                                    <label>Category</label> 
-                                                    <select class="form-control select2-single" name="category" data-width="100%">
-                                                        <option>Select Category</option>
-                                                        <option value="Cakes">Cakes</option>
-                                                        <option value="Cupcakes">Cupcakes</option>
-                                                        <option value="Desserts">Desserts</option>
+                                                    <label>Role</label>
+                                                    <select class="form-control select2-single" name="role" data-width="100%" required>
+                                                        <option value="">Select Role</option>
+                                                        <?php foreach($roles as $key => $value): ?>
+                                                            <?php if($value->id !== 1): ?>
+                                                            <option value="<?= $value->id ?>"><?= $value->name ?></option>
+                                                            <?php endif; ?>
+                                                        <?php endforeach; ?>
                                                     </select>
+                                                </div>
+                                                <div class="form-group position-relative info advisor">
+                                                    <label>Advisor Name</label>
+                                                    <select class="form-control select2-single" name="advisor" data-width="100%" required>
+                                                        <option value="">Select Advisor</option>
+                                                        <?php foreach($users as $key => $value): ?>
+                                                            <option value="<?= $value->id ?>"><?= $value->firstname.' '.$value->lastname ?></option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group position-relative info">
+                                                    <label>First Name</label>
+                                                    <input type="text" class="form-control" name="firstname" placeholder="First Name" required>
+                                                </div>
+                                                <div class="form-group position-relative info">
+                                                    <label>Last Name</label>
+                                                    <input type="text" class="form-control" name="lastname" placeholder="Last Name" required>
+                                                </div>
+                                                <div class="form-group position-relative info">
+                                                    <label>Unit Name</label>
+                                                    <select class="form-control select2-single" name="unit" data-width="100%" required>
+                                                        <option value="">Select Unit</option>
+                                                        <?php foreach($units as $key => $value): ?>
+                                                            <option value="<?= $value->id ?>"><?= $value->name ?></option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group position-relative info">
+                                                    <label>Status</label> 
+                                                    <select class="form-control select2-single" name="status" data-width="100%" required>
+                                                        <option value="">Select Status</option>
+                                                        <?php foreach($status as $key => $value): ?>
+                                                        <option value="<?= $value->id ?>"><?= $value->name ?></option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </div>
+                                                <div class="input-group date form-group position-relative info">
+                                                    <label>Coding Date</label>
+                                                    <input type="text" class="form-control" name="coding_date" style="width: 100%;" placeholder="Coding Date" required>
+                                                    <span class="input-group-addon">
+                                                        <span class="glyphicon glyphicon-calendar"></span>
+                                                    </span>
                                                 </div>
                                             </form>
                                         </div>
                                         <div class="modal-footer">
-                                            <a href="#" class="btn btn-primary btn-multiple-state" id="addToDatatable">
+                                            <a href="#" class="btn btn-primary btn-multiple-state not-active" id="addToDatatable">
                                                 <div class="spinner d-inline-block">
                                                     <div class="bounce1"></div>
                                                     <div class="bounce2"></div>
@@ -231,6 +300,10 @@ $active = 'users';
                 },
                 source: clients
             })
+            $('#addToDatatable').click(function () {
+                $('#addToDatatableForm').submit();
+            })
+            $('.alert-success').fadeIn('fast').fadeOut(5000);
         </script>
     </body>
 </html>

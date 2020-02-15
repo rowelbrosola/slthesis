@@ -3,9 +3,12 @@
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use App\Session;
 use App\Redirect;
+use App\UserProfile;
 
 class User extends Eloquent
 {
+	protected $fillable = array('firstname', 'lastname', 'email', 'password', 'role_id');
+
     public static function login($email = null, $password = null)
 	{
         $user = self::where('email',$email)->first();
@@ -41,4 +44,32 @@ class User extends Eloquent
 		Session::delete('user_id');
 		Redirect::to('login.php');
 	}
+
+	public static function add($request) {
+		// echo "<pre>";
+		// print_r($request);exit;
+		$user = self::create([
+			'firstname' => $request['firstname'],
+			'lastname' => $request['lastname'],
+			'role_id' => $request['role'],
+		]);
+		
+		UserProfile::create([
+			'user_id' => $user->id,
+			'firstname' => $request['firstname'],
+			'lastname' => $request['lastname'],
+			'advisor_id' => $request['advisor'],
+			'unit_id' => $request['unit'],
+			'status_id' => $request['status'],
+			'coding_date' => date('Y-m-d', strtotime($request['coding_date'])),
+		]);
+
+		Session::flash('success', 'Succesfully added new user.');
+		Redirect::to('users.php');
+	}
+
+	public function userProfiles()
+    {
+        return $this->hasOne('App\UserProfile');
+    }
 }

@@ -2903,9 +2903,9 @@ $.fn.addCommas = function(e) {
             }), $().validate && ($.validator.setDefaults({
                 ignore: [],
                 errorElement: "div",
-                submitHandler: function() {
-                    alert("submitted!")
-                },
+                // submitHandler: function() {
+                //     alert("submitted!")
+                // },
                 errorPlacement: function(e, t) {
                     -1 != t.attr("class").indexOf("custom-control") ? e.insertAfter(t.parent()) : e.insertAfter(t)
                 }
