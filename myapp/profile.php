@@ -4,6 +4,12 @@ require_once 'init.php';
 use App\User;
 use App\UserProfile;
 use App\Session;
+use App\Role;
+use App\Status;
+use App\Unit;
+$roles = Role::all();
+$status = Status::all();
+$units = Unit::all();
 $selected_user = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status')->find($_GET['id']);
 $selected_user_advisor = UserProfile::where('user_id', $_GET['id'])->with('advisor')->get();
 $advisors = User::whereIn('role_id', [4, 2, 3])->where('id', '!=', Session::get('user_id'))->with('profile')->get();
@@ -67,10 +73,10 @@ $advisors = User::whereIn('role_id', [4, 2, 3])->where('id', '!=', Session::get(
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
-                        <h1>Dashboard</h1>
+                        <h1>Profile</h1>
                         <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
                             <ol class="breadcrumb pt-0">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                <li class="breadcrumb-item"><a href="users.php">Users</a></li>
                                 <!-- <li class="breadcrumb-item"><a href="#">Library</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">Data</li> -->
                             </ol>
@@ -88,33 +94,108 @@ $advisors = User::whereIn('role_id', [4, 2, 3])->where('id', '!=', Session::get(
                         </div>
                     </div>
                     <div class="col-6">
-                        <form>
-                            <div class="form-group">
-                                <label>Advisor</label> 
-                                <select class="form-control select2-single" data-width="100%">
-                                    <option label="&nbsp;">&nbsp;</option>
-                                    <?php foreach($advisors as $key => $value): ?>
-                                        <option
-                                            <?= isset($selected_user_advisor[0]->advisor->user_id) && $value->id === $selected_user_advisor[0]->advisor->user_id
-                                                ? 'selected'
-                                                : null
-                                            ?>
-                                            value="<?= $value->id ?>">
-                                            <?= $value->profile->firstname.' '.$value->profile->lastname ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
+                        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Profile Info</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="pills-policy-tab" data-toggle="pill" href="#pills-policy" role="tab" aria-controls="pills-policy" aria-selected="false">Policy Info</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="pills-tabContent">
+                            <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                                <form>
+                                    <div class="form-group">
+                                        <label>Advisor</label> 
+                                        <select class="form-control select2-single" data-width="100%">
+                                            <option label="&nbsp;">&nbsp;</option>
+                                            <?php foreach($advisors as $key => $value): ?>
+                                                <option
+                                                    <?= isset($selected_user_advisor[0]->advisor->user_id) && $value->id === $selected_user_advisor[0]->advisor->user_id
+                                                        ? 'selected'
+                                                        : null
+                                                    ?>
+                                                    value="<?= $value->id ?>">
+                                                    <?= $value->profile->firstname.' '.$value->profile->lastname ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Unit</label>
+                                        <select class="form-control select2-single" data-width="100%">
+                                            <option label="&nbsp;">&nbsp;</option>
+                                            <?php foreach($units as $key => $value): ?>
+                                                <option
+                                                    <?= isset($selected_user->profile->unit->id) && $value->id === $selected_user->profile->unit->id
+                                                        ? 'selected'
+                                                        : null
+                                                    ?>
+                                                    value="<?= $value->id ?>">
+                                                    <?= $value->name ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Status</label>
+                                        <select class="form-control select2-single" data-width="100%">
+                                            <option label="&nbsp;">&nbsp;</option>
+                                            <?php foreach($status as $key => $value): ?>
+                                                <option
+                                                    <?= isset($selected_user->profile->status->id) && $value->id === $selected_user->profile->status->id
+                                                        ? 'selected'
+                                                        : null
+                                                    ?>
+                                                    value="<?= $value->id ?>">
+                                                    <?= $value->name ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="clientNumber">Client Number</label>
+                                        <input type="text" class="form-control" id="clientNumber" value="<?= $selected_user->profile->client_number ?>">
+                                    </div>
+                                    <div class="input-group form-group position-relative info">
+                                        <label>Coding Date</label>
+                                        <input type="text" class="form-control datepicker" name="coding_date" value="<?= date('m/d/Y', strtotime($selected_user->profile->coding_date)) ?>" style="width: 100%;" placeholder="Coding Date" required>
+                                        <div class="input-group-addon">
+                                            <span class="glyphicon glyphicon-th"></span>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </form>
                             </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Email address</label>
-                                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="client-firstname">First Name</label>
+                                        <input type="text" class="form-control" id="client-firstname" value="<?= $selected_user->profile->firstname ?>">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="client-lastname">Last Name</label>
+                                        <input type="text" class="form-control" id="client-lastname" value="<?= $selected_user->profile->lastname ?>">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="client-email">Email</label>
+                                        <input type="email" class="form-control" id="client-email" value="<?= $selected_user->email ?>">
+                                    </div>
+                                    <div class="input-group form-group position-relative info">
+                                        <label>Date of Birth</label>
+                                        <input type="text" class="form-control datepicker" name="clientDob" value="<?= date('m/d/Y', strtotime($selected_user->profile->dob)) ?>" style="width: 100%;" required>
+                                        <div class="input-group-addon">
+                                            <span class="glyphicon glyphicon-th"></span>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </form>
                             </div>
-                            <div class="form-group">
-                                <label for="exampleInputPassword1">Password</label>
-                                <input type="password" class="form-control" id="exampleInputPassword1">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </form>
+                            <div class="tab-pane fade" id="pills-policy" role="tabpanel" aria-labelledby="pills-policy-tab">...</div>
+                        </div>
                     </div>
                     <div class="col-3">
                         <h4>History</h4>

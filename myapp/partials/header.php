@@ -40,9 +40,9 @@ $account = User::find(Session::get('user_id'));
             <button class="header-icon btn btn-empty d-none d-sm-inline-block" type="button" id="fullScreenButton"><i class="simple-icon-size-fullscreen"></i> <i class="simple-icon-size-actual"></i></button>
         </div>
         <div class="user d-inline-block">
-            <button class="btn btn-empty p-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="name"><?= $account->firstname.' '.$account->lastname ?></span> <span><img alt="Profile Picture" src="img/no-photo.png"></span></button>
+            <button class="btn btn-empty p-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="name"><?= $account->profile->firstname.' '.$account->profile->lastname ?></span> <span><img alt="Profile Picture" src="img/no-photo.png"></span></button>
             <div class="dropdown-menu dropdown-menu-right mt-3">
-                <a class="dropdown-item" href="#">My Account</a>
+                <a class="dropdown-item" href="profile.php?id=<?= $account->id ?>">My Account</a>
                 <a class="dropdown-item" href="#">Payment</a>
                 <a class="dropdown-item" href="#">History</a>
                 <a class="dropdown-item" href="#">Support</a>
