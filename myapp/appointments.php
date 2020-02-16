@@ -95,19 +95,6 @@ $active = 'appointments';
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                            <?php
-                                                include 'appointment-data.php';
-                                                foreach ($array as $value):
-                                            ?>
-                                                <tr>
-                                                    <td><a href="user.php?id=<?= $value[0] ?>"><?= $value[1]; ?></a></td>
-                                                    <td><?= $value[5]; ?></td>
-                                                    <td><?= $value[6]; ?></td>
-                                                    <td><?= $value[2]; ?></td>
-                                                    <td><?= $value[4]; ?></td>
-                                                    <td><?= $value[6] > 6 ? 'Completed' : 'Pending'; ?></td>
-                                                </tr>
-                                            <?php endforeach; ?>
                                             </tbody>
                                         </table>
                                     </div>
