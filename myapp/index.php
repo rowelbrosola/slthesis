@@ -8,9 +8,7 @@ use App\Session;
 if(isset($_GET['logout'])) {
     User::logout();
 }
-if (!Session::exists('user_id')) {
-    Redirect::to('login.php');
-}
+User::isLogged();
 ?>
 <!DOCTYPE html>
 <html lang="en">

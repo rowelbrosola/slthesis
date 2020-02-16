@@ -7,12 +7,17 @@ use App\Session;
 use App\Role;
 use App\Status;
 use App\Unit;
+User::isLogged();
 $roles = Role::all();
 $status = Status::all();
 $units = Unit::all();
 $selected_user = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status')->find($_GET['id']);
 $selected_user_advisor = UserProfile::where('user_id', $_GET['id'])->with('advisor')->get();
 $advisors = User::whereIn('role_id', [4, 2, 3])->where('id', '!=', Session::get('user_id'))->with('profile')->get();
+if ($_SERVER['REQUEST_METHOD'] == 'POST') 
+{
+    User::updateUser($_POST);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -73,6 +78,7 @@ $advisors = User::whereIn('role_id', [4, 2, 3])->where('id', '!=', Session::get(
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
+                        <?php include 'partials/message.php' ?>
                         <h1>Profile</h1>
                         <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
                             <ol class="breadcrumb pt-0">
@@ -88,8 +94,8 @@ $advisors = User::whereIn('role_id', [4, 2, 3])->where('id', '!=', Session::get(
                             <img src="img/no-photo.png" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <h5 class="card-title"><?= $selected_user->profile->firstname.' '.$selected_user->profile->lastname  ?></h5>
-                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                                <p class="card-text"><?= $selected_user->email ?></p>
+                                <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
                             </div>
                         </div>
                     </div>
@@ -107,10 +113,10 @@ $advisors = User::whereIn('role_id', [4, 2, 3])->where('id', '!=', Session::get(
                         </ul>
                         <div class="tab-content" id="pills-tabContent">
                             <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-                                <form>
+                                <form method="POST">
                                     <div class="form-group">
                                         <label>Advisor</label> 
-                                        <select class="form-control select2-single" data-width="100%">
+                                        <select class="form-control select2-single" name="advisor" data-width="100%">
                                             <option label="&nbsp;">&nbsp;</option>
                                             <?php foreach($advisors as $key => $value): ?>
                                                 <option
@@ -126,7 +132,7 @@ $advisors = User::whereIn('role_id', [4, 2, 3])->where('id', '!=', Session::get(
                                     </div>
                                     <div class="form-group">
                                         <label>Unit</label>
-                                        <select class="form-control select2-single" data-width="100%">
+                                        <select class="form-control select2-single" name="unit" data-width="100%">
                                             <option label="&nbsp;">&nbsp;</option>
                                             <?php foreach($units as $key => $value): ?>
                                                 <option
@@ -142,7 +148,7 @@ $advisors = User::whereIn('role_id', [4, 2, 3])->where('id', '!=', Session::get(
                                     </div>
                                     <div class="form-group">
                                         <label>Status</label>
-                                        <select class="form-control select2-single" data-width="100%">
+                                        <select class="form-control select2-single" name="status" data-width="100%">
                                             <option label="&nbsp;">&nbsp;</option>
                                             <?php foreach($status as $key => $value): ?>
                                                 <option
@@ -158,7 +164,7 @@ $advisors = User::whereIn('role_id', [4, 2, 3])->where('id', '!=', Session::get(
                                     </div>
                                     <div class="form-group">
                                         <label for="clientNumber">Client Number</label>
-                                        <input type="text" class="form-control" id="clientNumber" value="<?= $selected_user->profile->client_number ?>">
+                                        <input type="text" class="form-control" name="client_number" id="clientNumber" value="<?= $selected_user->profile->client_number ?>">
                                     </div>
                                     <div class="input-group form-group position-relative info">
                                         <label>Coding Date</label>
@@ -167,22 +173,24 @@ $advisors = User::whereIn('role_id', [4, 2, 3])->where('id', '!=', Session::get(
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
                                     </div>
+                                    <input type="hidden" value="home" name="action">
+                                    <input type="hidden" value="<?= $_GET['id'] ?>" name="user_id">
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                 </form>
                             </div>
                             <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-                                <form>
+                                <form method="POST">
                                     <div class="form-group">
                                         <label for="client-firstname">First Name</label>
-                                        <input type="text" class="form-control" id="client-firstname" value="<?= $selected_user->profile->firstname ?>">
+                                        <input type="text" class="form-control" name="firstname" id="client-firstname" value="<?= $selected_user->profile->firstname ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="client-lastname">Last Name</label>
-                                        <input type="text" class="form-control" id="client-lastname" value="<?= $selected_user->profile->lastname ?>">
+                                        <input type="text" class="form-control" name="lastname" id="client-lastname" value="<?= $selected_user->profile->lastname ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="client-email">Email</label>
-                                        <input type="email" class="form-control" id="client-email" value="<?= $selected_user->email ?>">
+                                        <input type="email" class="form-control" name="email" id="client-email" value="<?= $selected_user->email ?>">
                                     </div>
                                     <div class="input-group form-group position-relative info">
                                         <label>Date of Birth</label>
@@ -191,29 +199,32 @@ $advisors = User::whereIn('role_id', [4, 2, 3])->where('id', '!=', Session::get(
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
                                     </div>
+                                    <input type="hidden" value="profile" name="action">
+                                    <input type="hidden" value="<?= $_GET['id'] ?>" name="user_id">
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                 </form>
                             </div>
-                            <div class="tab-pane fade" id="pills-policy" role="tabpanel" aria-labelledby="pills-policy-tab">...</div>
+                            <div class="tab-pane fade" id="pills-policy" role="tabpanel" aria-labelledby="pills-policy-tab">
+                                <input type="hidden" value="policy" name="action">
+                                <input type="hidden" value="<?= $_GET['id'] ?>" name="user_id">
+                                <h1>No records found.</h1>
+                            </div>
                         </div>
                     </div>
                     <div class="col-3">
                         <h4>History</h4>
                         <ul class="timeline">
                             <li>
-                                <a target="_blank" href="https://www.totoprayogo.com/#">New Web Design</a>
-                                <a href="#" class="float-right">21 March, 2014</a>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque scelerisque diam non nisi semper, et elementum lorem ornare. Maecenas placerat facilisis mollis. Duis sagittis ligula in sodales vehicula....</p>
+                                <a href="#">Created account</a>
+                                <a href="#" class="float-right">14 Feb, 2020</a>
                             </li>
                             <li>
-                                <a href="#">21 000 Job Seekers</a>
-                                <a href="#" class="float-right">4 March, 2014</a>
-                                <p>Curabitur purus sem, malesuada eu luctus eget, suscipit sed turpis. Nam pellentesque felis vitae justo accumsan, sed semper nisi sollicitudin...</p>
+                                <a href="#">Added to a unit</a>
+                                <a href="#" class="float-right">14 Feb, 2020</a>
                             </li>
                             <li>
-                                <a href="#">Awesome Employers</a>
-                                <a href="#" class="float-right">1 April, 2014</a>
-                                <p>Fusce ullamcorper ligula sit amet quam accumsan aliquet. Sed nulla odio, tincidunt vitae nunc vitae, mollis pharetra velit. Sed nec tempor nibh...</p>
+                                <a href="#">Set Status as Rookie</a>
+                                <a href="#" class="float-right">14 Feb, 2020</a>
                             </li>
                         </ul>
                     </div>
@@ -232,5 +243,8 @@ $advisors = User::whereIn('role_id', [4, 2, 3])->where('id', '!=', Session::get(
         <script src="js/vendor/select2.full.js"></script>
         <script src="js/dore.script.js"></script>
         <script src="js/scripts.js"></script>
+        <script>
+            $('.alert-success').fadeIn('fast').fadeOut(8000);
+        </script>
     </body>
 </html>

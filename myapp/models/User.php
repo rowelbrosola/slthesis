@@ -64,6 +64,47 @@ class User extends Eloquent
 		Redirect::to('users.php');
 	}
 
+	public static function isLogged($name = 'user_id') {
+		if(!Session::exists($name)) {
+			Redirect::to('login.php');
+		}
+	}
+
+	public static function updateUser($request) {
+		switch ($request['action']) {
+			case 'home':
+				$profile = UserProfile::where('user_id', $request['user_id'])
+				->update([
+					'advisor_id' => $request['advisor'],
+					'unit_id' => $request['unit'],
+					'status_id' => $request['status'],
+					'client_number' => $request['client_number'],
+					'coding_date' => date('Y-m-d', strtotime($request['coding_date'])),
+				]);
+				break;
+
+			case 'profile':
+				$profile = UserProfile::where('user_id', $request['user_id'])
+				->update([
+					'firstname' => $request['firstname'],
+					'lastname' => $request['lastname'],
+					'dob' => date('Y-m-d', strtotime($request['clientDob'])),
+				]);
+
+				$user = User::find($request['user_id'])
+				->update([
+					'email' =>  $request['email']
+				]);
+				break;
+			
+			default:
+				# code...
+				break;
+		}
+		Session::flash('success', 'Succesfully updated user.');
+		Redirect::to('profile.php?id='.$request['user_id']);
+	}
+
 	public function profile()
     {
         return $this->hasOne('App\UserProfile');

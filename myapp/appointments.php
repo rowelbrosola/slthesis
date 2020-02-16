@@ -1,4 +1,7 @@
 <?php
+require_once 'init.php';
+use App\User;
+User::isLogged();
 $active = 'appointments';
 ?>
 <!DOCTYPE html>

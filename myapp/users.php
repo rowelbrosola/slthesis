@@ -7,6 +7,7 @@ use App\User;
 use App\UserProfile;
 use App\Unit;
 use App\Session;
+User::isLogged();
 $roles = Role::all();
 $status = Status::all();
 $units = Unit::all();
@@ -36,19 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         <link rel="stylesheet" href="css/vendor/select2.min.css">
         <link rel="stylesheet" href="css/vendor/select2-bootstrap.min.css">
         <link rel="stylesheet" href="css/main.css">
-        <style>
-            .alert-success {
-                z-index: 10;
-                position: absolute;
-                top: 0;
-                width: 50%;
-                text-align: center;
-                margin-left: auto;
-                margin-right: auto;
-                left: 0;
-                right: 0;
-            }
-        </style>
     </head>
     <body id="app-container" class="menu-default show-spinner">
         <?php include 'partials/header.php' ?>
@@ -57,11 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
-                        <?php if(Session::exists('success')): ?>
-                        <div class="alert alert-success" role="alert">
-                            <?= Session::flash('success') ?>
-                        </div>
-                        <?php endif; ?>
+                        <?php include 'partials/message.php' ?>
                         <h1>Users</h1>
                         <div class="top-right-button-container">
                             <button type="button" class="btn btn-outline-primary btn-lg top-right-button mr-1" data-toggle="modal" data-target="#rightModal">ADD NEW</button>
@@ -322,7 +306,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             $('#addToDatatable').click(function () {
                 $('#addToDatatableForm').submit();
             })
-            $('.alert-success').fadeIn('fast').fadeOut(5000);
+            $('.alert-success').fadeIn('fast').fadeOut(8000);
         </script>
     </body>
 </html>
