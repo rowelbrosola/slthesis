@@ -161,7 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                         foreach ($users as $key => $value):
                                     ?>
                                         <tr>
-                                            <td><a href="profile.php?id=<?= $value->id ?>"><?= $value->profile->firstname.' '.$value->profile->lastname ?></a></td>
+                                            <td><a href="profile.php?id=<?= $value->id.'&tab=home' ?>"><?= $value->profile->firstname.' '.$value->profile->lastname ?></a></td>
                                             <td><?= $value->email ?></td>
                                             <td><?=
                                                 isset($value->profile->advisor)

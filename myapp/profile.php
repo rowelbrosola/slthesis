@@ -1,5 +1,6 @@
 <?php
 $active = 'users';
+$active_tab = isset($_GET['tab']) ? $_GET['tab'] : '';
 require_once 'init.php';
 use App\User;
 use App\UserProfile;
@@ -7,16 +8,29 @@ use App\Session;
 use App\Role;
 use App\Status;
 use App\Unit;
+use App\Policy;
+use App\UserPolicy;
 User::isLogged();
 $roles = Role::all();
 $status = Status::all();
 $units = Unit::all();
+$policies = Policy::all();
+if(isset($_GET['policy_id'])) {
+    $selected_user_policy = UserPolicy::where('policy_id', $_GET['policy_id'])
+    ->with('policy')
+    ->get();
+}
 $selected_user = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status')->find($_GET['id']);
 $selected_user_advisor = UserProfile::where('user_id', $_GET['id'])->with('advisor')->get();
 $advisors = User::whereIn('role_id', [4, 2, 3])->where('id', '!=', Session::get('user_id'))->with('profile')->get();
+$user_policies = UserPolicy::where('user_id', $_GET['id'])->with('policy')->get();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
-    User::updateUser($_POST);
+    if(isset($_POST['add_policy'])) {
+        UserPolicy::addPolicy($_POST);
+    } else {
+        User::updateUser($_POST);
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -80,6 +94,85 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     <div class="col-12">
                         <?php include 'partials/message.php' ?>
                         <h1>Profile</h1>
+                        <div class="top-right-button-container">
+                            <button type="button" class="btn btn-outline-primary btn-lg top-right-button mr-1" data-toggle="modal" data-target="#rightModal">ADD POLICY</button>
+                            <div class="modal fade modal-right" id="rightModal" tabindex="-1" role="dialog" aria-labelledby="rightModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="rightModalLabel">Add Policy</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Submitting below form will add the policy to <?= $selected_user->profile->firstname.' '.$selected_user->profile->lastname ?>'s profile</p>
+                                            <form class="tooltip-right-top" id="addToDatatableForm" novalidate method="POST">
+                                                <div class="form-group position-relative">
+                                                    <label>Policy</label> 
+                                                    <select class="form-control select2-single" name="policy" data-width="100%">
+                                                        <option>Select Policy</option>
+                                                        <?php foreach($policies as $key => $policy): ?>
+                                                        <option value="<?= $policy->id ?>"><?= $policy->name ?></option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group position-relative">
+                                                    <label>Face Amount</label> 
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" name="face_amount" placeholder="Face Amount" autocomplete="off">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group position-relative">
+                                                    <label>Benefits</label> 
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" name="benefits" placeholder="Benefits" autocomplete="off">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group position-relative">
+                                                    <label>Annual Premium Amount</label> 
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" name="annual_premium_amount" placeholder="Annual Premium Amount" autocomplete="off">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group position-relative">
+                                                    <label>Mode of Payment</label> 
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" name="mode_of_payment" placeholder="Mode of Payment" autocomplete="off">
+                                                    </div>
+                                                </div>
+                                                <div class="input-group date form-group position-relative info">
+                                                    <label>Issue Date</label>
+                                                    <input type="text" class="form-control" name="issue_date" style="width: 100%;" placeholder="Issue Date" required>
+                                                    <span class="input-group-addon">
+                                                        <span class="glyphicon glyphicon-calendar"></span>
+                                                    </span>
+                                                </div>
+                                                <div class="input-group date form-group position-relative info">
+                                                    <label>Premium Due Date</label>
+                                                    <input type="text" class="form-control" name="premium_due_date" style="width: 100%;" placeholder="Premium Due Date" required>
+                                                    <span class="input-group-addon">
+                                                        <span class="glyphicon glyphicon-calendar"></span>
+                                                    </span>
+                                                </div>
+                                                <input type="hidden" name="add_policy" value="add_policy">
+                                                <input type="hidden" name="profile_user_id" value="<?= $_GET['id'] ?>">
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a href="#" class="btn btn-primary btn-multiple-state" id="addToDatatable">
+                                                <div class="spinner d-inline-block">
+                                                    <div class="bounce1"></div>
+                                                    <div class="bounce2"></div>
+                                                    <div class="bounce3"></div>
+                                                </div>
+                                                <span class="icon success" data-toggle="tooltip" data-placement="top" title="Everything went right!"><i class="simple-icon-check"></i> </span>
+                                                <span class="icon fail" data-toggle="tooltip" data-placement="top" title="Something went wrong!"><i class="simple-icon-exclamation"></i> </span>
+                                                <span class="label">Done</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
                             <ol class="breadcrumb pt-0">
                                 <li class="breadcrumb-item"><a href="users.php">Users</a></li>
@@ -102,17 +195,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     <div class="col-6">
                         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Home</a>
+                                <a class="nav-link <?= $active_tab === 'home' ? 'active' : null ?>" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Profile Info</a>
+                                <a class="nav-link <?= $active_tab === 'profile' ? 'active' : null ?>" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Profile Info</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="pills-policy-tab" data-toggle="pill" href="#pills-policy" role="tab" aria-controls="pills-policy" aria-selected="false">Policy Info</a>
+                                <a class="nav-link <?= $active_tab === 'policy' ? 'active' : null ?>" id="pills-policy-tab" data-toggle="pill" href="#pills-policy" role="tab" aria-controls="pills-policy" aria-selected="false">Policies</a>
                             </li>
                         </ul>
                         <div class="tab-content" id="pills-tabContent">
-                            <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                            <div class="tab-pane fade <?= $active_tab === 'home' ? 'show active' : null ?>" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                                 <form method="POST">
                                     <div class="form-group">
                                         <label>Advisor</label> 
@@ -178,7 +271,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                 </form>
                             </div>
-                            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                            <div class="tab-pane fade <?= $active_tab === 'profile' ? 'show active' : null ?>" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
                                 <form method="POST">
                                     <div class="form-group">
                                         <label for="client-firstname">First Name</label>
@@ -204,10 +297,64 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                 </form>
                             </div>
-                            <div class="tab-pane fade" id="pills-policy" role="tabpanel" aria-labelledby="pills-policy-tab">
+                            <div class="tab-pane fade <?= $active_tab === 'policy' ? 'show active' : null ?>" id="pills-policy" role="tabpanel" aria-labelledby="pills-policy-tab">
                                 <input type="hidden" value="policy" name="action">
                                 <input type="hidden" value="<?= $_GET['id'] ?>" name="user_id">
+                                <?php if(isset($_GET['policy_id'])): ?>
+                                    <h2><?= $selected_user_policy[0]->policy->name ?></h2>
+                                    <form class="tooltip-right-top" id="addToDatatableForm" novalidate method="POST">
+                                        <div class="form-group position-relative">
+                                            <label>Face Amount</label> 
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" name="face_amount" placeholder="Face Amount" value="<?= $selected_user_policy[0]->face_amount ?>" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="form-group position-relative">
+                                            <label>Benefits</label> 
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" name="benefits" placeholder="Benefits" autocomplete="off" value="<?= $selected_user_policy[0]->benefits ?>" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="form-group position-relative">
+                                            <label>Annual Premium Amount</label> 
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" name="annual_premium_amount" placeholder="Annual Premium Amount" autocomplete="off" value="<?= $selected_user_policy[0]->annual_premium_amount ?>" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="form-group position-relative">
+                                            <label>Mode of Payment</label> 
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" name="mode_of_payment" placeholder="Mode of Payment" autocomplete="off" value="<?= $selected_user_policy[0]->mode_of_payment ?>" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="input-group date form-group position-relative info">
+                                            <label>Issue Date</label>
+                                            <input type="text" class="form-control" name="issue_date" style="width: 100%;" placeholder="Issue Date" value="<?= $selected_user_policy[0]->issue_date ?>" disabled>
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                        <div class="input-group date form-group position-relative info">
+                                            <label>Premium Due Date</label>
+                                            <input type="text" class="form-control" name="premium_due_date" style="width: 100%;" placeholder="Premium Due Date" value="<?= $selected_user_policy[0]->premium_due_date ?>" disabled>
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                        <input type="hidden" name="add_policy" value="add_policy">
+                                        <input type="hidden" name="profile_user_id" value="<?= $_GET['id'] ?>">
+                                    </form>
+                                <?php elseif($user_policies->count()): ?>
+                                <ul class="list-group list-group-flush">
+                                    <?php foreach($user_policies as $key => $user_policy): ?>
+                                    <a href="profile.php?policy_id=<?= $user_policy->policy_id.'&id='.$user_policy->user_id.'&tab=policy' ?>">
+                                        <li class="list-group-item"><?= $user_policy->policy->name ?></li>
+                                    </a>
+                                    <?php endforeach; ?>
+                                </ul>
+                                <?php else: ?>
                                 <h1>No records found.</h1>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -244,6 +391,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         <script src="js/dore.script.js"></script>
         <script src="js/scripts.js"></script>
         <script>
+            $('#addToDatatable').click(function () {
+                $('#addToDatatableForm').submit();
+            })
             $('.alert-success').fadeIn('fast').fadeOut(8000);
         </script>
     </body>

@@ -81,6 +81,7 @@ class User extends Eloquent
 					'client_number' => $request['client_number'],
 					'coding_date' => date('Y-m-d', strtotime($request['coding_date'])),
 				]);
+				$tab = 'home';
 				break;
 
 			case 'profile':
@@ -95,6 +96,7 @@ class User extends Eloquent
 				->update([
 					'email' =>  $request['email']
 				]);
+				$tab = 'profile';
 				break;
 			
 			default:
@@ -102,7 +104,7 @@ class User extends Eloquent
 				break;
 		}
 		Session::flash('success', 'Succesfully updated user.');
-		Redirect::to('profile.php?id='.$request['user_id']);
+		Redirect::to('profile.php?id='.$request['user_id'].'&tab='.$tab);
 	}
 
 	public function profile()
