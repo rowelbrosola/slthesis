@@ -3,6 +3,7 @@
         <div class="scroll">
             <ul class="list-unstyled">
                 <li class="<?= $active === 'dashboard' ? 'active' : '' ?>"><a href="index.php"><i class="iconsminds-home-1"></i> <span>Dashboard</span></a></li>
+                <li class="<?= $active === 'units'  ? 'active' : '' ?>"><a href="units.php"><i class="iconsminds-data-cloud"></i> Units</a></li>
                 <li class="dd-menu <?= $active === 'reports' ? 'active' : '' ?>"><a href="#reports"><i class="iconsminds-digital-drawing"></i> Reports</a></li>
                 <li class="<?= $active === 'payments'  ? 'active' : '' ?>"><a href="payments.php"><i class="iconsminds-cash-register-2"></i> Payments</a></li>
                 <li class="<?= $active === 'appointments'  ? 'active' : '' ?>"><a href="appointments.php"><i class="iconsminds-calendar-1"></i> Appointments</a></li>
