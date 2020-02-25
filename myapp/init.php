@@ -41,6 +41,6 @@ $capsule->setAsGlobal();
 
 // Setup the Eloquent ORM... (optional; unless you've used setEventDispatcher())
 $capsule->bootEloquent();
-
+var_dump(__DIR__);exit;
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
