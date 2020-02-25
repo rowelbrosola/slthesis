@@ -67,26 +67,19 @@ class User extends Eloquent
 			'unit_id' => $request['unit'],
 			'status_id' => $request['status'],
 			'coding_date' => date('Y-m-d', strtotime($request['coding_date'])),
+			'created_by' => Session::get('user_id')
 		]);
 
-		// Create the Transport
-		$transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
-			->setUsername(getenv('EMAIL'))
-			->setPassword(getenv('PASSWORD'))
-		;
+		$content = [
+			'message' => 'THIS IS YOUR PASSWORD',
+			'from' => [
+				getenv('EMAIL') => getenv('EMAIL_NAME')
+			],
+			'to' => [$request['email']],
+			'body' => 'Use this as your temporary password: '.$random_password
+		];
 
-		// Create the Mailer using your created Transport
-		$mailer = new Swift_Mailer($transport);
-
-		// Create a message
-		$message = (new Swift_Message('THIS IS YOUR PASSWORD'))
-			->setFrom([getenv('EMAIL') => getenv('EMAIL_NAME')])
-			->setTo([$request['email']])
-			->setBody('Use this as your temporary password: '.$random_password.'')
-			;
-
-		// Send the message
-		$result = $mailer->send($message);
+		self::sendMail($content);
 
 		Session::flash('success', 'Succesfully added new user.');
 		Redirect::to('users.php');
@@ -133,6 +126,27 @@ class User extends Eloquent
 		}
 		Session::flash('success', 'Succesfully updated user.');
 		Redirect::to('profile.php?id='.$request['user_id'].'&tab='.$tab);
+	}
+
+	private function sendMail($content) {
+		// Create the Transport
+		$transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
+			->setUsername(getenv('EMAIL'))
+			->setPassword(getenv('PASSWORD'))
+		;
+
+		// Create a message
+		$message = (new Swift_Message($content['message']))
+			->setFrom($content['from'])
+			->setTo($content['to'])
+			->setBody($content['body'])
+			;
+
+		// Create the Mailer using your created Transport
+		$mailer = new Swift_Mailer($transport);
+
+		// Send the message
+		$result = $mailer->send($message);
 	}
 
 	public function profile()
