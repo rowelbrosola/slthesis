@@ -4,6 +4,10 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 use App\Session;
 use App\Redirect;
 use App\UserProfile;
+use App\Hash;
+use Swift_SmtpTransport;
+use Swift_Mailer;
+use Swift_Message;
 
 class User extends Eloquent
 {
@@ -46,8 +50,13 @@ class User extends Eloquent
 	}
 
 	public static function add($request) {
+		$random_password = bin2hex(random_bytes(5)); 
+		$temporary_password = Hash::encrypt($random_password);
+
 		$user = self::create([
-			'role_id' => $request['role'],
+			'email' => $request['email'],
+			'password' => $temporary_password,
+			'role_id' => $request['role']
 		]);
 		
 		UserProfile::create([
@@ -59,6 +68,25 @@ class User extends Eloquent
 			'status_id' => $request['status'],
 			'coding_date' => date('Y-m-d', strtotime($request['coding_date'])),
 		]);
+
+		// Create the Transport
+		$transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
+			->setUsername(getenv('EMAIL'))
+			->setPassword(getenv('PASSWORD'))
+		;
+
+		// Create the Mailer using your created Transport
+		$mailer = new Swift_Mailer($transport);
+
+		// Create a message
+		$message = (new Swift_Message('THIS IS YOUR PASSWORD'))
+			->setFrom([getenv('EMAIL') => getenv('EMAIL_NAME')])
+			->setTo([$request['email']])
+			->setBody('Use this as your temporary password: '.$random_password.'')
+			;
+
+		// Send the message
+		$result = $mailer->send($message);
 
 		Session::flash('success', 'Succesfully added new user.');
 		Redirect::to('users.php');

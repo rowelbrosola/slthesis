@@ -80,6 +80,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                     </select>
                                                 </div>
                                                 <div class="form-group position-relative info">
+                                                    <label>Email</label>
+                                                    <input type="text" class="form-control" name="email" placeholder="Email" required>
+                                                </div>
+                                                <div class="form-group position-relative info">
                                                     <label>First Name</label>
                                                     <input type="text" class="form-control" name="firstname" placeholder="First Name" required>
                                                 </div>
