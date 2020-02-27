@@ -2,12 +2,14 @@
 require_once 'init.php';
 use App\User;
 use App\Unit;
+use App\Status;
 User::isLogged();
 $active = 'units';
-$units = Unit::with('creator')->get();
+$units = Unit::with('creator', 'owner', 'members')->get();
+$status = Status::all();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
-    Unit::add($_POST);
+    User::addUnit($_POST);
 }
 ?>
 <!DOCTYPE html>
@@ -21,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         <link rel="stylesheet" href="css/vendor/dataTables.bootstrap4.min.css">
         <link rel="stylesheet" href="css/vendor/datatables.responsive.bootstrap4.min.css">
         <link rel="stylesheet" href="css/vendor/bootstrap.min.css">
+        <link rel="stylesheet" href="css/vendor/bootstrap-datepicker3.min.css">
         <link rel="stylesheet" href="css/vendor/bootstrap.rtl.only.min.css">
         <link rel="stylesheet" href="css/vendor/perfect-scrollbar.css">
         <link rel="stylesheet" href="css/vendor/select2.min.css">
@@ -43,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="rightModalLabel">Add User</h5>
+                                                <h5 class="modal-title" id="rightModalLabel">Add Unit</h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                             </div>
                                             <div class="modal-body">
@@ -53,6 +56,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                         <label>Unit Name</label>
                                                         <input type="text" class="form-control" name="unit" placeholder="Unit Name" required>
                                                     </div>
+                                                    <div class="form-group position-relative info">
+                                                        <label>Manager First Name</label>
+                                                        <input type="text" class="form-control" name="firstname" placeholder="Manager First Name" required>
+                                                    </div>
+                                                    <div class="form-group position-relative info">
+                                                        <label>Manager Last Name</label>
+                                                        <input type="text" class="form-control" name="lastname" placeholder="Manager Last Name" required>
+                                                    </div>
+                                                    <div class="form-group position-relative info">
+                                                        <label>Email</label>
+                                                        <input type="email" class="form-control" name="email" placeholder="Email" required>
+                                                    </div>
+                                                    <div class="form-group position-relative info">
+                                                        <label>Advisor Code</label>
+                                                        <input type="text" class="form-control" name="advisor_code" placeholder="Advisor Code" required>
+                                                    </div>
+                                                    <div class="input-group form-group position-relative info">
+                                                        <label>Coding Date</label>
+                                                        <input type="text" class="form-control datepicker" name="coding_date" style="width: 100%;" placeholder="Coding Date" required>
+                                                        <div class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-th"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group position-relative info">
+                                                        <label>Status</label> 
+                                                        <select class="form-control select2-single" name="status" data-width="100%" required>
+                                                            <option value="">Select Status</option>
+                                                            <?php foreach($status as $key => $value): ?>
+                                                            <option value="<?= $value->id ?>"><?= $value->name ?></option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </div>
+                                                    <input type="hidden" name="role" value="3">
                                                 </form>
                                             </div>
                                             <div class="modal-footer">
@@ -87,23 +123,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                         <table class="data-table data-table-feature payment-table">
                                             <thead>
                                                 <tr>
-                                                    <th>ID</th>
-                                                    <th>Name</th>
-                                                    <th>Status</th>
-                                                    <th>Created At</th>
-                                                    <th>Created By</th>
-                                                    <th>Updated At</th>
+                                                    <th>Unit Name</th>
+                                                    <th>Advisor Code</th>
+                                                    <th>Unit Manager</th>
+                                                    <th>Man Power</th>
+                                                    <th>TYD Production</th>
+                                                    <th>Campaign</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <?php foreach($units as $key => $value): ?>
                                                 <tr>
-                                                    <td><?= $value->id ?></td>
                                                     <td><a href="unit.php?unit_id=<?= $value->id ?>"><?= $value->name ?></a></td>
-                                                    <td>Active</td>
-                                                    <td><?= date('Y-m-d H:i', strtotime($value->created_at)) ?></td>
-                                                    <td><?= $value->creator->firstname.' '.$value->creator->lastname ?></td>
-                                                    <td><?= date('Y-m-d H:i', strtotime($value->updated_at)) ?></td>
+                                                    <td><?= $value->owner->advisor_code ?></td>
+                                                    <td><?= $value->owner->firstname.' '.$value->owner->lastname ?></td>
+                                                    <td><?= $value->members->count() ?></td>
+                                                    <td><?= '&#8369; 50,000' ?></td>
+                                                    <td><?= 'Love Month' ?></td>
                                                 </tr>
                                                 <?php endforeach; ?>
                                             </tbody>
@@ -122,6 +158,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         <script src="js/vendor/mousetrap.min.js"></script>
         <script src="js/vendor/datatables.min.js"></script>
         <script src="js/vendor/select2.full.js"></script>
+        <script src="js/vendor/bootstrap-datepicker.js"></script>
         <script src="js/dore.script.js"></script>
         <script src="js/scripts.js"></script>
         <script>

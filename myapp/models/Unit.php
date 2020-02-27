@@ -22,4 +22,12 @@ class Unit extends Eloquent
     public function creator() {
         return $this->hasOne('App\UserProfile', 'user_id', 'created_by');
     }
+
+    public function owner() {
+        return $this->hasOne('App\UserProfile', 'user_id', 'owner_id');
+    }
+
+    public function members() {
+        return $this->hasMany('App\UserProfile');
+    }
 }

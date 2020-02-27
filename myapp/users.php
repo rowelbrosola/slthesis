@@ -101,6 +101,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                     </select>
                                                 </div>
                                                 <div class="form-group position-relative info">
+                                                    <label>Advisor Code</label>
+                                                    <input type="text" class="form-control" name="advisor_code" placeholder="Advisor Code" required>
+                                                </div>
+                                                <div class="form-group position-relative info">
                                                     <label>Status</label> 
                                                     <select class="form-control select2-single" name="status" data-width="100%" required>
                                                         <option value="">Select Status</option>
@@ -209,104 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         <script src="js/dore.script.js"></script>
         <script src="js/vendor/select2.full.js"></script>
         <script src="js/scripts.js"></script>
-        <script>            
-            $(function(){
-
-            })
-            var clients = 
-                [
-                    {
-                        name: "May",
-                        index: 0,
-                        id: "5a8a9bfd8bf389ba8d6bb211"
-                    }, {
-                        name: "Fuentes",
-                        index: 1,
-                        id: "5a8a9bfdee10e107f28578d4"
-                    }, {
-                        name: "Henderson",
-                        index: 2,
-                        id: "5a8a9bfd4f9e224dfa0110f3"
-                    }, {
-                        name: "Hinton",
-                        index: 3,
-                        id: "5a8a9bfde42b28e85df34630"
-                    }, {
-                        name: "Barrera",
-                        index: 4,
-                        id: "5a8a9bfdc0cba3abc4532d8d"
-                    }, {
-                        name: "Therese",
-                        index: 5,
-                        id: "5a8a9bfdedfcd1aa0f4c414e"
-                    }, {
-                        name: "Nona",
-                        index: 6,
-                        id: "5a8a9bfdd6686aa51b953c4e"
-                    }, {
-                        name: "Frye",
-                        index: 7,
-                        id: "5a8a9bfd352e2fd4c101507d"
-                    }, {
-                        name: "Cora",
-                        index: 8,
-                        id: "5a8a9bfdb5133142047f2600"
-                    }, {
-                        name: "Miles",
-                        index: 9,
-                        id: "5a8a9bfdadb1afd136117928"
-                    }, {
-                        name: "Cantrell",
-                        index: 10,
-                        id: "5a8a9bfdca4795bcbb002057"
-                    }, {
-                        name: "Benson",
-                        index: 11,
-                        id: "5a8a9bfdaa51e9a4aeeddb7d"
-                    }, {
-                        name: "Susanna",
-                        index: 12,
-                        id: "5a8a9bfd57dd857535ef5998"
-                    }, {
-                        name: "Beatrice",
-                        index: 13,
-                        id: "5a8a9bfd68b6f12828da4175"
-                    }, {
-                        name: "Tameka",
-                        index: 14,
-                        id: "5a8a9bfd2bc4a368244d5253"
-                    }, {
-                        name: "Lowe",
-                        index: 15,
-                        id: "5a8a9bfd9004fda447204d30"
-                    }, {
-                        name: "Roth",
-                        index: 16,
-                        id: "5a8a9bfdb4616dbc06af6172"
-                    }, {
-                        name: "Conley",
-                        index: 17,
-                        id: "5a8a9bfdfae43320dd8f9c5a"
-                    }, {
-                        name: "Nelda",
-                        index: 18,
-                        id: "5a8a9bfd534d9e0ba2d7c9a7"
-                    }, {
-                        name: "Angie",
-                        index: 19,
-                        id: "5a8a9bfd57de84496dc42259"
-                    }
-                ];
-            $("#client").typeahead({
-                hint: true,
-                highlight: true,
-                minLength: 1,
-                updater: function (item) {
-                    console.log(item)
-                    return item;
-                },
-                source: clients
-            })
+        <script>
             $('#addToDatatable').click(function () {
                 $('#addToDatatableForm').submit();
             })
