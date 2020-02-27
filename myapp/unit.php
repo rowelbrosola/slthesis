@@ -11,7 +11,7 @@ if (isset($_GET['unit_id']) && $_GET['unit_id'] == $my_unit[0]->unit->id) {
     $active = 'my_unit';
 }
 $units = Unit::with('creator')->get();
-$unit_members = UserProfile::where('unit_id', $_GET['unit_id'])->with('status', 'unit')->get();
+$unit_members = UserProfile::where('unit_id', $_GET['unit_id'])->with('status', 'unit', 'advisor')->get();
 $current_unit = Unit::find($_GET['unit_id']);
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
@@ -122,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                     <td><?= $value->firstname.' '.$value->lastname ?></td>
                                                     <td><?= $value->advisor_code ?></td>
                                                     <td><?= $value->status->name ?></td>
-                                                    <td><?= $value->unit->name ?></td>
+                                                    <td><?= $value->advisor->firstname.' '.$value->advisor->lastname ?></td>
                                                     <td><?=  '&#8369; 10,000' ?></td>
                                                     <td><?= 'Love Month' ?></td>
                                                 </tr>
