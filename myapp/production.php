@@ -2,13 +2,13 @@
 require_once 'init.php';
 use App\User;
 User::isLogged();
-$active = 'appointments';
+$active = 'production';
 ?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Appointments - Personal Production and Client Monitoring System for Financial Advisors</title>
+        <title>Production - Personal Production and Client Monitoring System for Financial Advisors</title>
         <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
         <link rel="stylesheet" href="font/iconsmind-s/css/iconsminds.css">
         <link rel="stylesheet" href="font/simple-line-icons/css/simple-line-icons.css">
@@ -29,7 +29,7 @@ $active = 'appointments';
                 <div class="row app-row">
                     <div class="col-12">
                         <div class="mb-2">
-                            <h1>Appointments</h1>
+                            <h1>Production</h1>
                             <div class="top-right-button-container">
                                 <button type="button" class="btn btn-outline-primary btn-lg top-right-button mr-1" data-toggle="modal" data-backdrop="static" data-target="#exampleModal">ADD NEW</button>
                                 <div class="modal fade modal-right" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -89,12 +89,6 @@ $active = 'appointments';
                                         <table class="data-table data-table-feature payment-table">
                                             <thead>
                                                 <tr>
-                                                    <th>Name</th>
-                                                    <th>Date</th>
-                                                    <th>Time</th>
-                                                    <th>Office</th>
-                                                    <th>Age</th>
-                                                    <th>Status</th>
                                                 </tr>
                                             </thead>
                                             <tbody>

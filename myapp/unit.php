@@ -11,7 +11,7 @@ if (isset($_GET['unit_id']) && $_GET['unit_id'] == $my_unit[0]->unit->id) {
     $active = 'my_unit';
 }
 $units = Unit::with('creator')->get();
-$unit_members = UserProfile::where('unit_id', $_GET['unit_id'])->get();
+$unit_members = UserProfile::where('unit_id', $_GET['unit_id'])->with('status', 'unit')->get();
 $current_unit = Unit::find($_GET['unit_id']);
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
@@ -108,23 +108,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                         <table class="data-table data-table-feature payment-table">
                                             <thead>
                                                 <tr>
-                                                    <th>ID</th>
                                                     <th>Name</th>
+                                                    <th>Advisor Code</th>
                                                     <th>Status</th>
-                                                    <th>Created At</th>
-                                                    <th>Client Number</th>
-                                                    <th>Updated At</th>
+                                                    <th>Unit Manager</th>
+                                                    <th>TYD Production</th>
+                                                    <th>Campaign</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <?php foreach($unit_members as $key => $value): ?>
                                                 <tr>
-                                                    <td><?= $value->id ?></td>
                                                     <td><?= $value->firstname.' '.$value->lastname ?></td>
-                                                    <td>Active</td>
-                                                    <td><?= $value->client_number ?></td>
-                                                    <td><?= date('Y-m-d H:i', strtotime($value->created_at)) ?></td>
-                                                    <td><?= date('Y-m-d H:i', strtotime($value->updated_at)) ?></td>
+                                                    <td><?= $value->advisor_code ?></td>
+                                                    <td><?= $value->status->name ?></td>
+                                                    <td><?= $value->unit->name ?></td>
+                                                    <td><?=  '&#8369; 10,000' ?></td>
+                                                    <td><?= 'Love Month' ?></td>
                                                 </tr>
                                                 <?php endforeach; ?>
                                             </tbody>
