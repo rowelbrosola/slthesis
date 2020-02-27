@@ -12,29 +12,31 @@ session_start();
 
 $capsule = new Capsule;
 
-// //dev
-// $capsule->addConnection([
-//     'driver'    => 'mysql',
-//     'host'      => 'localhost',
-//     'database'  => 'ppcm',
-//     'username'  => 'root',
-//     'password'  => 'root',
-//     'charset'   => 'utf8',
-//     'collation' => 'utf8_unicode_ci',
-//     'prefix'    => '',
-// ]);
-
-//production
-$capsule->addConnection([
-    'driver'    => 'mysql',
-    'host'      => 'us-cdbr-iron-east-04.cleardb.net',
-    'database'  => 'heroku_02dfbe5bfd390b9',
-    'username'  => 'b19dc4f4a9c5a7',
-    'password'  => '0bd4cf8c',
-    'charset'   => 'utf8',
-    'collation' => 'utf8_unicode_ci',
-    'prefix'    => '',
-]);
+if ($_SERVER['HTTP_HOST'] === 'localhost') {
+    // //dev
+    $capsule->addConnection([
+        'driver'    => 'mysql',
+        'host'      => 'localhost',
+        'database'  => 'ppcm',
+        'username'  => 'root',
+        'password'  => 'root',
+        'charset'   => 'utf8',
+        'collation' => 'utf8_unicode_ci',
+        'prefix'    => '',
+    ]);
+} else {
+    //production
+    $capsule->addConnection([
+        'driver'    => getenv('DB_DRIVER'),
+        'host'      => getenv('DB_HOST'),
+        'database'  => getenv('DB_DATABASE'),
+        'username'  => getenv('DB_USERNAME'),
+        'password'  => getenv('DB_PASSWORD'),
+        'charset'   => 'utf8',
+        'collation' => 'utf8_unicode_ci',
+        'prefix'    => '',
+    ]);
+}
 
 // Make this Capsule instance available globally via static methods... (optional)
 $capsule->setAsGlobal();
