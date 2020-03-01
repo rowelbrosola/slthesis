@@ -1,8 +1,16 @@
 <?php
 require_once 'init.php';
 use App\User;
+use App\UserProfile;
+use App\Payment;
 User::isLogged();
 $active = 'production';
+$clients = User::where('role_id', '!=' , 1)->with('profile')->get();
+$production = Payment::with('profile', 'unit', 'policy')->get();
+if ($_SERVER['REQUEST_METHOD'] == 'POST') 
+{
+    Payment::add($_POST);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,6 +37,7 @@ $active = 'production';
                 <div class="row app-row">
                     <div class="col-12">
                         <div class="mb-2">
+                            <?php include 'partials/message.php' ?>
                             <h1>Production</h1>
                             <div class="top-right-button-container">
                                 <button type="button" class="btn btn-outline-primary btn-lg top-right-button mr-1" data-toggle="modal" data-backdrop="static" data-target="#exampleModal">ADD NEW</button>
@@ -36,15 +45,30 @@ $active = 'production';
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Add New</h5>
+                                                <h5 class="modal-title" id="exampleModalLabel">Add Production</h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                             </div>
                                             <div class="modal-body">
-                                                <form>
-                                                    <div class="form-group"><label>Title</label> <input type="text" class="form-control" placeholder=""></div>
-                                                    <div class="form-group"><label>Title</label> <input type="text" class="form-control" placeholder=""></div>
-                                                    
-                                                    <div class="form-group"><label>Details</label> <textarea class="form-control" rows="2"></textarea></div>
+                                                <form method="POST" id="production-form">
+                                                    <div class="form-group position-relative info">
+                                                        <label>Client Name</label> 
+                                                        <select class="form-control select2-single" name="client" data-width="100%" id="clients" required>
+                                                            <option value="">Select Client</option>
+                                                            <?php foreach($clients as $key => $value): ?>
+                                                            <option value="<?= $value->id ?>"><?= $value->profile->firstname.' '.$value->profile->lastname ?></option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group position-relative info">
+                                                        <label>Policy</label> 
+                                                        <select class="form-control select2-single" name="policy" id="policy" data-width="100%" required disabled>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group position-relative info">
+                                                        <label>Amount</label>
+                                                        <input type="number" class="form-control" name="amount" placeholder="Amount" required>
+                                                    </div>
+                                                    <!-- <div class="form-group"><label>Details</label> <textarea class="form-control" rows="2"></textarea></div> -->
                                                     <!-- <div class="form-group">
                                                         <label>Category</label> 
                                                         <select class="form-control select2-single" data-width="100%">
@@ -62,13 +86,13 @@ $active = 'production';
                                                             <option value="Personal">Personal</option>
                                                         </select>
                                                     </div> -->
-                                                    <div class="form-group">
+                                                    <!-- <div class="form-group">
                                                         <label>Status</label>
                                                         <div class="custom-control custom-checkbox"><input type="checkbox" class="custom-control-input" id="customCheck1"> <label class="custom-control-label" for="customCheck1">Completed</label></div>
-                                                    </div>
+                                                    </div> -->
                                                 </form>
                                             </div>
-                                            <div class="modal-footer"><button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancel</button> <button type="button" class="btn btn-primary">Submit</button></div>
+                                            <div class="modal-footer"><button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancel</button> <button type="button" id="submitProduction" class="btn btn-primary">Submit</button></div>
                                         </div>
                                     </div>
                                 </div>
@@ -89,9 +113,25 @@ $active = 'production';
                                         <table class="data-table data-table-feature payment-table">
                                             <thead>
                                                 <tr>
+                                                    <th>Name</th>
+                                                    <th>Policy</th>
+                                                    <th>Amount Paid</th>
+                                                    <th>Advisor</th>
+                                                    <th>Payment Date</th>
+                                                    <th>Next Due Date</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                <?php foreach($production as $key => $value): ?>
+                                                <tr>
+                                                    <td><?= isset($value->profile) ? $value->profile->firstname.' '.$value->profile->lastname : null ?></td>
+                                                    <td><?= $value->policy->name ?></td>
+                                                    <td><?= $value->amount_paid ?></td>
+                                                    <td><?= '' ?></td>
+                                                    <td><?= $value->created_at ?></td>
+                                                    <td><?= '' ?></td>
+                                                </tr>
+                                                <?php endforeach; ?>
                                             </tbody>
                                         </table>
                                     </div>
@@ -140,6 +180,23 @@ $active = 'production';
         <script src="js/vendor/select2.full.js"></script>
         <script src="js/dore.script.js"></script>
         <script src="js/scripts.js"></script>
-
+        <script>
+            $("#clients").change(function() {
+                var user_id = $(this).children("option:selected").val();
+                $.ajax({
+                    url:"functions/fetch-policy.php",
+                    type:"POST",
+                    data:{user_id},
+                    success:function(data) {
+                        $("#policy").prop( "disabled", false );
+                        $("#policy").html(data);
+                    }
+                })
+            });
+            $('#submitProduction').click(function () {
+                $('#production-form').submit();
+            })
+            $('.alert-success').fadeIn('fast').fadeOut(8000);
+        </script>
     </body>
 </html>

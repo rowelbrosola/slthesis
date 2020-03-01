@@ -31,19 +31,19 @@ $account = User::find(Session::get('user_id'));
             <div class="position-relative d-none d-sm-inline-block">
                 <button class="header-icon btn btn-empty" type="button" id="iconMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="simple-icon-grid"></i></button>
                 <div class="dropdown-menu dropdown-menu-right mt-3 position-absolute" id="iconMenuDropdown">
-                    <a href="#" class="icon-menu-item"><i class="iconsminds-equalizer d-block"></i> <span>Clients</span> </a>
-                    <a href="#" class="icon-menu-item"><i class="iconsminds-male-female d-block"></i> <span>Users</span> </a>
-                    <a href="#" class="icon-menu-item"><i class="iconsminds-file d-block"></i> <span>Payment</span> </a>
-                    <a href="#" class="icon-menu-item"><i class="iconsminds-suitcase d-block"></i> <span>Appointment</span></a>
+                    <a href="users.php" class="icon-menu-item"><i class="iconsminds-equalizer d-block"></i> <span>Clients</span> </a>
+                    <!-- <a href="#" class="icon-menu-item"><i class="iconsminds-male-female d-block"></i> <span>Users</span> </a> -->
+                    <a href="due-dates.php" class="icon-menu-item"><i class="iconsminds-file d-block"></i> <span>Due Dates</span> </a>
+                    <a href="production.php" class="icon-menu-item"><i class="iconsminds-suitcase d-block"></i> <span>Production</span></a>
                 </div>
             </div>
             <button class="header-icon btn btn-empty d-none d-sm-inline-block" type="button" id="fullScreenButton"><i class="simple-icon-size-fullscreen"></i> <i class="simple-icon-size-actual"></i></button>
         </div>
         <div class="user d-inline-block">
-            <button class="btn btn-empty p-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="name"><?= $account->profile->firstname.' '.$account->profile->lastname ?></span> <span><img alt="Profile Picture" src="img/no-photo.png"></span></button>
+            <button class="btn btn-empty p-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="name"><?= isset($account->profile) ? $account->profile->firstname.' '.$account->profile->lastname : null ?></span> <span><img alt="Profile Picture" src="img/no-photo.png"></span></button>
             <div class="dropdown-menu dropdown-menu-right mt-3">
                 <a class="dropdown-item" href="profile.php?id=<?= $account->id.'&tab=home' ?>">My Account</a>
-                <a class="dropdown-item" href="#">Payment</a>
+                <a class="dropdown-item" href="due-dates.php">Due Dates</a>
                 <a class="dropdown-item" href="#">History</a>
                 <a class="dropdown-item" href="#">Support</a>
                 <a class="dropdown-item" href="index.php?logout=true">Sign out</a>

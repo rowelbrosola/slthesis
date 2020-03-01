@@ -4,6 +4,7 @@ use App\User;
 use App\Unit;
 use App\UserProfile;
 use App\Session;
+use App\Payment;
 User::isLogged();
 $my_unit = UserProfile::where('user_id', Session::get('user_id'))->with('unit')->get();
 $active = 'units';
@@ -13,6 +14,7 @@ if (isset($_GET['unit_id']) && $_GET['unit_id'] == $my_unit[0]->unit->id) {
 $units = Unit::with('creator')->get();
 $unit_members = UserProfile::where('unit_id', $_GET['unit_id'])->with('status', 'unit', 'advisor')->get();
 $current_unit = Unit::find($_GET['unit_id']);
+$payments = Payment::where('unit_id', $_GET['unit_id'])->get();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
     User::add($_POST);
@@ -119,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                             <tbody>
                                                 <?php foreach($unit_members as $key => $value): ?>
                                                 <tr>
-                                                    <td><?= $value->firstname.' '.$value->lastname ?></td>
+                                                    <td><a href="profile.php?id=<?= $value->user_id.'&tab=home'?>"><?= $value->firstname.' '.$value->lastname ?></a></td>
                                                     <td><?= $value->advisor_code ?></td>
                                                     <td><?= $value->status->name ?></td>
                                                     <td><?= $value->advisor->firstname.' '.$value->advisor->lastname ?></td>
@@ -135,6 +137,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="app-menu">
+                <div class="p-4 h-100">
+                    <div class="scroll">
+                        <p class="text-muted text-small">Production</p>
+                        <ul class="list-unstyled mb-5">
+                            <li><i class="simple-icon-check"></i> Completed <span class="float-right">Paid</span></a></li>
+                        </ul>
+                        <!-- <p class="text-muted text-small">Categories</p>
+                        <ul class="list-unstyled mb-5">
+                            <li>
+                                <div class="custom-control custom-checkbox mb-2"><input type="checkbox" class="custom-control-input" id="category1"> <label class="custom-control-label" for="category1">Flexbox</label></div>
+                            </li>
+                            <li>
+                                <div class="custom-control custom-checkbox mb-2"><input type="checkbox" class="custom-control-input" id="category2"> <label class="custom-control-label" for="category2">Sass</label></div>
+                            </li>
+                            <li>
+                                <div class="custom-control custom-checkbox"><input type="checkbox" class="custom-control-input" id="category3"> <label class="custom-control-label" for="category3">React</label></div>
+                            </li>
+                        </ul>
+                        <p class="text-muted text-small">Labels</p>
+                        <div>
+                            <p class="d-sm-inline-block mb-1"><a href="#"><span class="badge badge-pill badge-outline-primary mb-1">NEW FRAMEWORK</span></a></p>
+                            <p class="d-sm-inline-block mb-1"><a href="#"><span class="badge badge-pill badge-outline-theme-3 mb-1">EDUCATION</span></a></p>
+                            <p class="d-sm-inline-block mb-1"><a href="#"><span class="badge badge-pill badge-outline-secondary mb-1">PERSONAL</span></a></p>
+                        </div> -->
+                    </div>
+                </div>
+                <a class="app-menu-button d-inline-block d-xl-none" href="#"><i class="simple-icon-options"></i></a>
             </div>
         </main>
         <script src="js/vendor/jquery-3.3.1.min.js"></script>

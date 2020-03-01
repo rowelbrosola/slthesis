@@ -135,8 +135,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                 <?php foreach($units as $key => $value): ?>
                                                 <tr>
                                                     <td><a href="unit.php?unit_id=<?= $value->id ?>"><?= $value->name ?></a></td>
-                                                    <td><?= $value->owner->advisor_code ?></td>
-                                                    <td><?= $value->owner->firstname.' '.$value->owner->lastname ?></td>
+                                                    <td><?= isset($value->owner) ? $value->owner->advisor_code : null  ?></td>
+                                                    <td><a href="profile.php?id=<?= $value->owner_id.'&tab=home' ?>">
+                                                        <?= isset($value->owner) ? $value->owner->firstname.' '.$value->owner->lastname : null ?>
+                                                        </a>
+                                                    </td>
                                                     <td><?= $value->members->count() ?></td>
                                                     <td><?= '&#8369; 50,000' ?></td>
                                                     <td><?= 'Love Month' ?></td>

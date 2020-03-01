@@ -4,6 +4,10 @@ require_once 'init.php';
 use App\Redirect;
 use App\User;
 use App\Session;
+use App\Event;
+// $event = new Event;
+// echo "<pre>";
+// print_r($event);exit;
 
 if(isset($_GET['logout'])) {
     User::logout();
@@ -219,7 +223,7 @@ User::isLogged();
                     center:'title',
                     right:'month,agendaWeek,agendaDay'
                 },
-                events: 'load.php',
+                events: 'functions/load.php',
                 selectable:true,
                 selectHelper:true,
                 select: function(start, end, allDay) {
@@ -228,12 +232,15 @@ User::isLogged();
                         var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
                         var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
                         $.ajax({
-                            url:"insert.php",
+                            url:"functions/insert.php",
                             type:"POST",
                             data:{title:title, start:start, end:end},
                             success:function() {
                                 calendar.fullCalendar('refetchEvents');
                                 alert("Added Successfully");
+                            },
+                            error: function(err) {
+                                console.log(err)
                             }
                         })
                     }
@@ -246,7 +253,7 @@ User::isLogged();
                     var title = event.title;
                     var id = event.id;
                     $.ajax({
-                        url:"update.php",
+                        url:"functions/update.php",
                         type:"POST",
                         data:{title:title, start:start, end:end, id:id},
                         success:function() {
@@ -262,7 +269,7 @@ User::isLogged();
                     var title = event.title;
                     var id = event.id;
                     $.ajax({
-                        url:"update.php",
+                        url:"functions/update.php",
                         type:"POST",
                         data:{title:title, start:start, end:end, id:id},
                         success:function() {
@@ -276,7 +283,7 @@ User::isLogged();
                     if(confirm("Are you sure you want to remove it?")) {
                         var id = event.id;
                         $.ajax({
-                            url:"delete.php",
+                            url:"functions/delete.php",
                             type:"POST",
                             data:{id:id},
                             success:function() {
