@@ -123,8 +123,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                 <tr>
                                                     <td><a href="profile.php?id=<?= $value->user_id.'&tab=home'?>"><?= $value->firstname.' '.$value->lastname ?></a></td>
                                                     <td><?= $value->advisor_code ?></td>
-                                                    <td><?= $value->status->name ?></td>
-                                                    <td><?= $value->advisor->firstname.' '.$value->advisor->lastname ?></td>
+                                                    <td><?= isset($value->status) ? $value->status->name : null ?></td>
+                                                    <td><?= isset($value->advisor) ? $value->advisor->firstname.' '.$value->advisor->lastname : null ?></td>
                                                     <td><?=  '&#8369; 10,000' ?></td>
                                                     <td><?= 'Love Month' ?></td>
                                                 </tr>
