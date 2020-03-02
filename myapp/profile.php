@@ -10,6 +10,7 @@ use App\Status;
 use App\Unit;
 use App\Policy;
 use App\UserPolicy;
+use App\Payment;
 User::isLogged();
 $roles = Role::all();
 $status = Status::all();
@@ -24,6 +25,8 @@ $selected_user = User::with('profile', 'role', 'profile.advisor', 'profile.unit'
 $selected_user_advisor = UserProfile::where('user_id', $_GET['id'])->with('advisor')->get();
 $advisors = User::whereIn('role_id', [4, 2, 3])->where('id', '!=', Session::get('user_id'))->with('profile')->get();
 $user_policies = UserPolicy::where('user_id', $_GET['id'])->with('policy')->get();
+$selected_user_clients = UserProfile::where('advisor_id', $_GET['id'])->get();
+$payment_history = Payment::where('user_id', $_GET['id'])->with('policy', 'profile')->get();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
     if(isset($_POST['add_policy'])) {
@@ -195,6 +198,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     <div class="col-6">
                         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                             <li class="nav-item">
+                                <a class="nav-link <?= $active_tab === 'clients' ? 'active' : null ?>" id="pills-clients-tab" data-toggle="pill" href="#pills-clients" role="tab" aria-controls="pills-clients" aria-selected="true">Clients</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link <?= $active_tab === 'home' ? 'active' : null ?>" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Home</a>
                             </li>
                             <li class="nav-item">
@@ -203,8 +209,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             <li class="nav-item">
                                 <a class="nav-link <?= $active_tab === 'policy' ? 'active' : null ?>" id="pills-policy-tab" data-toggle="pill" href="#pills-policy" role="tab" aria-controls="pills-policy" aria-selected="false">Policies</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link <?= $active_tab === 'payment-history' ? 'active' : null ?>" id="pills-payment-history-tab" data-toggle="pill" href="#pills-payment-history" role="tab" aria-controls="pills-payment-history" aria-selected="false">Payment History</a>
+                            </li>
                         </ul>
                         <div class="tab-content" id="pills-tabContent">
+                            <div class="tab-pane fade <?= $active_tab === 'clients' ? 'show active' : null ?>" id="pills-clients" role="tabpanel" aria-labelledby="pills-clients-tab">
+                                <ul class="list-group list-group-flush">
+                                    <?php if($selected_user_clients->count()): ?>
+                                    <?php foreach($selected_user_clients as $key => $value): ?>
+                                    <li class="list-group-item"><a href="profile.php?id=<?= $value->user_id.'&tab=home' ?>"><?= $value->firstname.' '.$value->lastname ?></a></li>
+                                    <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <h1>No Clients found.</h1>
+                                    <?php endif; ?>
+                                </ul>
+                            </div>
                             <div class="tab-pane fade <?= $active_tab === 'home' ? 'show active' : null ?>" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                                 <form method="POST">
                                     <div class="form-group">
@@ -352,6 +372,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                     </a>
                                     <?php endforeach; ?>
                                 </ul>
+                                <?php else: ?>
+                                <h1>No records found.</h1>
+                                <?php endif; ?>
+                            </div>
+                            <div class="tab-pane fade <?= $active_tab === 'payment-history' ? 'show active' : null ?>" id="pills-payment-history" role="tabpanel" aria-labelledby="pills-payment-history-tab">
+                                <?php if($payment_history->count()): ?>
+                                <?php foreach($payment_history as $key => $value): ?>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                            <th scope="col">Policy</th>
+                                            <th scope="col">Amount Paid</th>
+                                            <th scope="col">Date Payment</th>
+                                            <th scope="col">Created By</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><?= $value->policy->name ?></td>
+                                                <td><?= $value->amount_paid ?></td>
+                                                <td><?= $value->created_at ?></td>
+                                                <td><?= $value->profile->firstname.' '.$value->profile->lastname ?></td>
+                                            </tr>
+                                        </tbody>
+                                        </table>
+                                <?php endforeach; ?>
                                 <?php else: ?>
                                 <h1>No records found.</h1>
                                 <?php endif; ?>

@@ -171,11 +171,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                         <tr>
                                             <td><a href="profile.php?id=<?= $value->id.'&tab=home' ?>"><?= $value->profile->firstname.' '.$value->profile->lastname ?></a></td>
                                             <td><?= $value->email ?></td>
-                                            <td><?=
+                                            <td><a href="profile.php?id=<?= isset($value->profile->advisor) ? $value->profile->advisor->user_id.'&tab=home' : null ?>"><?=
                                                 isset($value->profile->advisor)
                                                 ? $value->profile->advisor->firstname.' '.$value->profile->advisor->lastname
                                                 : null
-                                                ?>
+                                                ?></a>
                                             </td>
                                             <td><?=
                                                 isset($value->profile->unit->name)
