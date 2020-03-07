@@ -53,6 +53,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                     <label>Policy</label>
                                                     <input type="text" class="form-control" name="policy" placeholder="Policy" required>
                                                 </div>
+                                                <div class="form-group position-relative info">
+                                                    <label>Benefits</label>
+                                                    <input type="text" class="form-control" name="benefits" placeholder="benefits" required>
+                                                </div>
+                                                <div class="form-group position-relative info">
+                                                    <label>Face Amount</label>
+                                                    <input type="text" class="form-control" name="face_amount" placeholder="amount" required>
+                                                </div>
                                             </form>
                                         </div>
                                         <div class="modal-footer">

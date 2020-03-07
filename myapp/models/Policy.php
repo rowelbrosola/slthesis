@@ -7,10 +7,12 @@ use App\Redirect;
 class Policy extends Eloquent
 {
     protected $table = 'policy';
-    protected $fillable = ['name', 'created_by', 'updated_at', 'updated_by'];
+    protected $fillable = ['name', 'benefits', 'face_amount', 'created_by', 'updated_at', 'updated_by'];
     public static function add($request) {
         self::create([
             'name' => $request['policy'],
+            'benefits' => $request['benefits'],
+            'face_amount' => $request['face_amount'],
             'created_by' => Session::get('user_id')
         ]);
 
