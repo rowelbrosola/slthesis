@@ -16,6 +16,7 @@ $unit = UserProfile::where('user_id', Session::get('user_id'))->with('unit')->ge
                 <li class="dd-menu <?= $active === 'reports' ? 'active' : '' ?>"><a href="#reports"><i class="iconsminds-digital-drawing"></i> Reports</a></li>
                 <li class="<?= $active === 'due-dates'  ? 'active' : '' ?>"><a href="due-dates.php"><i class="iconsminds-calendar-4"></i> Due Dates</a></li>
                 <li class="<?= $active === 'production'  ? 'active' : '' ?>"><a href="production.php"><i class="iconsminds-money-bag"></i> Production</a></li>
+                <li class="<?= $active === 'policies'  ? 'active' : '' ?>"><a href="policies.php"><i class="iconsminds-file-clipboard-file---text"></i> Policies</a></li>
                 <li class="<?= $active === 'users'  ? 'active' : '' ?>"><a href="users.php"><i class="iconsminds-mens"></i> Clients</a></li>
             </ul>
         </div>

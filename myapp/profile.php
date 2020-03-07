@@ -396,7 +396,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                 <td><?= $value->profile->firstname.' '.$value->profile->lastname ?></td>
                                             </tr>
                                         </tbody>
-                                        </table>
+                                    </table>
                                 <?php endforeach; ?>
                                 <?php else: ?>
                                 <h1>No records found.</h1>
