@@ -5,7 +5,11 @@ use App\Policy;
 $policies = Policy::all();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
-    Policy::add($_POST);
+    if (isset($_POST['policy_id'])) {
+        Policy::updatePolicy($_POST);
+    } else {
+        Policy::add($_POST);
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -96,7 +100,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                     <table class="table">
                                         <thead>
                                             <tr>
-                                            <th scope="col">Policy</th>
+                                                <th scope="col">Policy</th>
+                                                <th scope="col">Benefits</th>
+                                                <th scope="col">Face Amount</th>
+                                                <th scope="col">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -104,6 +111,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                         <?php foreach($policies as $key => $value): ?>
                                             <tr>
                                                 <td><?= $value->name ?></td>
+                                                <td><?= $value->benefits ?></td>
+                                                <td><?= $value->face_amount ?></td>
+                                                <td>
+                                                    <button class="edit" id="<?= 'edit-'.$value->id ?>"><i class="iconsminds-file-edit">Edit</i></button>
+                                                    <button class="delete" id="<?= 'delete-'.$value->id ?>"><i class="iconsminds-folder-delete">Delete</i></button>
+                                                </td>
                                             </tr>
                                         <?php endforeach; ?>
                                         <?php else: ?>
@@ -115,7 +128,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                         </div>
                     </div>
                 </div>
-
+            </div>
+            <div class="modal modal-action" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Policy Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" id="policy_modal">
+                            <div class="form-group">
+                                <label for="inputPolicy">Policy</label>
+                                <input type="text" class="form-control" id="inputPolicy" name="policy" placeholder="Enter Policy">
+                            </div>
+                            <div class="form-group">
+                                <label for="inputBenefits">Benefits</label>
+                                <input type="text" class="form-control" id="inputBenefits" name="benefits" placeholder="Enter Benefits">
+                            </div>
+                            <div class="form-group">
+                                <label for="inputFaceAmount">Face Amount</label>
+                                <input type="text" class="form-control" id="inputFaceAmount" name="face_amount" placeholder="Enter Face Amount">
+                            </div>
+                            <input type="hidden" name="policy_id" id="policy_id">
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" form="policy_modal">Save changes</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                    </div>
+                </div>
             </div>
         </main>
         <script src="js/vendor/jquery-3.3.1.min.js"></script>
@@ -133,6 +178,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         <script>
             $('#addToDatatable').click(function () {
                 $('#addToDatatableForm').submit();
+            })
+            $('.edit').click(function() {
+                let id = $(this).attr('id')
+                $.ajax({
+                    url:"functions/fetch-policy-details.php",
+                    type:"POST",
+                    data:{id},
+                    success:function(data) {
+                        var parsed = JSON.parse(data)
+                        $('#inputPolicy').val(parsed.name);
+                        $('#inputBenefits').val(parsed.benefits);
+                        $('#inputFaceAmount').val(parsed.face_amount);
+                        $('#policy_id').val(parsed.id); 
+                    }
+                })
+                $('.modal-action').modal('toggle');
+            })
+            $('.delete').click(function() {
+                $('.modal-action').modal('toggle');
             })
             $('.alert-success').fadeIn('fast').fadeOut(8000);
         </script>

@@ -19,4 +19,16 @@ class Policy extends Eloquent
         Session::flash('success', 'Successfully added new policy!');
         Redirect::to('policies.php');
     }
+
+    public static function updatePolicy($request) {
+        self::where('id', $request['policy_id'])
+          ->update([
+              'name' => $request['policy'],
+              'benefits' => $request['benefits'],
+              'face_amount' => $request['face_amount']
+            ]);
+
+        Session::flash('success', 'Successfully updated Policy');
+        Redirect::to('policies.php');
+    }
 }
