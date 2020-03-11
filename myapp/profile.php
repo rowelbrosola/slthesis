@@ -248,8 +248,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
                                     </div>
-                                    <input type="hidden" value="profile" name="action">
-                                    <input type="hidden" value="<?= $_GET['id'] ?>" name="user_id">
                                     <div class="form-group">
                                         <label>Advisor</label> 
                                         <select class="form-control select2-single" name="advisor" data-width="100%">
@@ -268,7 +266,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                     </div>
                                     <div class="form-group">
                                         <label>Unit</label>
-                                        <select class="form-control select2-single" name="unit" data-width="100%">
+                                        <select class="form-control select2-single" name="unit" data-width="100%" disabled>
                                             <option label="&nbsp;">&nbsp;</option>
                                             <?php foreach($units as $key => $value): ?>
                                                 <option
@@ -309,7 +307,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
                                     </div>
-                                    <input type="hidden" value="home" name="action">
                                     <input type="hidden" value="<?= $_GET['id'] ?>" name="user_id">
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                 </form>

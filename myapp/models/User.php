@@ -143,38 +143,23 @@ class User extends Eloquent
 	}
 
 	public static function updateUser($request) {
-		switch ($request['action']) {
-			case 'home':
-				$profile = UserProfile::where('user_id', $request['user_id'])
-				->update([
-					'advisor_id' => $request['advisor'],
-					'unit_id' => $request['unit'],
-					'status_id' => $request['status'],
-					'client_number' => $request['client_number'],
-					'coding_date' => date('Y-m-d', strtotime($request['coding_date'])),
-				]);
-				$tab = 'home';
-				break;
+		$profile = UserProfile::where('user_id', $request['user_id'])
+		->update([
+			'firstname' => $request['firstname'],
+			'lastname' => $request['lastname'],
+			'dob' => date('Y-m-d', strtotime($request['clientDob'])),
+			'advisor_id' => $request['advisor'],
+			'status_id' => $request['status'],
+			'client_number' => $request['client_number'] ? $request['client_number'] : null,
+			'coding_date' => date('Y-m-d', strtotime($request['coding_date'])),
+		]);
 
-			case 'profile':
-				$profile = UserProfile::where('user_id', $request['user_id'])
-				->update([
-					'firstname' => $request['firstname'],
-					'lastname' => $request['lastname'],
-					'dob' => date('Y-m-d', strtotime($request['clientDob'])),
-				]);
-
-				$user = User::find($request['user_id'])
-				->update([
-					'email' =>  $request['email']
-				]);
-				$tab = 'profile';
-				break;
-			
-			default:
-				# code...
-				break;
-		}
+		$user = User::find($request['user_id'])
+		->update([
+			'email' =>  $request['email']
+		]);
+		$tab = 'profile';
+		
 		Session::flash('success', 'Succesfully updated user.');
 		Redirect::to('profile.php?id='.$request['user_id'].'&tab='.$tab);
 	}
