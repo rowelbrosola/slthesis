@@ -32,6 +32,6 @@ class Unit extends Eloquent
     }
 
     public function production() {
-        return $this->hasOne('App\Production', 'unit_id', 'id');
+        return $this->hasMany('App\Production', 'unit_id', 'id');
     }
 }

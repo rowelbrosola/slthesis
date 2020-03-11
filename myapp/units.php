@@ -135,6 +135,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                             </thead>
                                             <tbody>
                                                 <?php foreach($units as $key => $value): ?>
+                                                <?php
+                                                    $sum = 0;
+                                                    foreach($value->production as $k => $v)
+                                                    {
+                                                        $sum+= $v->amount;
+                                                    }
+                                                ?>
                                                 <tr>
                                                     <td><a href="unit.php?unit_id=<?= $value->id ?>"><?= $value->name ?></a></td>
                                                     <td><?= isset($value->owner) ? $value->owner->advisor_code : null  ?></td>
@@ -143,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                         </a>
                                                     </td>
                                                     <td><?= $value->members->count() ?></td>
-                                                    <td><?= isset($value->production) ? $value->production->amount : '&#8369;0' ?></td>
+                                                    <td><?= isset($value->production) ? $sum : '&#8369;0' ?></td>
                                                     <td><?= 'Love Month' ?></td>
                                                 </tr>
                                                 <?php endforeach; ?>

@@ -3,18 +3,21 @@
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use App\Session;
 use App\Redirect;
+use App\UserProfile;
 class Production extends Eloquent
 {
     protected $table = 'production';
 
-    protected $fillable = ['user_id', 'start', 'amount', 'end', 'created_by'];
+    protected $fillable = ['user_id', 'start', 'unit_id', 'amount', 'end', 'created_by'];
 
     public static function add($request) {
+        $user = UserProfile::where('user_id', $request['user_id'])->first();
         self::create([
             'user_id' => $request['user_id'],
             'amount' => $request['amount'],
             'start' => $request['start'],
             'end' => $request['end'],
+            'unit_id' => $user->unit_id,
             'created_by' => Session::get('user_id')
         ]);
 
