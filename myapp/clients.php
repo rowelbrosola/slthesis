@@ -12,7 +12,15 @@ $roles = Role::all();
 $status = Status::all();
 $units = Unit::all();
 $advisors = User::whereIn('role_id', [4, 2, 3])->with('profile')->get();
-$users = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status')->get();
+if (Session::get('user_id') == '1') {
+    $clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status')->get();
+} else {
+    // $clients = UserProfile::where('advisor_id', Session::get('user_id'))->with('user')->get();
+    $clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status')->whereHas('profile', function($q) {
+        $q->where('advisor_id', Session::get('user_id'));
+    })->get();
+}
+$logged_user = User::find(Session::get('user_id'));
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
     User::add($_POST);
@@ -22,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Users - Personal Production and Client Monitoring System for Financial Advisors</title>
+        <title>Clients - Personal Production and Client Monitoring System for Financial Advisors</title>
         <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
         <link rel="stylesheet" href="font/iconsmind-s/css/iconsminds.css">
         <link rel="stylesheet" href="font/simple-line-icons/css/simple-line-icons.css">
@@ -46,22 +54,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                 <div class="row">
                     <div class="col-12">
                         <?php include 'partials/message.php' ?>
-                        <h1>Users</h1>
+                        <?php include 'partials/error-message.php' ?>
+                        <h1>Clients</h1>
                         <div class="top-right-button-container">
                             <button type="button" class="btn btn-outline-primary btn-lg top-right-button mr-1" data-toggle="modal" data-target="#rightModal">ADD NEW</button>
                             <div class="modal fade modal-right" id="rightModal" tabindex="-1" role="dialog" aria-labelledby="rightModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="rightModalLabel">Add User</h5>
+                                            <h5 class="modal-title" id="rightModalLabel">Add Client</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                         </div>
                                         <div class="modal-body">
                                             <p>Submitting below form will add the data to Data Table and rows will be updateda.</p>
                                             <form class="tooltip-right-top" id="addToDatatableForm" method="POST" novalidate>
+                                                <?php if($logged_user->role_id != 2): ?>
                                                 <div class="form-group position-relative">
                                                     <label>Role</label>
-                                                    <select class="form-control select2-single" name="role" data-width="100%" required>
+                                                    <select class="form-control select2-single role" name="role" data-width="100%" required>
                                                         <option value="">Select Role</option>
                                                         <?php foreach($roles as $key => $value): ?>
                                                             <?php if($value->id !== 1): ?>
@@ -70,6 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                         <?php endforeach; ?>
                                                     </select>
                                                 </div>
+                                                <?php endif; ?>
+                                                <?php if($logged_user->role_id != 2): ?>
                                                 <div class="form-group position-relative info advisor">
                                                     <label>Advisor Name</label>
                                                     <select class="form-control select2-single" name="advisor" data-width="100%" required>
@@ -79,6 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                         <?php endforeach; ?>
                                                     </select>
                                                 </div>
+                                                <?php endif; ?>
                                                 <div class="form-group position-relative info">
                                                     <label>Email</label>
                                                     <input type="text" class="form-control" name="email" placeholder="Email" required>
@@ -91,9 +104,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                     <label>Last Name</label>
                                                     <input type="text" class="form-control" name="lastname" placeholder="Last Name" required>
                                                 </div>
-                                                <div class="form-group position-relative info">
+                                                <?php if($logged_user->role_id != 2): ?>
+                                                <div class="form-group position-relative info unit-select">
                                                     <label>Unit Name</label>
-                                                    <select class="form-control select2-single" name="unit" data-width="100%" required>
+                                                    <select class="form-control select2-single unit-selection" name="unit" data-width="100%">
                                                         <option value="">Select Unit</option>
                                                         <?php foreach($units as $key => $value): ?>
                                                             <option value="<?= $value->id ?>"><?= $value->name ?></option>
@@ -104,6 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                     <label>Advisor Code</label>
                                                     <input type="text" class="form-control" name="advisor_code" placeholder="Advisor Code" required>
                                                 </div>
+                                                <?php endif; ?>
                                                 <div class="form-group position-relative info">
                                                     <label>Status</label> 
                                                     <select class="form-control select2-single" name="status" data-width="100%" required>
@@ -166,7 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                     <tbody>
                                     <?php
                                         include 'account-data.php';
-                                        foreach ($users as $key => $value):
+                                        foreach ($clients as $key => $value):
                                     ?>
                                         <tr>
                                             <td><a href="profile.php?id=<?= $value->id.'&tab=home' ?>"><?= $value->profile->firstname.' '.$value->profile->lastname ?></a></td>
@@ -214,10 +229,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         <script src="js/vendor/select2.full.js"></script>
         <script src="js/scripts.js"></script>
         <script>
+            $('.unit-select').hide();
             $('#addToDatatable').click(function () {
                 $('#addToDatatableForm').submit();
-            })
+            });
+            $("select.role").change(function(){
+                var selectedRole = $(this).children("option:selected").val();
+                if (selectedRole != 2) {
+                    $('.unit-select').show();
+                    $(".unit-selection").prop('required',true);
+                } else {
+                    $('.unit-select').hide();
+                }
+            });
             $('.alert-success').fadeIn('fast').fadeOut(8000);
+            $('.alert-danger').fadeIn('fast').fadeOut(10000);
         </script>
     </body>
 </html>

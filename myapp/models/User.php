@@ -52,38 +52,42 @@ class User extends Eloquent
 	public static function add($request) {
 		$random_password = bin2hex(random_bytes(5)); 
 		$temporary_password = Hash::encrypt($random_password);
-
-		$user = self::create([
-			'email' => $request['email'],
-			'password' => $temporary_password,
-			'role_id' => $request['role']
-		]);
-		
-		UserProfile::create([
-			'user_id' => $user->id,
-			'firstname' => $request['firstname'],
-			'lastname' => $request['lastname'],
-			'advisor_id' => $request['advisor'],
-			'advisor_code' => $request['advisor_code'],
-			'unit_id' => $request['unit'],
-			'status_id' => $request['status'],
-			'coding_date' => date('Y-m-d', strtotime($request['coding_date'])),
-			'created_by' => Session::get('user_id')
-		]);
-
-		$content = [
-			'message' => 'THIS IS YOUR PASSWORD',
-			'from' => [
-				getenv('EMAIL') => getenv('EMAIL_NAME')
-			],
-			'to' => [$request['email']],
-			'body' => 'Use this as your temporary password: '.$random_password
-		];
-
-		self::sendMail($content);
-
-		Session::flash('success', 'Succesfully added new user.');
-		Redirect::to('users.php');
+		$exists = User::where('email', '=', $request['email'])->first();
+		if ($exists) {
+			Session::flash('error', 'Email already exists!');
+		} else {
+			$user = self::create([
+				'email' => $request['email'],
+				'password' => $temporary_password,
+				'role_id' => $request['role']
+			]);
+			
+			UserProfile::create([
+				'user_id' => $user->id,
+				'firstname' => $request['firstname'],
+				'lastname' => $request['lastname'],
+				'advisor_id' => $request['advisor'],
+				'advisor_code' => $request['advisor_code'],
+				'unit_id' => $request['unit'],
+				'status_id' => $request['status'],
+				'coding_date' => date('Y-m-d', strtotime($request['coding_date'])),
+				'created_by' => Session::get('user_id')
+			]);
+	
+			$content = [
+				'message' => 'THIS IS YOUR PASSWORD',
+				'from' => [
+					getenv('EMAIL') => getenv('EMAIL_NAME')
+				],
+				'to' => [$request['email']],
+				'body' => 'Use this as your temporary password: '.$random_password
+			];
+	
+			self::sendMail($content);
+	
+			Session::flash('success', 'Succesfully added new user.');
+		}
+		Redirect::to('clients.php');
 	}
 
 	public static function addUnit($request) {

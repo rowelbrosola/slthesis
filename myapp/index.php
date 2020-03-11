@@ -196,7 +196,7 @@ User::isLogged();
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-8 offset-xl-2 col-lg-12 mb-4">
+                    <div class="col-xl-8 col-lg-12 mb-4">
                         <div id="calendar" style="border: 2px solid #eee;"></div>
                     </div>
                 </div>

@@ -31,7 +31,7 @@ $account = User::find(Session::get('user_id'));
             <div class="position-relative d-none d-sm-inline-block">
                 <button class="header-icon btn btn-empty" type="button" id="iconMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="simple-icon-grid"></i></button>
                 <div class="dropdown-menu dropdown-menu-right mt-3 position-absolute" id="iconMenuDropdown">
-                    <a href="users.php" class="icon-menu-item"><i class="iconsminds-equalizer d-block"></i> <span>Clients</span> </a>
+                    <a href="clients.php" class="icon-menu-item"><i class="iconsminds-equalizer d-block"></i> <span>Clients</span> </a>
                     <!-- <a href="#" class="icon-menu-item"><i class="iconsminds-male-female d-block"></i> <span>Users</span> </a> -->
                     <a href="due-dates.php" class="icon-menu-item"><i class="iconsminds-file d-block"></i> <span>Due Dates</span> </a>
                     <a href="production.php" class="icon-menu-item"><i class="iconsminds-suitcase d-block"></i> <span>Production</span></a>

@@ -55,15 +55,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                             <form class="tooltip-right-top" id="addToDatatableForm" method="POST" novalidate>
                                                 <div class="form-group position-relative info">
                                                     <label>Policy</label>
-                                                    <input type="text" class="form-control" name="policy" placeholder="Policy" required>
+                                                    <input type="text" class="form-control" name="policy" placeholder="Enter Policy" required>
                                                 </div>
                                                 <div class="form-group position-relative info">
                                                     <label>Benefits</label>
-                                                    <input type="text" class="form-control" name="benefits" placeholder="benefits" required>
+                                                    <input type="text" class="form-control" name="benefits" placeholder="Enter Benefits" required>
                                                 </div>
                                                 <div class="form-group position-relative info">
                                                     <label>Face Amount</label>
-                                                    <input type="text" class="form-control" name="face_amount" placeholder="amount" required>
+                                                    <input type="text" class="form-control" name="face_amount" placeholder="Enter Face Amount" required>
                                                 </div>
                                             </form>
                                         </div>

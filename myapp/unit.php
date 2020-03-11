@@ -46,6 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     <div class="col-12">
                         <div class="mb-2">
                             <?php include 'partials/message.php' ?>
+                            <?php include 'partials/error-message.php' ?>
                             <h1>Unit</h1>
                             <div class="top-right-button-container">
                                 <button type="button" class="btn btn-outline-primary btn-lg top-right-button mr-1" data-toggle="modal" data-target="#rightModal">ADD NEW</button>
@@ -181,6 +182,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                 $('#addToDatatableForm').submit();
             })
             $('.alert-success').fadeIn('fast').fadeOut(8000);
+            $('.alert-danger').fadeIn('fast').fadeOut(10000);
         </script>
     </body>
 </html>
