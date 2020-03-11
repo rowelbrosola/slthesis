@@ -86,6 +86,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                 height: 20px;
                 z-index: 400;
             }
+            @media only screen and (max-width: 768px) {
+                .profile-image {
+                    display:none;
+                }
+                .history-pane {
+                    display:none;
+                }
+            }
         </style>
     </head>
     <body id="app-container" class="menu-default show-spinner">
@@ -185,7 +193,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                         </nav>
                         <div class="separator mb-5"></div>
                     </div>
-                    <div class="col-3">
+                    <div class="col-3 profile-image">
                         <div class="card" style="width: 18rem;">
                             <img src="img/no-photo.png" class="card-img-top" alt="...">
                             <div class="card-body">
@@ -195,22 +203,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             </div>
                         </div>
                     </div>
-                    <div class="col-6">
+                    <div class="col-md-6 col-sm-12">
                         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link <?= $active_tab === 'clients' ? 'active' : null ?>" id="pills-clients-tab" data-toggle="pill" href="#pills-clients" role="tab" aria-controls="pills-clients" aria-selected="true">Clients</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link <?= $active_tab === 'home' ? 'active' : null ?>" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Home</a>
+                                <a class="nav-link <?= $active_tab === 'home' ? 'active' : null ?>" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Production</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link <?= $active_tab === 'profile' ? 'active' : null ?>" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Profile Info</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link <?= $active_tab === 'policy' ? 'active' : null ?>" id="pills-policy-tab" data-toggle="pill" href="#pills-policy" role="tab" aria-controls="pills-policy" aria-selected="false">Policies</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link <?= $active_tab === 'payment-history' ? 'active' : null ?>" id="pills-payment-history-tab" data-toggle="pill" href="#pills-payment-history" role="tab" aria-controls="pills-payment-history" aria-selected="false">Payment History</a>
                             </li>
                         </ul>
                         <div class="tab-content" id="pills-tabContent">
@@ -226,7 +225,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                 </ul>
                             </div>
                             <div class="tab-pane fade <?= $active_tab === 'home' ? 'show active' : null ?>" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                                
+                            </div>
+                            <div class="tab-pane fade <?= $active_tab === 'profile' ? 'show active' : null ?>" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
                                 <form method="POST">
+                                    <div class="form-group">
+                                        <label for="client-firstname">First Name</label>
+                                        <input type="text" class="form-control" name="firstname" id="client-firstname" value="<?= $selected_user->profile->firstname ?>">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="client-lastname">Last Name</label>
+                                        <input type="text" class="form-control" name="lastname" id="client-lastname" value="<?= $selected_user->profile->lastname ?>">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="client-email">Email</label>
+                                        <input type="email" class="form-control" name="email" id="client-email" value="<?= $selected_user->email ?>">
+                                    </div>
+                                    <div class="input-group form-group position-relative info">
+                                        <label>Date of Birth</label>
+                                        <input type="text" class="form-control datepicker" name="clientDob" value="<?= date('m/d/Y', strtotime($selected_user->profile->dob)) ?>" style="width: 100%;" required>
+                                        <div class="input-group-addon">
+                                            <span class="glyphicon glyphicon-th"></span>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" value="profile" name="action">
+                                    <input type="hidden" value="<?= $_GET['id'] ?>" name="user_id">
                                     <div class="form-group">
                                         <label>Advisor</label> 
                                         <select class="form-control select2-single" name="advisor" data-width="100%">
@@ -287,32 +310,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                         </div>
                                     </div>
                                     <input type="hidden" value="home" name="action">
-                                    <input type="hidden" value="<?= $_GET['id'] ?>" name="user_id">
-                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                </form>
-                            </div>
-                            <div class="tab-pane fade <?= $active_tab === 'profile' ? 'show active' : null ?>" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-                                <form method="POST">
-                                    <div class="form-group">
-                                        <label for="client-firstname">First Name</label>
-                                        <input type="text" class="form-control" name="firstname" id="client-firstname" value="<?= $selected_user->profile->firstname ?>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="client-lastname">Last Name</label>
-                                        <input type="text" class="form-control" name="lastname" id="client-lastname" value="<?= $selected_user->profile->lastname ?>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="client-email">Email</label>
-                                        <input type="email" class="form-control" name="email" id="client-email" value="<?= $selected_user->email ?>">
-                                    </div>
-                                    <div class="input-group form-group position-relative info">
-                                        <label>Date of Birth</label>
-                                        <input type="text" class="form-control datepicker" name="clientDob" value="<?= date('m/d/Y', strtotime($selected_user->profile->dob)) ?>" style="width: 100%;" required>
-                                        <div class="input-group-addon">
-                                            <span class="glyphicon glyphicon-th"></span>
-                                        </div>
-                                    </div>
-                                    <input type="hidden" value="profile" name="action">
                                     <input type="hidden" value="<?= $_GET['id'] ?>" name="user_id">
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                 </form>
@@ -404,7 +401,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             </div>
                         </div>
                     </div>
-                    <div class="col-3">
+                    <div class="col-3 history-pane">
                         <h4>History</h4>
                         <ul class="timeline">
                             <li>
