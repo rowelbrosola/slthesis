@@ -14,7 +14,9 @@ if (isset($_GET['unit_id']) && $_GET['unit_id'] == $my_unit[0]->unit->id) {
     $active = 'my_unit';
 }
 $units = Unit::with('creator')->get();
-$unit_members = UserProfile::where('unit_id', $_GET['unit_id'])->with('status', 'unit', 'advisor')->get();
+$unit_members = UserProfile::where('unit_id', $_GET['unit_id'])->with('status', 'unit', 'advisor', 'production')->get();
+// echo "<pre>";
+// var_dump($unit_members[2]->production->amount);exit;
 $current_unit = Unit::find($_GET['unit_id']);
 $payments = Payment::where('unit_id', $_GET['unit_id'])->get();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
@@ -164,7 +166,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                     <td><?= $value->advisor_code ?></td>
                                                     <td><?= isset($value->status) ? $value->status->name : null ?></td>
                                                     <td><?= isset($value->advisor) ? $value->advisor->firstname.' '.$value->advisor->lastname : null ?></td>
-                                                    <td><?=  '&#8369; 0' ?></td>
+                                                    <td><?=  isset($value->production->amount) ? '&#8369;'.$value->production->amount : '&#8369;0' ?></td>
                                                     <td><?= 'Love Month' ?></td>
                                                 </tr>
                                                 <?php endforeach; ?>
@@ -236,7 +238,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <a href="" type="button" class="btn btn-secondary" data-dismiss="modal">Go to Production</a>
+                        <a href="#" type="button" class="btn btn-secondary gotoProduction">Go to Production</a>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                     </div>
@@ -265,10 +267,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     success:function(data) {
                         var parsed = JSON.parse(data);
                         const name = `${parsed.profile.firstname} ${parsed.profile.lastname}`
+                        const url = `sales-production.php?id=${parsed.id}`
                         $('#modalName').val(name);
                         $('#modalAdvisorCode').val(parsed.profile.advisor_code);
                         $('#modalDob').val(parsed.profile.dob);
                         $('#modalCodingDate').val(parsed.profile.coding_date);
+                        $('.gotoProduction').attr("href", url);
                     }
                 })
                 $('.modal-action').modal('toggle');

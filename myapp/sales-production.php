@@ -1,9 +1,11 @@
 <?php
 require_once 'init.php';
+use App\Production;
 $active = '';
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
-    User::add($_POST);
+    Production::add($_POST);
 }
 ?>
 <!DOCTYPE html>
@@ -47,22 +49,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             <div class="col-12 mb-4">
                                 <div class="card">
                                     <div class="card-body">
-                                        <div class="form-group mb-3 col-md-4">
-                                            <label>Production for month of </label>
-                                            <div class="input-daterange input-group" id="datepicker">
-                                                <input type="text" class="input-sm form-control" name="start" placeholder="Start">
-                                                <span class="input-group-addon"></span> 
+                                        <form method="POST">
+                                            <div class="form-group mb-3 col-md-4">
+                                                <label>Production for month of </label>
+                                                <div class="input-daterange input-group" id="datepicker">
+                                                    <input type="text" class="input-sm form-control" name="start" placeholder="Start">
+                                                    <span class="input-group-addon"></span> 
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group mb-3 col-md-4">
-                                            <div class="input-daterange input-group" id="datepicker">
-                                                <input type="text" class="input-sm form-control" name="end" placeholder="End">
+                                            <div class="form-group mb-3 col-md-4">
+                                                <div class="input-daterange input-group" id="datepicker">
+                                                    <input type="text" class="input-sm form-control" name="end" placeholder="End">
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group mb-3 col-md-4">
-                                            <label>Amount </label>
-                                            <input type="text" class="input-sm form-control" name="amount" placeholder="Amount">
-                                        </div>
+                                            <div class="form-group mb-3 col-md-4">
+                                                <label>Amount </label>
+                                                <input type="text" class="input-sm form-control" name="amount" placeholder="Amount">
+                                            </div>
+                                            <input type="hidden" value="<?= $_GET['id'] ?>" name="user_id">
+                                            <button type="submit" class="btn btn-secondary">Save</button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
