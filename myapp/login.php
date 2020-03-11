@@ -36,10 +36,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     <div class="col-12 col-md-10 mx-auto my-auto">
                         <div class="card auth-card">
                             <div class="position-relative image-side">
-                                <p class="text-white h2">LIVE BRIGHTER UNDER THE SUN</p>
-                                <p class="white mb-0">Please use your credentials to login.<br>If you are not a member, please <a href="#" class="white">register</a>.</p>
                             </div>
                             <div class="form-side">
+                                <h2>LIVE BRIGHTER UNDER THE SUN</h2>
+                                <p>Please use your credentials to login.</p>
                                 <h6 class="mb-4">Login</h6>
                                 <form method="post">
                                     <label class="form-group has-float-label mb-4">

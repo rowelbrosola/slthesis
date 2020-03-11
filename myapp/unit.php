@@ -229,7 +229,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Go to Production</button>
+                        <a href type="button" class="btn btn-secondary" data-dismiss="modal">Go to Production</a>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                     </div>
