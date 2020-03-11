@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                         <div class="mb-2">
                             <?php include 'partials/message.php' ?>
                             <?php include 'partials/error-message.php' ?>
-                            <h1>Unit</h1>
+                            <h1>Dagupan Sales Team</h1>
                             <div class="top-right-button-container">
                                 <button type="button" class="btn btn-outline-primary btn-lg top-right-button mr-1" data-toggle="modal" data-target="#rightModal">ADD NEW</button>
                                 <div class="modal fade modal-right" id="rightModal" tabindex="-1" role="dialog" aria-labelledby="rightModalLabel" aria-hidden="true">
@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                     <th>Advisor Code</th>
                                                     <th>Status</th>
                                                     <th>Unit Manager</th>
-                                                    <th>TYD Production</th>
+                                                    <th>Year-to-date Production</th>
                                                     <th>Campaign</th>
                                                 </tr>
                                             </thead>
