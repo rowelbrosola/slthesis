@@ -161,12 +161,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                             </thead>
                                             <tbody>
                                                 <?php foreach($unit_members as $key => $value): ?>
+                                                <?php
+                                                    $sum = 0;
+                                                    foreach($value->production as $k => $v)
+                                                    {
+                                                        $sum+= $v->amount;
+                                                    }
+                                                ?>
                                                 <tr>
                                                     <td class="user-name" id="<?= $value->user_id ?>"><a href="#"><?= $value->firstname.' '.$value->lastname ?></a></td>
                                                     <td><?= $value->advisor_code ?></td>
                                                     <td><?= isset($value->status) ? $value->status->name : null ?></td>
                                                     <td><?= isset($value->advisor) ? $value->advisor->firstname.' '.$value->advisor->lastname : null ?></td>
-                                                    <td><?=  isset($value->production->amount) ? '&#8369;'.$value->production->amount : '&#8369;0' ?></td>
+                                                    <td><?= isset($value->production) ? $sum : '&#8369;0' ?></td>
                                                     <td><?= 'Love Month' ?></td>
                                                 </tr>
                                                 <?php endforeach; ?>

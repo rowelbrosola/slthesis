@@ -101,6 +101,6 @@ class UserProfile extends Eloquent
     }
 
     public function production() {
-        return $this->hasOne('App\Production', 'user_id', 'user_id');
+        return $this->hasMany('App\Production', 'user_id', 'user_id');
     }
 }
