@@ -22,7 +22,7 @@ $user_role = User::find(Session::get('user_id'));
                 <li class="<?= $active === 'production'  ? 'active' : '' ?>"><a href="production.php"><i class="iconsminds-money-bag"></i> Production</a></li>
                 <li class="<?= $active === 'policies'  ? 'active' : '' ?>"><a href="policies.php"><i class="iconsminds-file-clipboard-file---text"></i> Policies</a></li>
                 <li class="<?= $active === 'clients'  ? 'active' : '' ?>"><a href="clients.php"><i class="iconsminds-mens"></i> Clients</a></li>
-                <li class="<?= $active === 'users'  ? 'active' : '' ?>"><a href="clients.php"><i class="iconsminds-mens"></i> Users</a></li>
+                <li class="<?= $active === 'users'  ? 'active' : '' ?>"><a href="users.php"><i class="iconsminds-mens"></i> Users</a></li>
             </ul>
         </div>
     </div>

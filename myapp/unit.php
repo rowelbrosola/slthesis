@@ -222,14 +222,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                 <label for="modalCodingDate">Coding Date</label>
                                 <input type="text" class="form-control" id="modalCodingDate" name="coding_date" disabled>
                             </div>
-                            <div class="form-group">
-                                <label for="modalClientNumber">Client Number</label>
-                                <input type="text" class="form-control" id="modalClientNumber" name="client_number" disabled>
-                            </div>
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <a href type="button" class="btn btn-secondary" data-dismiss="modal">Go to Production</a>
+                        <a href="" type="button" class="btn btn-secondary" data-dismiss="modal">Go to Production</a>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                     </div>
@@ -262,7 +258,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                         $('#modalAdvisorCode').val(parsed.profile.advisor_code);
                         $('#modalDob').val(parsed.profile.dob);
                         $('#modalCodingDate').val(parsed.profile.coding_date);
-                        $('#modalClientNumber').val(parsed.profile.client_number); 
                     }
                 })
                 $('.modal-action').modal('toggle');
