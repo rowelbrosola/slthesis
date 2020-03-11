@@ -1,5 +1,5 @@
 <?php
-$active = 'clients';
+$active = 'users';
 require_once 'init.php';
 use App\Status;
 use App\Role;
