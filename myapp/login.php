@@ -50,7 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                         <input class="form-control" type="password" name="password" placeholder="">
                                         <span>Password</span>
                                     </label>
-                                    <div class="d-flex justify-content-between align-items-center"><!-- <a href="#">Forget password?</a> --> <button class="btn btn-primary btn-lg btn-shadow" type="submit">LOGIN</button></div>
+
+                                    <div class="d-flex justify-content-between align-items-center"><a href="#">Forget password?</a><button class="btn btn-primary btn-lg btn-shadow" type="submit">LOGIN</button></div>
                                 </form>
                             </div>
                         </div>

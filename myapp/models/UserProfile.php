@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class UserProfile extends Eloquent
 {
-    protected $fillable = array('user_id', 'firstname', 'lastname', 'advisor_id', 'unit_id', 'status_id', 'dob', 'coding_date', 'client_number', 'image_path');
+    protected $fillable = array('user_id', 'firstname', 'lastname', 'advisor_id', 'advisor_code', 'unit_id', 'status_id', 'dob', 'coding_date', 'client_number', 'image_path');
 
     public function upload($request) {
         header('Content-Type: text/plain; charset=utf-8');
