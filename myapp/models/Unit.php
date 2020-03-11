@@ -30,4 +30,8 @@ class Unit extends Eloquent
     public function members() {
         return $this->hasMany('App\UserProfile');
     }
+
+    public function production() {
+        return $this->hasOne('App\Production', 'unit_id', 'id');
+    }
 }

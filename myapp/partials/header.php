@@ -34,7 +34,7 @@ $account = User::find(Session::get('user_id'));
                     <a href="clients.php" class="icon-menu-item"><i class="iconsminds-equalizer d-block"></i> <span>Clients</span> </a>
                     <!-- <a href="#" class="icon-menu-item"><i class="iconsminds-male-female d-block"></i> <span>Users</span> </a> -->
                     <a href="due-dates.php" class="icon-menu-item"><i class="iconsminds-file d-block"></i> <span>Due Dates</span> </a>
-                    <a href="production.php" class="icon-menu-item"><i class="iconsminds-suitcase d-block"></i> <span>Production</span></a>
+                    <a href="payments.php" class="icon-menu-item"><i class="iconsminds-suitcase d-block"></i> <span>Payments</span></a>
                 </div>
             </div>
             <button class="header-icon btn btn-empty d-none d-sm-inline-block" type="button" id="fullScreenButton"><i class="simple-icon-size-fullscreen"></i> <i class="simple-icon-size-actual"></i></button>

@@ -24,8 +24,8 @@ class Payment extends Eloquent
             'created_by' => Session::get('user_id')
         ]);
 
-        Session::flash('success', 'Succesfully added new production.');
-		Redirect::to('production.php');
+        Session::flash('success', 'Succesfully added new payment.');
+		Redirect::to('payments.php');
     }
 
     public function profile() {

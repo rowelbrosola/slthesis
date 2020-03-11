@@ -19,7 +19,8 @@ $user_role = User::find(Session::get('user_id'));
                 <?php endif; ?>
                 <li class="<?= $active === 'reports' ? 'active' : '' ?>"><a href="reports.php"><i class="iconsminds-digital-drawing"></i> Reports</a></li>
                 <li class="<?= $active === 'due-dates'  ? 'active' : '' ?>"><a href="due-dates.php"><i class="iconsminds-calendar-4"></i> Due Dates</a></li>
-                <li class="<?= $active === 'production'  ? 'active' : '' ?>"><a href="production.php"><i class="iconsminds-money-bag"></i> Production</a></li>
+                <!-- <li class="<?= $active === 'payments'  ? 'active' : '' ?>"><a href="payments.php"><i class="iconsminds-money-bag"></i> Payments</a></li> -->
+                <li class="<?= $active === 'productions'  ? 'active' : '' ?>"><a href="productions.php"><i class="iconsminds-money-bag"></i> Productions</a></li>
                 <li class="<?= $active === 'policies'  ? 'active' : '' ?>"><a href="policies.php"><i class="iconsminds-file-clipboard-file---text"></i> Products</a></li>
                 <li class="<?= $active === 'clients'  ? 'active' : '' ?>"><a href="clients.php"><i class="iconsminds-mens"></i> Clients</a></li>
                 <?php if($user_role->role_id != 2): ?>

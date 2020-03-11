@@ -5,7 +5,9 @@ use App\Unit;
 use App\Status;
 User::isLogged();
 $active = 'units';
-$units = Unit::with('creator', 'owner', 'members')->get();
+$units = Unit::with('creator', 'owner', 'members', 'production')->get();
+// echo "<pre>";
+// print_r($units);exit;
 $status = Status::all();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
@@ -141,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                         </a>
                                                     </td>
                                                     <td><?= $value->members->count() ?></td>
-                                                    <td><?= '&#8369; 50,000' ?></td>
+                                                    <td><?= isset($value->production) ? $value->production->amount : '&#8369;0' ?></td>
                                                     <td><?= 'Love Month' ?></td>
                                                 </tr>
                                                 <?php endforeach; ?>

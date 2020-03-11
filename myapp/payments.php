@@ -4,7 +4,7 @@ use App\User;
 use App\UserProfile;
 use App\Payment;
 User::isLogged();
-$active = 'production';
+$active = 'payment';
 $clients = User::where('role_id', '!=' , 1)->with('profile')->get();
 $production = Payment::with('profile', 'unit', 'policy')->get();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Production - Personal Production and Client Monitoring System for Financial Advisors</title>
+        <title>Payments - Personal Production and Client Monitoring System for Financial Advisors</title>
         <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
         <link rel="stylesheet" href="font/iconsmind-s/css/iconsminds.css">
         <link rel="stylesheet" href="font/simple-line-icons/css/simple-line-icons.css">
