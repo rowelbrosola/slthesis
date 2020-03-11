@@ -11,7 +11,7 @@ $user_role = User::find(Session::get('user_id'));
         <div class="scroll">
             <ul class="list-unstyled">
                 <li class="<?= $active === 'dashboard' ? 'active' : '' ?>"><a href="index.php"><i class="iconsminds-home-1"></i> <span>Dashboard</span></a></li>
-                <?php if($user_role->role_id != 2): ?>
+                <?php if($user_role->role_id != 2 || $user_role->role_id != 3): ?>
                 <li class="<?= $active === 'units'  ? 'active' : '' ?>"><a href="units.php"><i class="iconsminds-data-cloud"></i> Sales Team</a></li>
                 <?php endif; ?>
                 <?php if (isset($unit[0]->unit->name)): ?>
