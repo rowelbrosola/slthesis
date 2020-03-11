@@ -12,7 +12,7 @@ $user_role = User::find(Session::get('user_id'));
             <ul class="list-unstyled">
                 <li class="<?= $active === 'dashboard' ? 'active' : '' ?>"><a href="index.php"><i class="iconsminds-home-1"></i> <span>Dashboard</span></a></li>
                 <?php if($user_role->role_id != 2): ?>
-                <li class="<?= $active === 'units'  ? 'active' : '' ?>"><a href="units.php"><i class="iconsminds-data-cloud"></i> Units</a></li>
+                <li class="<?= $active === 'units'  ? 'active' : '' ?>"><a href="units.php"><i class="iconsminds-data-cloud"></i> Sales Team</a></li>
                 <?php endif; ?>
                 <?php if (isset($unit[0]->unit->name)): ?>
                 <li class="<?= $active === 'my_unit'  ? 'active' : '' ?>"><a href="unit.php?unit_id=<?= $unit[0]->unit->id ?>"><i class="iconsminds-network"></i>My Unit</a></li>
