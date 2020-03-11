@@ -6,6 +6,7 @@ use App\UserProfile;
 use App\Session;
 use App\Payment;
 User::isLogged();
+$status = Status::all();
 $my_unit = UserProfile::where('user_id', Session::get('user_id'))->with('unit')->get();
 $active = 'units';
 if (isset($_GET['unit_id']) && $_GET['unit_id'] == $my_unit[0]->unit->id) {
@@ -75,7 +76,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                     </div>
                                                     <div class="form-group position-relative info">
                                                         <label>Advisor Code</label>
-                                                        <input type="text" class="form-control" name="advisor_code" placeholder="Advisor Code" required>
+                                                        <input type="text" class="form-control" maxlength="6" name="advisor_code" placeholder="Advisor Code" required>
+                                                    </div>
+                                                    <div class="form-group position-relative info">
+                                                        <label>Status</label> 
+                                                        <select class="form-control select2-single" name="status" data-width="100%" required>
+                                                            <option value="">Select Status</option>
+                                                            <?php foreach($status as $key => $value): ?>
+                                                            <option value="<?= $value->id ?>"><?= $value->name ?></option>
+                                                            <?php endforeach; ?>
+                                                        </select>
                                                     </div>
                                                     <div class="form-group position-relative">
                                                         <label>Gender</label>

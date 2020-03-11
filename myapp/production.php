@@ -144,11 +144,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             <div class="app-menu">
                 <div class="p-4 h-100">
                     <div class="scroll">
-                        <p class="text-muted text-small">Status</p>
+                        <!-- <p class="text-muted text-small">Status</p>
                         <ul class="list-unstyled mb-5">
                             <li class="active"><a href="?q=pending"><i class="simple-icon-refresh"></i> Pending <span class="float-right">12</span></a></li>
                             <li><a href="?q=completed"><i class="simple-icon-check"></i> Completed <span class="float-right">24</span></a></li>
-                        </ul>
+                        </ul> -->
                         <!-- <p class="text-muted text-small">Categories</p>
                         <ul class="list-unstyled mb-5">
                             <li>
