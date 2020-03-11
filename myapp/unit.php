@@ -149,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                             <tbody>
                                                 <?php foreach($unit_members as $key => $value): ?>
                                                 <tr>
-                                                    <td><a href="profile.php?id=<?= $value->user_id.'&tab=home'?>"><?= $value->firstname.' '.$value->lastname ?></a></td>
+                                                    <td class="user-name" id="<?= $value->user_id ?>"><a href="#"><?= $value->firstname.' '.$value->lastname ?></a></td>
                                                     <td><?= $value->advisor_code ?></td>
                                                     <td><?= isset($value->status) ? $value->status->name : null ?></td>
                                                     <td><?= isset($value->advisor) ? $value->advisor->firstname.' '.$value->advisor->lastname : null ?></td>
@@ -195,6 +195,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                 </div>
                 <a class="app-menu-button d-inline-block d-xl-none" href="#"><i class="simple-icon-options"></i></a>
             </div>
+            <div class="modal modal-action" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Profile Info</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" id="policy_modal">
+                            <div class="form-group">
+                                <label for="modalName">Name</label>
+                                <input type="text" class="form-control" id="modalName" name="name" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="modalAdvisorCode">Adivsor Code</label>
+                                <input type="text" class="form-control" id="modalAdvisorCode" name="advisor_code" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="modalDob">Date of Birth</label>
+                                <input type="text" class="form-control" id="modalDob" name="dob" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="modalCodingDate">Coding Date</label>
+                                <input type="text" class="form-control" id="modalCodingDate" name="coding_date" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="modalClientNumber">Client Number</label>
+                                <input type="text" class="form-control" id="modalClientNumber" name="client_number" disabled>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Go to Production</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
         </main>
         <script src="js/vendor/jquery-3.3.1.min.js"></script>
         <script src="js/vendor/bootstrap.bundle.min.js"></script>
@@ -208,6 +248,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         <script>
             $('#addToDatatable').click(function () {
                 $('#addToDatatableForm').submit();
+            })
+            $('.user-name').click(function() {
+                let id = $(this).attr('id')
+                $.ajax({
+                    url:"functions/fetch-profile.php",
+                    type:"POST",
+                    data:{id},
+                    success:function(data) {
+                        var parsed = JSON.parse(data);
+                        const name = `${parsed.profile.firstname} ${parsed.profile.lastname}`
+                        $('#modalName').val(name);
+                        $('#modalAdvisorCode').val(parsed.profile.advisor_code);
+                        $('#modalDob').val(parsed.profile.dob);
+                        $('#modalCodingDate').val(parsed.profile.coding_date);
+                        $('#modalClientNumber').val(parsed.profile.client_number); 
+                    }
+                })
+                $('.modal-action').modal('toggle');
             })
             $('.alert-success').fadeIn('fast').fadeOut(8000);
             $('.alert-danger').fadeIn('fast').fadeOut(10000);
