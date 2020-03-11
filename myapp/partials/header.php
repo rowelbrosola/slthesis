@@ -42,7 +42,7 @@ $account = User::find(Session::get('user_id'));
         <div class="user d-inline-block">
             <button class="btn btn-empty p-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="name"><?= isset($account->profile) ? $account->profile->firstname.' '.$account->profile->lastname : null ?></span> <span><img alt="Profile Picture" src="img/no-photo.png"></span></button>
             <div class="dropdown-menu dropdown-menu-right mt-3">
-                <a class="dropdown-item" href="profile.php?id=<?= $account->id.'&tab=home' ?>">My Account</a>
+                <a class="dropdown-item" href="profile.php?id=<?= $account->id.'&tab=profile' ?>">My Account</a>
                 <a class="dropdown-item" href="due-dates.php">Due Dates</a>
                 <a class="dropdown-item" href="#">History</a>
                 <a class="dropdown-item" href="#">Support</a>

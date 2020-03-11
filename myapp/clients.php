@@ -184,9 +184,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                         foreach ($clients as $key => $value):
                                     ?>
                                         <tr>
-                                            <td><a href="profile.php?id=<?= $value->id.'&tab=home' ?>"><?= $value->profile->firstname.' '.$value->profile->lastname ?></a></td>
+                                            <td><a href="profile.php?id=<?= $value->id.'&tab=profile' ?>"><?= $value->profile->firstname.' '.$value->profile->lastname ?></a></td>
                                             <td><?= $value->email ?></td>
-                                            <td><a href="profile.php?id=<?= isset($value->profile->advisor) ? $value->profile->advisor->user_id.'&tab=home' : null ?>"><?=
+                                            <td><a href="profile.php?id=<?= isset($value->profile->advisor) ? $value->profile->advisor->user_id.'&tab=profile' : null ?>"><?=
                                                 isset($value->profile->advisor)
                                                 ? $value->profile->advisor->firstname.' '.$value->profile->advisor->lastname
                                                 : null
