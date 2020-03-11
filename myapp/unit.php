@@ -5,6 +5,7 @@ use App\Unit;
 use App\UserProfile;
 use App\Session;
 use App\Payment;
+use App\Status;
 User::isLogged();
 $status = Status::all();
 $my_unit = UserProfile::where('user_id', Session::get('user_id'))->with('unit')->get();
