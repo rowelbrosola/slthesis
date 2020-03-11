@@ -70,6 +70,8 @@ class User extends Eloquent
 				'advisor_code' => $request['advisor_code'],
 				'unit_id' => $request['unit'],
 				'status_id' => $request['status'],
+				'dob' => isset($request['dob']) ? $request['dob'] : null,
+				'gender' => isset($request['gender']) ? $request['gender'] : null,
 				'coding_date' => date('Y-m-d', strtotime($request['coding_date'])),
 				'created_by' => Session::get('user_id')
 			]);
@@ -86,6 +88,9 @@ class User extends Eloquent
 			self::sendMail($content);
 	
 			Session::flash('success', 'Succesfully added new user.');
+			if ($request['addtounit']) {
+				Redirect::to('unit.php?unit_id'.$request['unit']);
+			}
 		}
 		Redirect::to('clients.php');
 	}

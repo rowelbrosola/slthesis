@@ -33,6 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         <link rel="stylesheet" href="css/vendor/bootstrap.min.css">
         <link rel="stylesheet" href="css/vendor/bootstrap.rtl.only.min.css">
         <link rel="stylesheet" href="css/vendor/perfect-scrollbar.css">
+        <link rel="stylesheet" href="css/vendor/bootstrap-datepicker3.min.css">
         <link rel="stylesheet" href="css/vendor/select2.min.css">
         <link rel="stylesheet" href="css/vendor/select2-bootstrap.min.css">
         <link rel="stylesheet" href="css/main.css">
@@ -71,6 +72,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                     <div class="form-group position-relative info">
                                                         <label>Email</label>
                                                         <input type="text" class="form-control" name="email" placeholder="Email" required>
+                                                    </div>
+                                                    <div class="form-group position-relative info">
+                                                        <label>Advisor Code</label>
+                                                        <input type="text" class="form-control" name="advisor_code" placeholder="Advisor Code" required>
+                                                    </div>
+                                                    <div class="form-group position-relative">
+                                                        <label>Gender</label>
+                                                        <select class="form-control select2-single role" name="gender" data-width="100%" required>
+                                                            <option value="">Select Gender</option>
+                                                            <option value="Male">Male</option>
+                                                            <option value="Female">Female</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="input-group date form-group position-relative info">
+                                                        <label>Birthdate</label>
+                                                        <input type="text" class="form-control" name="bod" style="width: 100%;" placeholder="Birth Date" required>
+                                                        <span class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="input-group date form-group position-relative info">
+                                                        <label>Coding Date</label>
+                                                        <input type="text" class="form-control" name="coding_date" style="width: 100%;" placeholder="Coding Date" required>
+                                                        <span class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                        </span>
                                                     </div>
                                                     <input type="hidden" value="<?= $_GET['unit_id'] ?>" name="unit">
                                                     <input type="hidden" value="true" name="addtounit">
@@ -174,6 +201,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         <script src="js/vendor/perfect-scrollbar.min.js"></script>
         <script src="js/vendor/mousetrap.min.js"></script>
         <script src="js/vendor/datatables.min.js"></script>
+        <script src="js/vendor/bootstrap-datepicker.js"></script>
         <script src="js/vendor/select2.full.js"></script>
         <script src="js/dore.script.js"></script>
         <script src="js/scripts.js"></script>
