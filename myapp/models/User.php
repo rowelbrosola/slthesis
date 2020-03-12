@@ -164,7 +164,7 @@ class User extends Eloquent
 		Redirect::to('profile.php?id='.$request['user_id'].'&tab='.$tab);
 	}
 
-	private function sendMail($content) {
+	private static function sendMail($content) {
 		// Create the Transport
 		$transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
 			->setUsername(getenv('EMAIL'))
@@ -210,7 +210,7 @@ class User extends Eloquent
 					This link will expire in 24 hours, so be sure to use it right away.'
 			];
 	
-			$this->sendMail($content);
+			self::sendMail($content);
 	
 			Redirect::to('reset-password.php');
 		} else {
