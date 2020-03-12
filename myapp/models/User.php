@@ -11,7 +11,7 @@ use Swift_Message;
 
 class User extends Eloquent
 {
-	protected $fillable = array('email', 'password', 'role_id');
+	protected $fillable = array('email', 'password', 'email_verified', 'reset_password', 'token', 'token_expiry', 'role_id');
 
     public static function login($email = null, $password = null)
 	{
@@ -183,6 +183,40 @@ class User extends Eloquent
 
 		// Send the message
 		$result = $mailer->send($message);
+	}
+
+	public static function resetPassword($request) {
+		$user = User::where('email', $request['email'])->first();
+		if ($user) {
+			$token = md5(uniqid(rand(), true));
+			$user = User::find($user->id)
+			->update([
+				'token' =>  $token,
+			]);
+			
+			$content = [
+				'message' => 'Password Reset Request',
+				'from' => [
+					getenv('EMAIL') => getenv('EMAIL_NAME')
+				],
+				'to' => [$request['email']],
+				'body' =>
+					'To change your password, click the following link.'.
+
+
+					'https://slthesis.herokuapp.com/myapp/reset-password?token='.$token.'
+					
+					
+					This link will expire in 24 hours, so be sure to use it right away.'
+			];
+	
+			self::sendMail($content);
+	
+			Redirect::to('reset-password.php');
+		} else {
+			Session:: flash('error', 'Email does not exists!');
+			Redirect::to('login.php');
+		}
 	}
 
 	public function profile()
