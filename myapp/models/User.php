@@ -210,7 +210,7 @@ class User extends Eloquent
 					This link will expire in 24 hours, so be sure to use it right away.'
 			];
 	
-			self::sendMail($content);
+			$this->sendMail($content);
 	
 			Redirect::to('reset-password.php');
 		} else {
