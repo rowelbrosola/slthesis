@@ -9,7 +9,7 @@ use App\User;
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
     if (isset($_POST['reset-password'])) {
-        User::resetPassword($_POST);
+        User::requestPasswordRequest($_POST);
     } else {
         $email = $_POST['email'];
         $password = $_POST['password'];

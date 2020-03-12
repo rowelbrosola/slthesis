@@ -185,7 +185,7 @@ class User extends Eloquent
 		$result = $mailer->send($message);
 	}
 
-	public static function resetPassword($request) {
+	public static function requestPasswordRequest($request) {
 		$user = User::where('email', $request['email'])->first();
 		if ($user) {
 			$token = md5(uniqid(rand(), true));
@@ -204,7 +204,7 @@ class User extends Eloquent
 					'To change your password, click the following link.'.
 
 
-					'https://slthesis.herokuapp.com/myapp/reset-password?token='.$token.'
+					'https://slthesis.herokuapp.com/myapp/reset-password.php?token='.$token.'
 					
 					
 					This link will expire in 24 hours, so be sure to use it right away.'
@@ -217,6 +217,17 @@ class User extends Eloquent
 			Session:: flash('error', 'Email does not exists!');
 			Redirect::to('login.php');
 		}
+	}
+
+	public static function resetPassword($request) {
+		$password = Hash::encrypt($request['password']);
+		$user = User::find($request['user_id'])
+		->update([
+			'password' => $password,
+			'reset_password' => 1
+		]);
+		
+		Redirect::to('reset-password-successful.php');
 	}
 
 	public function profile()
