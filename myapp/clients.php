@@ -13,7 +13,10 @@ $status = Status::all();
 $units = Unit::all();
 $advisors = User::whereIn('role_id', [4, 2, 3])->with('profile')->get();
 if (Session::get('user_id') == '1') {
-    $clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status')->get();
+    $clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status')
+    ->whereHas('profile', function($q) {
+        $q->where('advisor_id', Session::get('user_id'));
+    })->get();
 } else {
     // $clients = UserProfile::where('advisor_id', Session::get('user_id'))->with('user')->get();
     $clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status')->whereHas('profile', function($q) {
@@ -57,101 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                         <?php include 'partials/error-message.php' ?>
                         <h1>Clients</h1>
                         <div class="top-right-button-container">
-                            <button type="button" class="btn btn-outline-primary btn-lg top-right-button mr-1" data-toggle="modal" data-target="#rightModal">ADD NEW</button>
-                            <div class="modal fade modal-right" id="rightModal" tabindex="-1" role="dialog" aria-labelledby="rightModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="rightModalLabel">Add Client</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p>Submitting below form will add the data to Data Table and rows will be updateda.</p>
-                                            <form class="tooltip-right-top" id="addToDatatableForm" method="POST" novalidate>
-                                                <?php if($logged_user->role_id != 2): ?>
-                                                <div class="form-group position-relative">
-                                                    <label>Role</label>
-                                                    <select class="form-control select2-single role" name="role" data-width="100%" required>
-                                                        <option value="">Select Role</option>
-                                                        <?php foreach($roles as $key => $value): ?>
-                                                            <?php if($value->id !== 1): ?>
-                                                            <option value="<?= $value->id ?>"><?= $value->name ?></option>
-                                                            <?php endif; ?>
-                                                        <?php endforeach; ?>
-                                                    </select>
-                                                </div>
-                                                <?php endif; ?>
-                                                <?php if($logged_user->role_id != 2): ?>
-                                                <div class="form-group position-relative info advisor">
-                                                    <label>Advisor Name</label>
-                                                    <select class="form-control select2-single" name="advisor" data-width="100%" required>
-                                                        <option value="">Select Advisor</option>
-                                                        <?php foreach($advisors as $key => $value): ?>
-                                                            <option value="<?= $value->id ?>"><?= $value->profile->firstname.' '.$value->profile->lastname ?></option>
-                                                        <?php endforeach; ?>
-                                                    </select>
-                                                </div>
-                                                <?php endif; ?>
-                                                <div class="form-group position-relative info">
-                                                    <label>Email</label>
-                                                    <input type="text" class="form-control" name="email" placeholder="Email" required>
-                                                </div>
-                                                <div class="form-group position-relative info">
-                                                    <label>First Name</label>
-                                                    <input type="text" class="form-control" name="firstname" placeholder="First Name" required>
-                                                </div>
-                                                <div class="form-group position-relative info">
-                                                    <label>Last Name</label>
-                                                    <input type="text" class="form-control" name="lastname" placeholder="Last Name" required>
-                                                </div>
-                                                <?php if($logged_user->role_id != 2): ?>
-                                                <div class="form-group position-relative info unit-select">
-                                                    <label>Unit Name</label>
-                                                    <select class="form-control select2-single unit-selection" name="unit" data-width="100%">
-                                                        <option value="">Select Unit</option>
-                                                        <?php foreach($units as $key => $value): ?>
-                                                            <option value="<?= $value->id ?>"><?= $value->name ?></option>
-                                                        <?php endforeach; ?>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group position-relative info">
-                                                    <label>Advisor Code</label>
-                                                    <input type="text" class="form-control" name="advisor_code" placeholder="Advisor Code" required>
-                                                </div>
-                                                <?php endif; ?>
-                                                <div class="form-group position-relative info">
-                                                    <label>Status</label> 
-                                                    <select class="form-control select2-single" name="status" data-width="100%" required>
-                                                        <option value="">Select Status</option>
-                                                        <?php foreach($status as $key => $value): ?>
-                                                        <option value="<?= $value->id ?>"><?= $value->name ?></option>
-                                                        <?php endforeach; ?>
-                                                    </select>
-                                                </div>
-                                                <div class="input-group date form-group position-relative info">
-                                                    <label>Coding Date</label>
-                                                    <input type="text" class="form-control" name="coding_date" style="width: 100%;" placeholder="Coding Date" required>
-                                                    <span class="input-group-addon">
-                                                        <span class="glyphicon glyphicon-calendar"></span>
-                                                    </span>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <a href="#" class="btn btn-primary btn-multiple-state not-active" id="addToDatatable">
-                                                <div class="spinner d-inline-block">
-                                                    <div class="bounce1"></div>
-                                                    <div class="bounce2"></div>
-                                                    <div class="bounce3"></div>
-                                                </div>
-                                                <span class="icon success" data-toggle="tooltip" data-placement="top" title="Everything went right!"><i class="simple-icon-check"></i> </span>
-                                                <span class="icon fail" data-toggle="tooltip" data-placement="top" title="Something went wrong!"><i class="simple-icon-exclamation"></i> </span>
-                                                <span class="label">Done</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <a href="add-financial-advisor.php" class="btn btn-outline-primary btn-lg top-right-button mr-1">ADD NEW</a>
                         </div>
                         <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
                             <ol class="breadcrumb pt-0">
@@ -172,10 +81,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                         <tr>
                                             <th>Name</th>
                                             <th>Email</th>
+                                            <th>Gender</th>
                                             <th>Advisor</th>
-                                            <th>Unit Name</th>
-                                            <th>Status</th>
-                                            <th>Role</th>
+                                            <th>Date of Birth</th>
+                                            <th>Coding Date</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -186,25 +95,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                         <tr>
                                             <td><a href="profile.php?id=<?= $value->id.'&tab=profile' ?>"><?= $value->profile->firstname.' '.$value->profile->lastname ?></a></td>
                                             <td><?= $value->email ?></td>
+                                            <td><?= $value->gender ?></td>
                                             <td><a href="profile.php?id=<?= isset($value->profile->advisor) ? $value->profile->advisor->user_id.'&tab=profile' : null ?>"><?=
                                                 isset($value->profile->advisor)
                                                 ? $value->profile->advisor->firstname.' '.$value->profile->advisor->lastname
                                                 : null
                                                 ?></a>
                                             </td>
-                                            <td><?=
-                                                isset($value->profile->unit->name)
-                                                ? $value->profile->unit->name
-                                                : null
-                                                ?>
+                                            <td><?= date('Y-m-d', strtotime($value->dob)) ?>
                                             </td>
-                                            <td><?=
-                                                isset($value->profile->status)
-                                                ? $value->profile->status->name
-                                                : null
-                                                ?>
-                                            </td>
-                                            <td><?= $value->role->name ?></td>
+                                            <td><?= date('Y-m-d', strtotime($value->coding_date)) ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                     </tbody>

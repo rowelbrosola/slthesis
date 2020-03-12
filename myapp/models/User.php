@@ -8,6 +8,9 @@ use App\Hash;
 use Swift_SmtpTransport;
 use Swift_Mailer;
 use Swift_Message;
+use App\UserPolicy;
+use App\PolicyBenefit;
+use App\Production;
 
 class User extends Eloquent
 {
@@ -228,6 +231,50 @@ class User extends Eloquent
 		]);
 		
 		Redirect::to('reset-password-successful.php');
+	}
+
+	public static function addClient($request) {
+		$time = strtotime($request['issue_date']);
+		$premium_due_date = date("Y-m-d", strtotime("+1 month", $time));
+		$benefits = $request['benefits'];
+
+		$user = self::create([
+			'email' => $request['email']
+		]);
+
+		UserProfile::create([
+			'user_id' => $user->id,
+			'firstname' => $request['firstname'],
+			'lastname' => $request['lastname'],
+			'dob' => isset($request['dob']) ? date('Y-m-d', strtotime($request['dob'])) : null,
+			'gender' => $request['gender'],
+			'coding_date' => date('Y-m-d', strtotime($request['coding_date'])),
+			'created_by' => Session::get('user_id')
+		]);
+
+		$time = strtotime($request['issue_date']);
+		$premium_due_date = date("Y-m-d", strtotime("+1 month", $time));
+
+		UserPolicy::create([
+			'user_id' => $user->id,
+			'policy_id' => $request['product'],
+			'advisor_id' => Session::get('user_id'),
+			'annual_premium_amount' => $request['annual_premium'],
+			'mode_of_payment' => $request['mode_of_payment'],
+			'issue_date' => date('Y-m-d', strtotime($request['issue_date'])),
+			'premium_due_date' => $premium_due_date
+		]);
+		
+		foreach ($benefits as $value) {
+			PolicyBenefit::create([
+				'policy_id' => $request['product'],
+				'benefits_id' => $value,
+				'user_id' => $user->id
+			]);
+		}
+
+		Session::flash('success', 'Successfully added client');
+		Redirect::to('clients.php');
 	}
 
 	public function profile()
