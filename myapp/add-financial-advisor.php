@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                     <div class="col">
                                         <div class="form-group input-group date">
                                             <label>Date of Birth</label>
-                                            <input type="text" class="form-control" name="bod" oninput="this.className = ''" style="width: 100%;" placeholder="Date of Birth">
+                                            <input type="text" class="form-control" name="dob" oninput="this.className = ''" style="width: 100%;" placeholder="Date of Birth">
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
                                             </span>

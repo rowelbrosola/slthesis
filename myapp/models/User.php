@@ -15,6 +15,7 @@ use App\Production;
 class User extends Eloquent
 {
 	protected $fillable = array('email', 'password', 'email_verified', 'reset_password', 'token', 'token_expiry', 'role_id');
+	protected $hidden = ['password'];
 
     public static function login($email = null, $password = null)
 	{
@@ -246,6 +247,7 @@ class User extends Eloquent
 			'user_id' => $user->id,
 			'firstname' => $request['firstname'],
 			'lastname' => $request['lastname'],
+			'advisosr_id' => Session::get('user_id'),
 			'dob' => isset($request['dob']) ? date('Y-m-d', strtotime($request['dob'])) : null,
 			'gender' => $request['gender'],
 			'coding_date' => date('Y-m-d', strtotime($request['coding_date'])),

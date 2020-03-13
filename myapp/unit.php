@@ -195,7 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     <div class="scroll">
                         <p class="text-muted text-small">Production</p>
                         <ul class="list-unstyled mb-5">
-                            <li><i class="simple-icon-check"></i> Completed <span class="float-right">Paid</span></a></li>
+                            <!-- <li><i class="simple-icon-check"></i> Completed <span class="float-right">Paid</span></a></li> -->
                         </ul>
                         <!-- <p class="text-muted text-small">Categories</p>
                         <ul class="list-unstyled mb-5">

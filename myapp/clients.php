@@ -12,17 +12,11 @@ $roles = Role::all();
 $status = Status::all();
 $units = Unit::all();
 $advisors = User::whereIn('role_id', [4, 2, 3])->with('profile')->get();
-if (Session::get('user_id') == '1') {
-    $clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status')
-    ->whereHas('profile', function($q) {
-        $q->where('advisor_id', Session::get('user_id'));
-    })->get();
-} else {
-    // $clients = UserProfile::where('advisor_id', Session::get('user_id'))->with('user')->get();
-    $clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status')->whereHas('profile', function($q) {
-        $q->where('advisor_id', Session::get('user_id'));
-    })->get();
-}
+$clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status', 'profile.latestPayment')
+->whereHas('profile', function($q) {
+    $q->where('advisor_id', Session::get('user_id'));
+})->get();
+
 $logged_user = User::find(Session::get('user_id'));
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
@@ -82,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                             <th>Name</th>
                                             <th>Email</th>
                                             <th>Gender</th>
-                                            <th>Advisor</th>
+                                            <th>Latest Payment</th>
                                             <th>Date of Birth</th>
                                             <th>Coding Date</th>
                                         </tr>
@@ -95,16 +89,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                         <tr>
                                             <td><a href="profile.php?id=<?= $value->id.'&tab=profile' ?>"><?= $value->profile->firstname.' '.$value->profile->lastname ?></a></td>
                                             <td><?= $value->email ?></td>
-                                            <td><?= $value->gender ?></td>
-                                            <td><a href="profile.php?id=<?= isset($value->profile->advisor) ? $value->profile->advisor->user_id.'&tab=profile' : null ?>"><?=
-                                                isset($value->profile->advisor)
-                                                ? $value->profile->advisor->firstname.' '.$value->profile->advisor->lastname
-                                                : null
-                                                ?></a>
+                                            <td><?= $value->profile->gender ?></td>
+                                            <td><?= $value->profile->lastPayment
+                                                ? date('Y-m-d', strtotime($value->profile->lastPayment->payment_date))
+                                                : null ?>
                                             </td>
-                                            <td><?= date('Y-m-d', strtotime($value->dob)) ?>
+                                            <td><?= date('Y-m-d', strtotime($value->profile->dob)) ?>
                                             </td>
-                                            <td><?= date('Y-m-d', strtotime($value->coding_date)) ?></td>
+                                            <td><?= date('Y-m-d', strtotime($value->profile->coding_date)) ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                     </tbody>

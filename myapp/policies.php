@@ -112,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                             <tr>
                                                 <td><?= $value->name ?></td>
                                                 <td><?= $value->benefits ?></td>
-                                                <td><?= $value->face_amount ?></td>
+                                                <td><?= '&#8369;'.number_format($value->face_amount) ?></td>
                                                 <td>
                                                     <button class="edit" id="<?= 'edit-'.$value->id ?>"><i class="iconsminds-file-edit">Edit</i></button>
                                                     <button class="delete" id="<?= 'delete-'.$value->id ?>"><i class="iconsminds-folder-delete">Delete</i></button>

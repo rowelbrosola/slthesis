@@ -103,4 +103,12 @@ class UserProfile extends Eloquent
     public function production() {
         return $this->hasMany('App\Production', 'user_id', 'user_id');
     }
+
+    public function payment() {
+        return $this->hasMany('App\Payment', 'user_id', 'user_id');
+    }
+
+    public function latestPayment() {
+        return $this->hasOne('App\Payment', 'user_id', 'user_id')->latest();
+    }
 }
