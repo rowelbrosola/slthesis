@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                 <?php if($logged_user->role_id != 2): ?>
                                                 <div class="form-group position-relative info advisor">
                                                     <label>Advisor Name</label>
-                                                    <select class="form-control select2-single" name="advisor" data-width="100%" required>
+                                                    <select class="form-control select2-single" name="advisor" data-width="100%">
                                                         <option value="">Select Advisor</option>
                                                         <?php foreach($advisors as $key => $value): ?>
                                                             <option value="<?= $value->id ?>"><?= $value->profile->firstname.' '.$value->profile->lastname ?></option>
@@ -245,7 +245,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                 var selectedRole = $(this).children("option:selected").val();
                 if (selectedRole != 2) {
                     $('.unit-select').show();
-                    $(".unit-selection").prop('required',true);
+                    // $(".unit-selection").prop('required',true);
                 } else {
                     $('.unit-select').hide();
                 }

@@ -9,7 +9,7 @@ if (isset($_GET['token'])) {
     if($user) {
         $token_expiry = strtotime($user->token_expiry);
     
-        if($token_expiry > time() + 86400) {
+        if($token_expiry > time()) {
            $token = true;
         } else {
             Redirect::to('includes/404.php');

@@ -70,7 +70,7 @@ class User extends Eloquent
 				'user_id' => $user->id,
 				'firstname' => $request['firstname'],
 				'lastname' => $request['lastname'],
-				'advisor_id' => $request['advisor'],
+				'advisor_id' => isset($request['advisor']) && $request['advisor'] ? $request['advisor'] : null,
 				'advisor_code' => $request['advisor_code'],
 				'unit_id' => isset($request['unit']) && $request['unit'] ? $request['unit'] : null,
 				'status_id' => isset($request['status']) ? $request['status'] : null,
@@ -198,9 +198,13 @@ class User extends Eloquent
 		$user = User::where('email', $request['email'])->first();
 		if ($user) {
 			$token = md5(uniqid(rand(), true));
+			$today = time();
+			$token_expiry = date('Y-m-d H:i:s', strtotime('+1 day', $today));
+			
 			$user = User::find($user->id)
 			->update([
 				'token' =>  $token,
+				'token_expiry' => $token_expiry
 			]);
 			
 			$content = [
@@ -221,7 +225,7 @@ class User extends Eloquent
 	
 			self::sendMail($content);
 	
-			Redirect::to('reset-password.php');
+			Redirect::to('reset-password-successful.php');
 		} else {
 			Session:: flash('error', 'Email does not exists!');
 			Redirect::to('login.php');
