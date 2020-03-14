@@ -72,8 +72,8 @@ class User extends Eloquent
 				'lastname' => $request['lastname'],
 				'advisor_id' => $request['advisor'],
 				'advisor_code' => $request['advisor_code'],
-				'unit_id' => $request['unit'],
-				'status_id' => $request['status'],
+				'unit_id' => isset($request['unit']) && $request['unit'] ? $request['unit'] : null,
+				'status_id' => isset($request['status']) ? $request['status'] : null,
 				'dob' => isset($request['dob']) ? date('Y-m-d', strtotime($request['dob'])) : null,
 				'gender' => isset($request['gender']) ? $request['gender'] : null,
 				'coding_date' => date('Y-m-d', strtotime($request['coding_date'])),
@@ -169,11 +169,12 @@ class User extends Eloquent
 	}
 
 	private static function sendMail($content) {
-		// Create the Transport
-		$transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
+		try {
+			// Create the Transport
+			$transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
 			->setUsername(getenv('EMAIL'))
 			->setPassword(getenv('PASSWORD'))
-		;
+			;
 
 		// Create a message
 		$message = (new Swift_Message($content['message']))
@@ -187,6 +188,10 @@ class User extends Eloquent
 
 		// Send the message
 		$result = $mailer->send($message);
+		} catch (\Throwable $th) {
+			//throw $th;
+		}
+		
 	}
 
 	public static function requestPasswordRequest($request) {

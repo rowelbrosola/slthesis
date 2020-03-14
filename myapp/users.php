@@ -8,10 +8,23 @@ use App\UserProfile;
 use App\Unit;
 use App\Session;
 User::isLogged();
-$roles = Role::all();
+
 $status = Status::all();
 $units = Unit::all();
-$advisors = User::whereIn('role_id', [4, 2, 3])->with('profile')->get();
+$user = User::find(Session::get('user_id'));
+if ($user->role_id === 2) {
+    $roles = Role::find(2);
+} else if($user->role_id === 3) {
+    $roles = Role::whereIn('role_id', [3,2])->with('profile')->get();
+} else {
+    $roles = Role::all();
+}
+if ($user->id === 1) {
+    $advisors = User::whereIn('role_id', [1, 2, 3, 4])->with('profile')->get();
+} else {
+    $advisors = User::whereIn('role_id', [4, 2, 3])->with('profile')->get();
+}
+
 $clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status')
     ->whereNotNull('role_id')
     ->get();
@@ -50,14 +63,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     <div class="col-12">
                         <?php include 'partials/message.php' ?>
                         <?php include 'partials/error-message.php' ?>
-                        <h1>Clients</h1>
+                        <h1>Users</h1>
                         <div class="top-right-button-container">
                             <button type="button" class="btn btn-outline-primary btn-lg top-right-button mr-1" data-toggle="modal" data-target="#rightModal">ADD NEW</button>
                             <div class="modal fade modal-right" id="rightModal" tabindex="-1" role="dialog" aria-labelledby="rightModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="rightModalLabel">Add Client</h5>
+                                            <h5 class="modal-title" id="rightModalLabel">Add User</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                         </div>
                                         <div class="modal-body">
@@ -111,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                 </div>
                                                 <div class="form-group position-relative info">
                                                     <label>Advisor Code</label>
-                                                    <input type="text" class="form-control" name="advisor_code" placeholder="Advisor Code" required>
+                                                    <input type="text" class="form-control" name="advisor_code" maxlength="6" placeholder="Advisor Code" required>
                                                 </div>
                                                 <?php endif; ?>
                                                 <div class="form-group position-relative info">

@@ -3,9 +3,15 @@ require_once 'init.php';
 use App\User;
 use App\UserProfile;
 use App\Payment;
+use App\Session;
 User::isLogged();
 $active = 'productions';
-$clients = User::where('role_id', '!=' , 1)->with('profile')->get();
+$user = User::find(Session::get('user_id'));
+// if ($user->role_id !== 1) {
+    $clients = User::whereNull('role_id')->with('profile')->get();
+// } else {
+//     $clients = User::with('profile')->get();
+// }
 $production = Payment::with('profile', 'unit', 'policy')->get();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
