@@ -26,7 +26,6 @@ class Policy extends Eloquent
         self::where('id', $request['policy_id'])
           ->update([
               'name' => $request['policy'],
-              'face_amount' => $request['face_amount'],
               'commission' => $request['commission'],
               'excess_premium' => $request['excess_premium'],
               'type' => $request['type']

@@ -27,7 +27,7 @@ if ($user->role_id === 2) {
     $clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status', 'profile.latestPayment')
     ->whereHas('profile', function($q) {
         $q->where('advisor_id', Session::get('user_id'));
-    })->get();
+    })->whereNull('role_id')->get();
 }
 
 $logged_user = User::find(Session::get('user_id'));
@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                             <th>Gender</th>
                                             <th>Latest Payment</th>
                                             <th>Date of Birth</th>
-                                            <th>Coding Date</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                 ? date('Y-m-d', strtotime($value->profile->dob))
                                                 : null ?>
                                             </td>
-                                            <td><?= date('Y-m-d', strtotime($value->profile->coding_date)) ?></td>
+                                            <td></td>
                                         </tr>
                                     <?php endforeach; ?>
                                     </tbody>

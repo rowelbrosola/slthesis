@@ -114,18 +114,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                     <thead>
                                         <tr>
                                             <th>Policy</th>
-                                            <th>Face Amount</th>
                                             <th>Commission Percentage</th>
                                             <th>Excess Premium</th>
                                             <th>Type</th>
                                             <th>Actions</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php foreach($policies as $key => $value): ?>
                                             <tr>
                                                 <td><?= $value->name ?></td>
-                                                <td><?= '&#8369;'.number_format($value->face_amount) ?></td>
                                                 <td><?= $value->commission.'%' ?></td>
                                                 <td><?= $value->excess_premium.'%' ?></td>
                                                 <td><?= $value->type ?></td>
@@ -133,6 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                     <button onClick="view(<?=$value->id ?>)" class="edit" id="<?= 'edit-'.$value->id ?>"><i class="iconsminds-file-edit">Edit</i></button>
                                                     <button onClick="deleteRecord(<?=$value->id ?>)" class="delete" id="<?= 'delete-'.$value->id ?>"><i class="iconsminds-folder-delete">Delete</i></button>
                                                 </td>
+                                                <td></td>
                                             </tr>
                                         <?php endforeach; ?>
                                     </tbody>
@@ -156,10 +156,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             <div class="form-group">
                                 <label for="inputPolicy">Policy</label>
                                 <input type="text" class="form-control" id="inputPolicy" name="policy" placeholder="Enter Policy">
-                            </div>
-                            <div class="form-group">
-                                <label for="inputFaceAmount">Face Amount</label>
-                                <input type="text" class="form-control" id="inputFaceAmount" name="face_amount" placeholder="Enter Face Amount">
                             </div>
                             <div class="form-group position-relative info">
                                 <label>Commission Percentage</label>
@@ -239,7 +235,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                         $('#inputPolicy').val(parsed.name);
                         $('#inputCommission').val(parsed.commission);
                         $('#inputExcessPremium').val(parsed.excess_premium);
-                        $('#inputFaceAmount').val(parsed.face_amount);
                         $("#product-type").val(parsed.type).change();
                         $('#policy_id').val(parsed.id); 
                     }

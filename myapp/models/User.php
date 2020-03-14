@@ -255,7 +255,6 @@ class User extends Eloquent
 			'advisosr_id' => Session::get('user_id'),
 			'dob' => isset($request['dob']) ? date('Y-m-d', strtotime($request['dob'])) : null,
 			'gender' => $request['gender'],
-			'coding_date' => date('Y-m-d', strtotime($request['coding_date'])),
 			'created_by' => Session::get('user_id')
 		]);
 

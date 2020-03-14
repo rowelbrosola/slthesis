@@ -86,15 +86,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="col">
-                                        <div class="form-group input-group date">
-                                            <label>Coding Date</label>
-                                            <input type="text" class="form-control" oninput="this.className = ''"  name="coding_date" style="width: 100%;" placeholder="Coding Date">
-                                            <span class="input-group-addon">
-                                                <span class="glyphicon glyphicon-calendar"></span>
-                                            </span>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                             <div class="tab">
