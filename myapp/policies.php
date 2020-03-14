@@ -117,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                             <th>Face Amount</th>
                                             <th>Commission Percentage</th>
                                             <th>Excess Premium</th>
-                                            <th>Excess Premium</th>
+                                            <th>Type</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -126,9 +126,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                             <tr>
                                                 <td><?= $value->name ?></td>
                                                 <td><?= '&#8369;'.number_format($value->face_amount) ?></td>
-                                                <td><?= $value->commision ?></td>
-                                                <td><?= $value->commision ?></td>
-                                                <td><?= $value->commision ?></td>
+                                                <td><?= $value->commission.'%' ?></td>
+                                                <td><?= $value->excess_premium.'%' ?></td>
+                                                <td><?= $value->type ?></td>
                                                 <td>
                                                     <button onClick="view(<?=$value->id ?>)" class="edit" id="<?= 'edit-'.$value->id ?>"><i class="iconsminds-file-edit">Edit</i></button>
                                                     <button onClick="deleteRecord(<?=$value->id ?>)" class="delete" id="<?= 'delete-'.$value->id ?>"><i class="iconsminds-folder-delete">Delete</i></button>
@@ -160,6 +160,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             <div class="form-group">
                                 <label for="inputFaceAmount">Face Amount</label>
                                 <input type="text" class="form-control" id="inputFaceAmount" name="face_amount" placeholder="Enter Face Amount">
+                            </div>
+                            <div class="form-group position-relative info">
+                                <label>Commission Percentage</label>
+                                <input type="text" class="form-control" id="inputCommission" name="commission" placeholder="Enter Commission Percentage" required>
+                            </div>
+                            <div class="form-group position-relative info">
+                                <label>Excess Premium Amount</label>
+                                <input type="text" class="form-control" id="inputExcessPremium" name="excess_premium" placeholder="Enter Face Amount" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Type</label> 
+                                <select class="form-control select2-single" id="product-type" name="type">
+                                    <option value="Traditional">Traditional</option>
+                                    <option value="VUL">VUL</option>
+                                </select>
                             </div>
                             <input type="hidden" name="policy_id" id="policy_id">
                         </form>
@@ -222,8 +237,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     success:function(data) {
                         var parsed = JSON.parse(data)
                         $('#inputPolicy').val(parsed.name);
-                        $('#inputBenefits').val(parsed.benefits);
+                        $('#inputCommission').val(parsed.commission);
+                        $('#inputExcessPremium').val(parsed.excess_premium);
                         $('#inputFaceAmount').val(parsed.face_amount);
+                        $("#product-type").val(parsed.type).change();
                         $('#policy_id').val(parsed.id); 
                     }
                 })

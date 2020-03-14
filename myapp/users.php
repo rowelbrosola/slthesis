@@ -12,7 +12,9 @@ $roles = Role::all();
 $status = Status::all();
 $units = Unit::all();
 $advisors = User::whereIn('role_id', [4, 2, 3])->with('profile')->get();
-$clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status')->get();
+$clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status')
+    ->whereNotNull('role_id')
+    ->get();
 $logged_user = User::find(Session::get('user_id'));
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
