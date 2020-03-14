@@ -28,5 +28,10 @@ class UserPolicy extends Eloquent
     public function policy()
     {
         return $this->hasOne('App\Policy', 'id', 'policy_id');
-	}
+    }
+    
+    public function benefits()
+    {
+        return $this->hasMany('App\PolicyBenefit', 'policy_id', 'policy_id');
+    }
 }

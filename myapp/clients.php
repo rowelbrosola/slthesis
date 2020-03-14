@@ -94,7 +94,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                 ? date('Y-m-d', strtotime($value->profile->lastPayment->payment_date))
                                                 : null ?>
                                             </td>
-                                            <td><?= date('Y-m-d', strtotime($value->profile->dob)) ?>
+                                            <td><?= $value->profile->dob
+                                                ? date('Y-m-d', strtotime($value->profile->dob))
+                                                : null ?>
                                             </td>
                                             <td><?= date('Y-m-d', strtotime($value->profile->coding_date)) ?></td>
                                         </tr>

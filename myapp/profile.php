@@ -11,22 +11,35 @@ use App\Unit;
 use App\Policy;
 use App\UserPolicy;
 use App\Payment;
+use App\Benefit;
 User::isLogged();
 $roles = Role::all();
 $status = Status::all();
 $units = Unit::all();
 $policies = Policy::all();
+$benefits = Benefit::all();
 if(isset($_GET['policy_id'])) {
     $selected_user_policy = UserPolicy::where('policy_id', $_GET['policy_id'])
-    ->with('policy')
-    ->get();
+    ->with('policy', 'benefits', 'benefits.benefits')
+    ->whereHas('benefits', function($q) {
+        $q->where('user_id', $_GET['id']);
+    })->first();
+
+    $benefitsData = json_encode($selected_user_policy);
+    $benefitsData = json_decode($benefitsData);
+
+    $policy = Policy::find($_GET['policy_id']);
 }
 $selected_user = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status')->find($_GET['id']);
-$selected_user_advisor = UserProfile::where('user_id', $_GET['id'])->with('advisor')->get();
-$advisors = User::whereIn('role_id', [4, 2, 3])->where('id', '!=', Session::get('user_id'))->with('profile')->get();
+$advisor = UserProfile::where('user_id', $_GET['id'])->with('advisor')->first();
+$advisors = User::whereIn('role_id', [1, 2, 3, 4])->with('profile')->get();
 $user_policies = UserPolicy::where('user_id', $_GET['id'])->with('policy')->get();
 $selected_user_clients = UserProfile::where('advisor_id', $_GET['id'])->get();
 $payment_history = Payment::where('user_id', $_GET['id'])->with('policy', 'profile')->get();
+
+if (!$selected_user->role_id) {
+    $active = 'clients';
+}
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
     if(isset($_POST['add_policy'])) {
@@ -86,6 +99,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                 height: 20px;
                 z-index: 400;
             }
+            .select2-selection--multiple.form-control  {
+                height: auto!important;
+            }
             @media only screen and (max-width: 768px) {
                 .profile-image {
                     display:none;
@@ -126,17 +142,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                         <?php endforeach; ?>
                                                     </select>
                                                 </div>
-                                                <div class="form-group position-relative">
-                                                    <label>Face Amount</label> 
-                                                    <div class="input-group">
-                                                        <input type="text" class="form-control" name="face_amount" placeholder="Face Amount" autocomplete="off">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group position-relative">
+                                                <div class="form-group">
                                                     <label>Benefits</label> 
-                                                    <div class="input-group">
-                                                        <input type="text" class="form-control" name="benefits" placeholder="Benefits" autocomplete="off">
-                                                    </div>
+                                                    <select class="form-control select2-multiple" multiple="multiple"  name="benefits[]">
+                                                        <?php foreach($benefits as $key => $value): ?>
+                                                        <option value="<?= $value->id ?>"><?= $value->name ?></option>
+                                                        <?php endforeach; ?>
+                                                    </select>
                                                 </div>
                                                 <div class="form-group position-relative">
                                                     <label>Annual Premium Amount</label> 
@@ -145,21 +157,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                     </div>
                                                 </div>
                                                 <div class="form-group position-relative">
-                                                    <label>Mode of Payment</label> 
-                                                    <div class="input-group">
-                                                        <input type="text" class="form-control" name="mode_of_payment" placeholder="Mode of Payment" autocomplete="off">
-                                                    </div>
+                                                    <label>ode of Payment</label> 
+                                                    <select class="form-control select2-single" name="mode_of_payment" data-width="100%">
+                                                        <option>Select Mode of Payment</option>
+                                                        <option value="Annual">Annual</option>
+                                                        <option value="Semi-Annual">Semi-Annual</option>
+                                                        <option value="Quarterly">Quarterly</option>
+                                                        <option value="Monthly">Monthly</option>
+                                                    </select>
                                                 </div>
                                                 <div class="input-group date form-group position-relative info">
                                                     <label>Issue Date</label>
                                                     <input type="text" class="form-control" name="issue_date" style="width: 100%;" placeholder="Issue Date" required>
-                                                    <span class="input-group-addon">
-                                                        <span class="glyphicon glyphicon-calendar"></span>
-                                                    </span>
-                                                </div>
-                                                <div class="input-group date form-group position-relative info">
-                                                    <label>Premium Due Date</label>
-                                                    <input type="text" class="form-control" name="premium_due_date" style="width: 100%;" placeholder="Premium Due Date" required>
                                                     <span class="input-group-addon">
                                                         <span class="glyphicon glyphicon-calendar"></span>
                                                     </span>
@@ -205,12 +214,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                            <?php if($selected_user->role_id): ?>
                             <li class="nav-item">
                                 <a class="nav-link <?= $active_tab === 'home' ? 'active' : null ?>" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Production</a>
                             </li>
+                            <?php endif; ?>
                             <li class="nav-item">
                                 <a class="nav-link <?= $active_tab === 'profile' ? 'active' : null ?>" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Profile Info</a>
                             </li>
+                            <?php if(!$selected_user->role_id): ?>
+                            <li class="nav-item">
+                                <a class="nav-link <?= $active_tab === 'policy' ? 'active' : null ?>" id="pills-policy-tab" data-toggle="pill" href="#pills-policy" role="tab" aria-controls="pills-policy" aria-selected="false">Policy Info</a>
+                            </li>
+                            <?php endif; ?>
                         </ul>
                         <div class="tab-content" id="pills-tabContent">
                             <div class="tab-pane fade <?= $active_tab === 'clients' ? 'show active' : null ?>" id="pills-clients" role="tabpanel" aria-labelledby="pills-clients-tab">
@@ -231,30 +247,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                 <form method="POST">
                                     <div class="form-group">
                                         <label for="client-firstname">First Name</label>
-                                        <input type="text" class="form-control" name="firstname" id="client-firstname" value="<?= $selected_user->profile->firstname ?>">
+                                        <input type="text" class="form-control" name="firstname" id="client-firstname" value="<?= $selected_user->profile->firstname ?>" disabled>
                                     </div>
                                     <div class="form-group">
                                         <label for="client-lastname">Last Name</label>
-                                        <input type="text" class="form-control" name="lastname" id="client-lastname" value="<?= $selected_user->profile->lastname ?>">
+                                        <input type="text" class="form-control" name="lastname" id="client-lastname" value="<?= $selected_user->profile->lastname ?>" disabled>
                                     </div>
                                     <div class="form-group">
                                         <label for="client-email">Email</label>
-                                        <input type="email" class="form-control" name="email" id="client-email" value="<?= $selected_user->email ?>">
+                                        <input type="email" class="form-control" name="email" id="client-email" value="<?= $selected_user->email ?>" disabled>
                                     </div>
                                     <div class="input-group form-group position-relative info">
                                         <label>Date of Birth</label>
-                                        <input type="text" class="form-control datepicker" name="clientDob" value="<?= date('m/d/Y', strtotime($selected_user->profile->dob)) ?>" style="width: 100%;" required>
+                                        <input type="text" class="form-control datepicker" name="clientDob" value="<?= date('m/d/Y', strtotime($selected_user->profile->dob)) ?>" style="width: 100%;" disabled>
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label>Advisor</label> 
-                                        <select class="form-control select2-single" name="advisor" data-width="100%">
+                                        <select class="form-control select2-single" name="advisor" data-width="100%" disabled>
                                             <option label="&nbsp;">&nbsp;</option>
                                             <?php foreach($advisors as $key => $value): ?>
                                                 <option
-                                                    <?= isset($selected_user_advisor[0]->advisor->user_id) && $value->id === $selected_user_advisor[0]->advisor->user_id
+                                                    <?= isset($advisor->advisor->user_id) && $value->id === $advisor->advisor->user_id
                                                         ? 'selected'
                                                         : null
                                                     ?>
@@ -264,6 +280,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
+                                    <?php if($selected_user->role_id): ?>
                                     <div class="form-group">
                                         <label>Unit</label>
                                         <select class="form-control select2-single" name="unit" data-width="100%" disabled>
@@ -282,7 +299,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                     </div>
                                     <div class="form-group">
                                         <label>Status</label>
-                                        <select class="form-control select2-single" name="status" data-width="100%">
+                                        <select class="form-control select2-single" name="status" data-width="100%" disabled>
                                             <option label="&nbsp;">&nbsp;</option>
                                             <?php foreach($status as $key => $value): ?>
                                                 <option
@@ -296,13 +313,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
+                                    <?php endif; ?>
                                     <div class="form-group">
                                         <label for="clientNumber">Client Number</label>
-                                        <input type="text" class="form-control" name="client_number" id="clientNumber" value="<?= $selected_user->profile->client_number ?>">
+                                        <input type="text" class="form-control" name="client_number" id="clientNumber" value="<?= $selected_user->profile->client_number ?>" disabled>
                                     </div>
                                     <div class="input-group form-group position-relative info">
                                         <label>Coding Date</label>
-                                        <input type="text" class="form-control datepicker" name="coding_date" value="<?= date('m/d/Y', strtotime($selected_user->profile->coding_date)) ?>" style="width: 100%;" placeholder="Coding Date" required>
+                                        <input type="text" class="form-control datepicker" name="coding_date" value="<?= date('m/d/Y', strtotime($selected_user->profile->coding_date)) ?>" style="width: 100%;" placeholder="Coding Date" disabled>
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
@@ -315,42 +333,49 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                 <input type="hidden" value="policy" name="action">
                                 <input type="hidden" value="<?= $_GET['id'] ?>" name="user_id">
                                 <?php if(isset($_GET['policy_id'])): ?>
-                                    <h2><?= $selected_user_policy[0]->policy->name ?></h2>
+                                    <h2><?= $selected_user_policy->policy->name ?></h2>
                                     <form class="tooltip-right-top" id="addToDatatableForm" novalidate method="POST">
                                         <div class="form-group position-relative">
                                             <label>Face Amount</label> 
                                             <div class="input-group">
-                                                <input type="text" class="form-control" name="face_amount" placeholder="Face Amount" value="<?= $selected_user_policy[0]->face_amount ?>" disabled>
+                                                <input type="text" class="form-control" name="face_amount" placeholder="Face Amount" value="<?= '&#8369;'.number_format($policy->face_amount) ?>" disabled>
                                             </div>
                                         </div>
-                                        <div class="form-group position-relative">
+                                        <div class="form-group">
                                             <label>Benefits</label> 
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" name="benefits" placeholder="Benefits" autocomplete="off" value="<?= $selected_user_policy[0]->benefits ?>" disabled>
-                                            </div>
+                                            <select class="form-control select2-multiple" multiple="multiple"  name="benefits[]" disabled>
+                                                <?php foreach($benefits as $key => $value): ?>
+                                                <option
+                                                    <?= isset($benefitsData->benefits[$key]) && $value->id === $benefitsData->benefits[$key]->benefits->id
+                                                        ? 'selected'
+                                                        : null
+                                                    ?>
+                                                    value="<?= $value->id ?>"><?= $value->name ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
                                         </div>
                                         <div class="form-group position-relative">
                                             <label>Annual Premium Amount</label> 
                                             <div class="input-group">
-                                                <input type="text" class="form-control" name="annual_premium_amount" placeholder="Annual Premium Amount" autocomplete="off" value="<?= $selected_user_policy[0]->annual_premium_amount ?>" disabled>
+                                                <input type="text" class="form-control" name="annual_premium_amount" placeholder="Annual Premium Amount" autocomplete="off" value="<?= $selected_user_policy->annual_premium_amount ?>" disabled>
                                             </div>
                                         </div>
                                         <div class="form-group position-relative">
                                             <label>Mode of Payment</label> 
                                             <div class="input-group">
-                                                <input type="text" class="form-control" name="mode_of_payment" placeholder="Mode of Payment" autocomplete="off" value="<?= $selected_user_policy[0]->mode_of_payment ?>" disabled>
+                                                <input type="text" class="form-control" name="mode_of_payment" placeholder="Mode of Payment" autocomplete="off" value="<?= $selected_user_policy->mode_of_payment ?>" disabled>
                                             </div>
                                         </div>
                                         <div class="input-group date form-group position-relative info">
                                             <label>Issue Date</label>
-                                            <input type="text" class="form-control" name="issue_date" style="width: 100%;" placeholder="Issue Date" value="<?= $selected_user_policy[0]->issue_date ?>" disabled>
+                                            <input type="text" class="form-control" name="issue_date" style="width: 100%;" placeholder="Issue Date" value="<?= $selected_user_policy->issue_date ?>" disabled>
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
                                             </span>
                                         </div>
                                         <div class="input-group date form-group position-relative info">
                                             <label>Premium Due Date</label>
-                                            <input type="text" class="form-control" name="premium_due_date" style="width: 100%;" placeholder="Premium Due Date" value="<?= $selected_user_policy[0]->premium_due_date ?>" disabled>
+                                            <input type="text" class="form-control" name="premium_due_date" style="width: 100%;" placeholder="Premium Due Date" value="<?= $selected_user_policy->premium_due_date ?>" disabled>
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
                                             </span>

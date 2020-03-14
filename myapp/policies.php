@@ -7,6 +7,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
     if (isset($_POST['policy_id'])) {
         Policy::updatePolicy($_POST);
+    } elseif(isset($_POST['delete-policy'])) {
+        Policy::deletePolicy($_POST['delete-policy']);
     } else {
         Policy::add($_POST);
     }
@@ -40,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                 <div class="row">
                     <div class="col-12">
                         <?php include 'partials/message.php' ?>
-                        <h1>Policies</h1>
+                        <h1>Products</h1>
                         <div class="top-right-button-container">
                             <button type="button" class="btn btn-outline-primary btn-lg top-right-button mr-1" data-toggle="modal" data-target="#rightModal">ADD NEW</button>
                             <div class="modal fade modal-right" id="rightModal" tabindex="-1" role="dialog" aria-labelledby="rightModalLabel" aria-hidden="true">
@@ -58,12 +60,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                     <input type="text" class="form-control" name="policy" placeholder="Enter Policy" required>
                                                 </div>
                                                 <div class="form-group position-relative info">
-                                                    <label>Benefits</label>
-                                                    <input type="text" class="form-control" name="benefits" placeholder="Enter Benefits" required>
-                                                </div>
-                                                <div class="form-group position-relative info">
                                                     <label>Face Amount</label>
                                                     <input type="text" class="form-control" name="face_amount" placeholder="Enter Face Amount" required>
+                                                </div>
+                                                <div class="form-group position-relative info">
+                                                    <label>Commission Percentage</label>
+                                                    <input type="text" class="form-control" name="commission" placeholder="Enter Commission Percentage" required>
+                                                </div>
+                                                <div class="form-group position-relative info">
+                                                    <label>Excess Premium Amount</label>
+                                                    <input type="text" class="form-control" name="excess_premium" placeholder="Enter Face Amount" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Type</label> 
+                                                    <select class="form-control select2-single" name="type">
+                                                        <option value="Traditional">Traditional</option>
+                                                        <option value="VUL">VUL</option>
+                                                    </select>
                                                 </div>
                                             </form>
                                         </div>
@@ -97,33 +110,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     <div class="col-12 mb-4">
                         <div class="card">
                             <div class="card-body">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Policy</th>
-                                                <th scope="col">Benefits</th>
-                                                <th scope="col">Face Amount</th>
-                                                <th scope="col">Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php if($policies->count()): ?>
+                                <table class="data-table data-table-feature payment-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Policy</th>
+                                            <th>Face Amount</th>
+                                            <th>Commission Percentage</th>
+                                            <th>Excess Premium</th>
+                                            <th>Excess Premium</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
                                         <?php foreach($policies as $key => $value): ?>
                                             <tr>
                                                 <td><?= $value->name ?></td>
-                                                <td><?= $value->benefits ?></td>
                                                 <td><?= '&#8369;'.number_format($value->face_amount) ?></td>
+                                                <td><?= $value->commision ?></td>
+                                                <td><?= $value->commision ?></td>
+                                                <td><?= $value->commision ?></td>
                                                 <td>
-                                                    <button class="edit" id="<?= 'edit-'.$value->id ?>"><i class="iconsminds-file-edit">Edit</i></button>
-                                                    <button class="delete" id="<?= 'delete-'.$value->id ?>"><i class="iconsminds-folder-delete">Delete</i></button>
+                                                    <button onClick="view(<?=$value->id ?>)" class="edit" id="<?= 'edit-'.$value->id ?>"><i class="iconsminds-file-edit">Edit</i></button>
+                                                    <button onClick="deleteRecord(<?=$value->id ?>)" class="delete" id="<?= 'delete-'.$value->id ?>"><i class="iconsminds-folder-delete">Delete</i></button>
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>
-                                        <?php else: ?>
-                                        <h1>No records found.</h1>
-                                        <?php endif; ?>
-                                        </tbody>
-                                    </table>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -145,10 +158,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                 <input type="text" class="form-control" id="inputPolicy" name="policy" placeholder="Enter Policy">
                             </div>
                             <div class="form-group">
-                                <label for="inputBenefits">Benefits</label>
-                                <input type="text" class="form-control" id="inputBenefits" name="benefits" placeholder="Enter Benefits">
-                            </div>
-                            <div class="form-group">
                                 <label for="inputFaceAmount">Face Amount</label>
                                 <input type="text" class="form-control" id="inputFaceAmount" name="face_amount" placeholder="Enter Face Amount">
                             </div>
@@ -162,25 +171,50 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     </div>
                 </div>
             </div>
+            <div id="delete-modal" class="modal fade">
+                <div class="modal-dialog modal-confirm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Are you sure?</h4>	
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Do you really want to delete this record? This process cannot be undone.</p>
+                            <form method="POST" id="delete-policy-form">
+                                <input type="hidden" id="delete-policy" name="delete-policy">
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-danger delete-policy">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>    
         </main>
         <script src="js/vendor/jquery-3.3.1.min.js"></script>
         <script src="js/vendor/bootstrap.bundle.min.js"></script>
         <script src="js/vendor/perfect-scrollbar.min.js"></script>
         <script src="js/vendor/jquery.validate/jquery.validate.min.js"></script>
         <script src="js/vendor/jquery.validate/additional-methods.min.js"></script>
+        <script src="js/vendor/mousetrap.min.js"></script>
         <script src="js/vendor/datatables.min.js"></script>
-        <script src="js/vendor/bootstrap-datepicker.js"></script>
-        <script src="js/vendor/bootstrap-tagsinput.min.js"></script>
-        <script src="js/vendor/typeahead.bundle.js"></script>
-        <script src="js/dore.script.js"></script>
         <script src="js/vendor/select2.full.js"></script>
+        <script src="js/dore.script.js"></script>
         <script src="js/scripts.js"></script>
         <script>
             $('#addToDatatable').click(function () {
                 $('#addToDatatableForm').submit();
             })
-            $('.edit').click(function() {
-                let id = $(this).attr('id')
+            $('.delete-policy').click(function () {
+                $('#delete-policy-form').submit();
+            })
+            $('.delete').click(function() {
+                $('#delete-modal').modal('toggle');
+            })
+            $('.alert-success').fadeIn('fast').fadeOut(8000);
+
+            function view(id) {
                 $.ajax({
                     url:"functions/fetch-policy-details.php",
                     type:"POST",
@@ -194,11 +228,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     }
                 })
                 $('.modal-action').modal('toggle');
-            })
-            $('.delete').click(function() {
-                $('.modal-action').modal('toggle');
-            })
-            $('.alert-success').fadeIn('fast').fadeOut(8000);
+            }
+
+            function deleteRecord(id) {
+                $('#delete-policy').val(id);
+                $('#delete-modal').modal('toggle');
+            }
         </script>
     </body>
 </html>
