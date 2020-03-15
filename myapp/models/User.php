@@ -1,6 +1,7 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Session;
 use App\Redirect;
 use App\UserProfile;
@@ -14,6 +15,7 @@ use App\Production;
 
 class User extends Eloquent
 {
+	use SoftDeletes;
 	protected $fillable = array('email', 'password', 'email_verified', 'reset_password', 'token', 'token_expiry', 'role_id');
 	protected $hidden = ['password'];
 
@@ -284,6 +286,14 @@ class User extends Eloquent
 		}
 
 		Session::flash('success', 'Successfully added client');
+		Redirect::to('clients.php');
+	}
+
+	public static function deleteClient($request) {
+		$client = User::find($request['user_id']);
+		$client->delete();
+
+		Session::flash('success', 'Successfully deleted client');
 		Redirect::to('clients.php');
 	}
 

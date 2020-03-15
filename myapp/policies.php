@@ -129,8 +129,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                 <td><?= $value->excess_premium.'%' ?></td>
                                                 <td><?= $value->type ?></td>
                                                 <td>
-                                                    <button onClick="view(<?=$value->id ?>)" class="edit" id="<?= 'edit-'.$value->id ?>"><i class="iconsminds-file-edit">Edit</i></button>
-                                                    <button onClick="deleteRecord(<?=$value->id ?>)" class="delete" id="<?= 'delete-'.$value->id ?>"><i class="iconsminds-folder-delete">Delete</i></button>
+                                                    <button onClick="view(<?=$value->id ?>)" class="edit btn btn-primary" id="<?= 'edit-'.$value->id ?>"><i class="iconsminds-file-edit">Edit</i></button>
+                                                    <button onClick="deleteRecord(<?=$value->id ?>)" class="delete btn btn-danger" id="<?= 'delete-'.$value->id ?>"><i class="iconsminds-trash-with-men">Delete</i></button>
                                                 </td>
                                                 <td></td>
                                             </tr>

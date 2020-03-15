@@ -1,11 +1,13 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Session;
 use App\Redirect;
 
 class Policy extends Eloquent
 {
+    use SoftDeletes;
     protected $table = 'policy';
     protected $fillable = ['name', 'face_amount', 'commission', 'excess_premium', 'type', 'created_by', 'updated_at', 'updated_by'];
     public static function add($request) {

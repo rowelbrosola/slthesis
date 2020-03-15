@@ -15,7 +15,6 @@ class Payment extends Eloquent
     protected $fillable = ['user_id', 'policy_id', 'amount_paid', 'unit_id', 'created_by'];
 
     public static function add($request) {
-        $unit = UserProfile::where('user_id', $request['client'])->get();
         $policy = Policy::find($request['policy']);
         $percentage = $policy->commission;
         $excess_premium = $policy->excess_premium;
@@ -25,7 +24,6 @@ class Payment extends Eloquent
             'policy_id' => $request['policy'],
             'amount_paid' => $request['amount'],
             'payment_date' => $today,
-            'unit_id' => $unit[0]->unit_id,
             'created_by' => Session::get('user_id')
         ]);
         

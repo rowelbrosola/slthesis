@@ -22,7 +22,7 @@ if ($user->role_id === 2) {
     $clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status', 'profile.latestPayment')
     ->whereHas('profile', function($q) {
         $q->where('advisor_id', Session::get('user_id'));
-    })->whereNotIn('role_id', [1,4])->orWhereNull('role_id')->get();
+    })->whereNull('role_id')->get();
 } else {
     $clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status', 'profile.latestPayment')
     ->whereHas('profile', function($q) {
@@ -30,10 +30,14 @@ if ($user->role_id === 2) {
     })->whereNull('role_id')->get();
 }
 
-$logged_user = User::find(Session::get('user_id'));
+// $logged_user = User::find(Session::get('user_id'));
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
-    User::add($_POST);
+    if (isset($_POST['user_id'])) {
+        User::deleteClient($_POST);
+    } else {
+        User::add($_POST);
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -88,14 +92,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                         <tr>
                                             <th>Name</th>
                                             <th>Email</th>
-                                            <th>Gender</th>
-                                            <th>Latest Payment</th>
                                             <th>Date of Birth</th>
                                             <?php if($user->role_id === 1 || $user->role_id === 4): ?>
                                             <th>Advisor</th>
                                             <?php else: ?>
-                                            <th></th>
+                                            <th>Gender</th>
                                             <?php endif; ?>
+                                            <th>Latest Payment</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -106,11 +110,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                         <tr>
                                             <td><a href="profile.php?id=<?= $value->id.'&tab=profile' ?>"><?= $value->profile->firstname.' '.$value->profile->lastname ?></a></td>
                                             <td><?= $value->email ?></td>
-                                            <td><?= $value->profile->gender ?></td>
-                                            <td><?= $value->profile->lastPayment
-                                                ? date('Y-m-d', strtotime($value->profile->lastPayment->payment_date))
-                                                : null ?>
-                                            </td>
                                             <td><?= $value->profile->dob
                                                 ? date('Y-m-d', strtotime($value->profile->dob))
                                                 : null ?>
@@ -122,8 +121,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                 </a>
                                             </td>
                                             <?php else: ?>
-                                            <td></td>
+                                            <td><?= $value->profile->gender ?></td>
                                             <?php endif; ?>
+                                            <td><?= $value->profile->lastPayment
+                                                ? date('Y-m-d', strtotime($value->profile->lastPayment->payment_date))
+                                                : null ?>
+                                            </td>
+                                            <td>
+                                                <button onClick="deleteRecord(<?=$value->id ?>)" class="delete btn btn-danger" id="<?= 'delete-'.$value->id ?>"><i class="iconsminds-trash-with-men">Delete</i></button>
+                                            </td>
                                         </tr>
                                     <?php endforeach; ?>
                                     </tbody>
@@ -132,8 +138,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                         </div>
                     </div>
                 </div>
-
             </div>
+            <div id="delete-modal" class="modal fade">
+                <div class="modal-dialog modal-confirm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Are you sure?</h4>	
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Do you really want to delete this record? This process cannot be undone.</p>
+                            <form method="POST" id="delete-client-form">
+                                <input type="hidden" id="delete-client" name="user_id">
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-danger" form="delete-client-form">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>  
         </main>
         <script src="js/vendor/jquery-3.3.1.min.js"></script>
         <script src="js/vendor/bootstrap.bundle.min.js"></script>
@@ -161,6 +186,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     $('.unit-select').hide();
                 }
             });
+            function deleteRecord(id) {
+                $.ajax({
+                    url:"functions/fetch-profile.php",
+                    type:"POST",
+                    data:{id},
+                    success:function(data) {
+                        var parsed = JSON.parse(data)
+                        $('#delete-client').val(parsed.id); 
+                    }
+                })
+                $('#delete-modal').modal('toggle');
+            }
             $('.alert-success').fadeIn('fast').fadeOut(8000);
             $('.alert-danger').fadeIn('fast').fadeOut(10000);
         </script>

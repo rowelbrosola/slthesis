@@ -3,9 +3,15 @@ require_once 'init.php';
 use App\User;
 use App\UserProfile;
 use App\Payment;
+use App\Session;
 User::isLogged();
 $active = 'payments';
-$clients = User::where('role_id', '!=' , 1)->with('profile')->get();
+
+$clients = User::with('profile')
+->whereHas('profile', function($q) {
+    $q->where('advisor_id', Session::get('user_id'));
+})->whereNull('role_id')->get();
+
 $production = Payment::with('profile', 'unit', 'policy')->get();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
@@ -45,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Add Paymen</h5>
+                                                <h5 class="modal-title" id="exampleModalLabel">Add Payment</h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                             </div>
                                             <div class="modal-body">
