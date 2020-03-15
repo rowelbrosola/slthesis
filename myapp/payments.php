@@ -4,7 +4,7 @@ use App\User;
 use App\UserProfile;
 use App\Payment;
 User::isLogged();
-$active = 'payment';
+$active = 'payments';
 $clients = User::where('role_id', '!=' , 1)->with('profile')->get();
 $production = Payment::with('profile', 'unit', 'policy')->get();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
@@ -38,14 +38,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     <div class="col-12">
                         <div class="mb-2">
                             <?php include 'partials/message.php' ?>
-                            <h1>Production</h1>
+                            <h1>Payments</h1>
                             <div class="top-right-button-container">
                                 <button type="button" class="btn btn-outline-primary btn-lg top-right-button mr-1" data-toggle="modal" data-backdrop="static" data-target="#exampleModal">ADD NEW</button>
                                 <div class="modal fade modal-right" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Add Production</h5>
+                                                <h5 class="modal-title" id="exampleModalLabel">Add Paymen</h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                             </div>
                                             <div class="modal-body">

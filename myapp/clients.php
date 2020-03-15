@@ -26,7 +26,7 @@ if ($user->role_id === 2) {
 } else {
     $clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status', 'profile.latestPayment')
     ->whereHas('profile', function($q) {
-        $q->where('advisor_id', Session::get('user_id'));
+        $q->whereNotNull('advisor_id');
     })->whereNull('role_id')->get();
 }
 
@@ -91,7 +91,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                             <th>Gender</th>
                                             <th>Latest Payment</th>
                                             <th>Date of Birth</th>
+                                            <?php if($user->role_id === 1 || $user->role_id === 4): ?>
+                                            <th>Advisor</th>
+                                            <?php else: ?>
                                             <th></th>
+                                            <?php endif; ?>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -111,7 +115,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                 ? date('Y-m-d', strtotime($value->profile->dob))
                                                 : null ?>
                                             </td>
+                                            <?php if($user->role_id === 1 || $user->role_id === 4): ?>
+                                            <td>
+                                                <a href="profile.php?id=<?= $value->id.'&tab=profile' ?>">
+                                                    <?= $value->profile->advisor->firstname.' '.$value->profile->advisor->lastname ?>
+                                                </a>
+                                            </td>
+                                            <?php else: ?>
                                             <td></td>
+                                            <?php endif; ?>
                                         </tr>
                                     <?php endforeach; ?>
                                     </tbody>

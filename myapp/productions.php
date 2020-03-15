@@ -124,6 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                     <th>Amount Paid</th>
                                                     <th>Advisor</th>
                                                     <th>Payment Date</th>
+                                                    <th>Commission</th>
                                                     <th>Next Due Date</th>
                                                 </tr>
                                             </thead>
@@ -135,6 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                     <td><?= $value->amount_paid ?></td>
                                                     <td><?= '' ?></td>
                                                     <td><?= $value->created_at ?></td>
+                                                    <td><?= '' ?></td>
                                                     <td><?= '' ?></td>
                                                 </tr>
                                                 <?php endforeach; ?>
