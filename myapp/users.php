@@ -12,15 +12,16 @@ User::isLogged();
 $status = Status::all();
 $units = Unit::all();
 $user = User::find(Session::get('user_id'));
+
 if ($user->role_id === 2) {
     $roles = Role::find(2);
 } else if($user->role_id === 3) {
-    $roles = Role::whereIn('role_id', [3,2])->with('profile')->get();
+    $roles = Role::whereIn('id', [3,2])->get();
 } else {
     $roles = Role::all();
 }
 if ($user->id === 1) {
-    $advisors = User::whereIn('role_id', [1, 2, 3, 4])->with('profile')->get();
+    $advisors = User::whereNotNull('role_id')->with('profile')->get();
 } else {
     $advisors = User::whereIn('role_id', [4, 2, 3])->with('profile')->get();
 }
@@ -93,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                 <div class="form-group position-relative info advisor">
                                                     <label>Advisor Name</label>
                                                     <select class="form-control select2-single" name="advisor" data-width="100%">
-                                                        <option value="">Select Advisor</option>
+                                                        <option value="0">Select Advisor</option>
                                                         <?php foreach($advisors as $key => $value): ?>
                                                             <option value="<?= $value->id ?>"><?= $value->profile->firstname.' '.$value->profile->lastname ?></option>
                                                         <?php endforeach; ?>
@@ -116,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                 <div class="form-group position-relative info unit-select">
                                                     <label>Unit Name</label>
                                                     <select class="form-control select2-single unit-selection" name="unit" data-width="100%">
-                                                        <option value="">Select Unit</option>
+                                                        <option value="0">Select Unit</option>
                                                         <?php foreach($units as $key => $value): ?>
                                                             <option value="<?= $value->id ?>"><?= $value->name ?></option>
                                                         <?php endforeach; ?>
@@ -130,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                 <div class="form-group position-relative info">
                                                     <label>Status</label> 
                                                     <select class="form-control select2-single" name="status" data-width="100%" required>
-                                                        <option value="">Select Status</option>
+                                                        <option value="0">Select Status</option>
                                                         <?php foreach($status as $key => $value): ?>
                                                         <option value="<?= $value->id ?>"><?= $value->name ?></option>
                                                         <?php endforeach; ?>

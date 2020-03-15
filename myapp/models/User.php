@@ -256,7 +256,7 @@ class User extends Eloquent
 			'user_id' => $user->id,
 			'firstname' => $request['firstname'],
 			'lastname' => $request['lastname'],
-			'advisosr_id' => Session::get('user_id'),
+			'advisor_id' => Session::get('user_id'),
 			'dob' => isset($request['dob']) ? date('Y-m-d', strtotime($request['dob'])) : null,
 			'gender' => $request['gender'],
 			'created_by' => Session::get('user_id')

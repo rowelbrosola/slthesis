@@ -17,12 +17,12 @@ if ($user->role_id === 2) {
     $clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status', 'profile.latestPayment')
     ->whereHas('profile', function($q) {
         $q->where('advisor_id', Session::get('user_id'));
-    })->where('role_id', 2)->get();
+    })->whereNull('role_id')->get();
 } else if($user->role_id === 3) {
     $clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status', 'profile.latestPayment')
     ->whereHas('profile', function($q) {
         $q->where('advisor_id', Session::get('user_id'));
-    })->whereIn('role_id', [2,3])->get();
+    })->whereNotIn('role_id', [1,4])->orWhereNull('role_id')->get();
 } else {
     $clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status', 'profile.latestPayment')
     ->whereHas('profile', function($q) {
