@@ -19,6 +19,11 @@ class Payment extends Eloquent
         $percentage = $policy->commission;
         $excess_premium = $policy->excess_premium;
         $today = date('Y-m-d', time());
+
+        // get client's advisor info
+        $advisor = UserProfile::where('user_id', $request['client'])->first();
+        $advisor = UserProfile::where('user_id',$advisor->advisor_id)->first();
+        
         self::create([
             'user_id' => $request['client'],
             'policy_id' => $request['policy'],
@@ -31,9 +36,13 @@ class Payment extends Eloquent
         if ($policy->excess_premium) {
             $commisssion += $request['amount'] * ($excess_premium / 100); // add excess premium percentage to commission
         }
+        // var_dump($advisor->user_id);exit;
         Production::create([
             'user_id' => $request['client'],
+            'advisor_user_id' => $advisor->user_id,
+            'advisor_unit_id' => $advisor->unit_id,
             'amount' => $commisssion,
+            'created_by' => Session::get('user_id')
         ]);
 
 

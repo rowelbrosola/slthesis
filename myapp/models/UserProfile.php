@@ -101,7 +101,7 @@ class UserProfile extends Eloquent
     }
 
     public function production() {
-        return $this->hasMany('App\Production', 'user_id', 'user_id');
+        return $this->hasMany('App\Production', 'advisor_user_id', 'user_id');
     }
 
     public function payment() {

@@ -7,10 +7,17 @@ use App\Session;
 User::isLogged();
 $active = 'payments';
 
-$clients = User::with('profile')
-->whereHas('profile', function($q) {
-    $q->where('advisor_id', Session::get('user_id'));
-})->whereNull('role_id')->get();
+$user = User::find(Session::get('user_id'));
+
+if ($user->role_id === 1 || $user->role_id === 4) {
+    $clients = User::with('profile')
+    ->whereNull('role_id')->get();
+} else {
+    $clients = User::with('profile')
+    ->whereHas('profile', function($q) {
+        $q->where('advisor_id', Session::get('user_id'));
+    })->whereNull('role_id')->get();
+}
 
 $production = Payment::with('profile', 'unit', 'policy')->get();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 

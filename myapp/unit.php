@@ -18,9 +18,9 @@ $current_unit = Unit::find($_GET['unit_id']);
 Session::put('owner_id', $current_unit->owner_id);
 $unit_members = UserProfile::where('unit_id', $_GET['unit_id'])
     ->with('status', 'unit', 'advisor', 'production')
-    ->whereHas('unit', function($q) {
-        $q->where('owner_id', '!=', Session::get('owner_id'));
-    })
+    // ->whereHas('unit', function($q) {
+    //     $q->where('owner_id', '!=', Session::get('owner_id'));
+    // })
     ->get();
 $payments = Payment::where('unit_id', $_GET['unit_id'])->get();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 

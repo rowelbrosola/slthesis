@@ -8,7 +8,7 @@ class Production extends Eloquent
 {
     protected $table = 'production';
 
-    protected $fillable = ['user_id', 'start', 'unit_id', 'amount', 'end', 'created_by'];
+    protected $fillable = ['user_id', 'amount', 'advisor_user_id', 'advisor_unit_id', 'created_by'];
 
     public static function add($request) {
         $user = UserProfile::where('user_id', $request['user_id'])->first();

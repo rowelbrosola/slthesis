@@ -5,9 +5,10 @@ use App\Redirect;
 use App\User;
 use App\Session;
 use App\Event;
-// $event = new Event;
-// echo "<pre>";
-// print_r($event);exit;
+
+$currentMonth = date('m');
+$new_clients = User::whereRaw('MONTH(created_at) = ?',[$currentMonth])
+    ->whereNull('role_id')->get();
 
 if(isset($_GET['logout'])) {
     User::logout();
@@ -54,7 +55,7 @@ User::isLogged();
                         <div class="card">
                             <div class="card-body d-flex justify-content-between align-items-center">
                                 <h6 class="mb-0">New Clients <br/> <small><i>This Month</i></small></h6>
-                                <div role="progressbar" class="progress-bar-circle position-relative" data-color="#922c88" data-trailcolor="#d7d7d7" aria-valuemax="100" aria-valuenow="40" data-show-percent="true"></div>
+                                <div role="progressbar" class="progress-bar-circle position-relative" data-color="#922c88" data-trailcolor="#d7d7d7" aria-valuemax="100" aria-valuenow="<?= $new_clients->count() ?>" data-show-percent="true"></div>
                             </div>
                         </div>
                     </div>
