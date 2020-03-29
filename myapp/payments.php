@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                         </select>
                                                     </div>
                                                     <div class="form-group position-relative info">
-                                                        <label>Policy</label> 
+                                                        <label>Plan</label> 
                                                         <select class="form-control select2-single" name="policy" id="policy" data-width="100%" required disabled>
                                                         </select>
                                                     </div>

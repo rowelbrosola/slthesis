@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Users - Personal Production and Client Monitoring System for Financial Advisors</title>
+        <title>Plans - Personal Production and Client Monitoring System for Financial Advisors</title>
         <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
         <link rel="stylesheet" href="font/iconsmind-s/css/iconsminds.css">
         <link rel="stylesheet" href="font/simple-line-icons/css/simple-line-icons.css">
@@ -49,30 +49,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="rightModalLabel">Add a Policy</h5>
+                                            <h5 class="modal-title" id="rightModalLabel">Add a Plan</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                         </div>
                                         <div class="modal-body">
                                             <p>Submitting below form will add the data to Data Table and rows will be updateda.</p>
                                             <form class="tooltip-right-top" id="addToDatatableForm" method="POST" novalidate>
                                                 <div class="form-group position-relative info">
-                                                    <label>Policy</label>
-                                                    <input type="text" class="form-control" name="policy" placeholder="Enter Policy" required>
+                                                    <label>Plan Name</label>
+                                                    <input type="text" class="form-control" name="policy" placeholder="Enter Plan" required>
                                                 </div>
                                                 <div class="form-group position-relative info">
-                                                    <label>Face Amount</label>
-                                                    <input type="text" class="form-control" name="face_amount" placeholder="Enter Face Amount" required>
+                                                    <label>Commission Rate</label>
+                                                    <input type="text" class="form-control" name="commission" placeholder="Enter Commission Rate" required>
                                                 </div>
                                                 <div class="form-group position-relative info">
-                                                    <label>Commission Percentage</label>
-                                                    <input type="text" class="form-control" name="commission" placeholder="Enter Commission Percentage" required>
-                                                </div>
-                                                <div class="form-group position-relative info">
-                                                    <label>Excess Premium Amount</label>
-                                                    <input type="text" class="form-control" name="excess_premium" placeholder="Enter Face Amount" required>
+                                                    <label>Excess Premium Rate</label>
+                                                    <input type="text" class="form-control" name="excess_premium" placeholder="Enter Excess Premium Rate" required>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label>Type</label> 
+                                                    <label>Category</label> 
                                                     <select class="form-control select2-single" name="type">
                                                         <option value="Traditional">Traditional</option>
                                                         <option value="VUL">VUL</option>
@@ -114,9 +110,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                     <thead>
                                         <tr>
                                             <th>Policy</th>
-                                            <th>Commission Percentage</th>
-                                            <th>Excess Premium</th>
-                                            <th>Type</th>
+                                            <th>Commission Rate</th>
+                                            <th>Excess Premium Rate</th>
+                                            <th>Category</th>
                                             <th>Actions</th>
                                             <th></th>
                                         </tr>
@@ -154,19 +150,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     <div class="modal-body">
                         <form method="POST" id="policy_modal">
                             <div class="form-group">
-                                <label for="inputPolicy">Policy</label>
-                                <input type="text" class="form-control" id="inputPolicy" name="policy" placeholder="Enter Policy">
+                                <label for="inputPolicy">Plan Name</label>
+                                <input type="text" class="form-control" id="inputPolicy" name="policy" placeholder="Enter Plan">
                             </div>
                             <div class="form-group position-relative info">
-                                <label>Commission Percentage</label>
-                                <input type="text" class="form-control" id="inputCommission" name="commission" placeholder="Enter Commission Percentage" required>
+                                <label>Commission Rate</label>
+                                <input type="text" class="form-control" id="inputCommission" name="commission" placeholder="Enter Commission Rate" required>
                             </div>
                             <div class="form-group position-relative info">
-                                <label>Excess Premium Amount</label>
-                                <input type="text" class="form-control" id="inputExcessPremium" name="excess_premium" placeholder="Enter Face Amount" required>
+                                <label>Excess Premium Rate</label>
+                                <input type="text" class="form-control" id="inputExcessPremium" name="excess_premium" placeholder="Enter Excess Premium Rate" required>
                             </div>
                             <div class="form-group">
-                                <label>Type</label> 
+                                <label>Category</label> 
                                 <select class="form-control select2-single" id="product-type" name="type">
                                     <option value="Traditional">Traditional</option>
                                     <option value="VUL">VUL</option>

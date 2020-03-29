@@ -155,8 +155,6 @@ class User extends Eloquent
 			'lastname' => $request['lastname'],
 			'dob' => date('Y-m-d', strtotime($request['clientDob'])),
 			'advisor_id' => $request['advisor'],
-			'status_id' => $request['status'],
-			'client_number' => $request['client_number'] ? $request['client_number'] : null,
 			'coding_date' => date('Y-m-d', strtotime($request['coding_date'])),
 		]);
 

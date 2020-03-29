@@ -128,6 +128,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                 : null ?>
                                             </td>
                                             <td>
+                                                <button class="btn" style="padding: 0px;">
+                                                    <a href="profile.php?id=<?= $value->id.'&tab=profile&edit=true' ?>" class=" btn btn-primary"><i class="iconsminds-trash-with-men">Edit</i></a>
+                                                </button>
                                                 <button onClick="deleteRecord(<?=$value->id ?>)" class="delete btn btn-danger" id="<?= 'delete-'.$value->id ?>"><i class="iconsminds-trash-with-men">Delete</i></button>
                                             </td>
                                         </tr>

@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             </div>
                             <div class="tab">
                                 <div class="form-group">
-                                    <label>Product</label> 
+                                    <label>Plan</label> 
                                     <select class="form-control select2" data-width="100%" name="product">
                                         <option label="&nbsp;">&nbsp;</option>
                                         <?php foreach($policies as $key => $value): ?>
@@ -109,8 +109,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="form-group">
+                                            <label for="annualPremium">Face Amount</label>
+                                            <input type="text" class="form-control" name="face_amount" oninput="this.className = ''" id="faceAmount" placeholder="Face Amount">
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
                                             <label for="annualPremium">Annual Premium</label>
                                             <input type="text" class="form-control" name="annual_premium" oninput="this.className = ''" id="annualPremium" placeholder="Annual Premium">
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="annualPremium">Excess Premium</label>
+                                            <input type="text" class="form-control" name="excess_premium" oninput="this.className = ''" id="excessPremium" placeholder="Excess Premium">
                                         </div>
                                     </div>
                                     <div class="col-6">

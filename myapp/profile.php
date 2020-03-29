@@ -36,7 +36,6 @@ $advisors = User::whereIn('role_id', [1, 2, 3, 4])->with('profile')->get();
 $user_policies = UserPolicy::where('user_id', $_GET['id'])->with('policy')->get();
 $selected_user_clients = UserProfile::where('advisor_id', $_GET['id'])->get();
 $payment_history = Payment::where('user_id', $_GET['id'])->with('policy', 'profile')->get();
-
 if (!$selected_user->role_id) {
     $active = 'clients';
 }
@@ -247,7 +246,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                 <form method="POST">
                                     <div class="form-group">
                                         <label for="client-firstname">First Name</label>
-                                        <input type="text" class="form-control" name="firstname" id="client-firstname" value="<?= $selected_user->profile->firstname ?>" disabled>
+                                        <input type="text" class="form-control" name="firstname" id="client-firstname" value="<?= $selected_user->profile->firstname ?>" disabled="false">
                                     </div>
                                     <div class="form-group">
                                         <label for="client-lastname">Last Name</label>
@@ -255,18 +254,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                     </div>
                                     <div class="form-group">
                                         <label for="client-email">Email</label>
-                                        <input type="email" class="form-control" name="email" id="client-email" value="<?= $selected_user->email ?>" disabled>
+                                        <input type="email" class="form-control" id="client-email" name="email" id="client-email" value="<?= $selected_user->email ?>" disabled>
                                     </div>
                                     <div class="input-group form-group position-relative info">
                                         <label>Date of Birth</label>
-                                        <input type="text" class="form-control datepicker" name="clientDob" value="<?= date('m/d/Y', strtotime($selected_user->profile->dob)) ?>" style="width: 100%;" disabled>
+                                        <input type="text" class="form-control datepicker" id="client-dob" name="clientDob" value="<?= date('m/d/Y', strtotime($selected_user->profile->dob)) ?>" style="width: 100%;" disabled>
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label>Advisor</label> 
-                                        <select class="form-control select2-single" name="advisor" data-width="100%" disabled>
+                                        <select class="form-control select2-single" id="client-advisor" name="advisor" data-width="100%" disabled>
                                             <option label="&nbsp;">&nbsp;</option>
                                             <?php foreach($advisors as $key => $value): ?>
                                                 <option
@@ -313,20 +312,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
-                                    <?php endif; ?>
                                     <div class="form-group">
                                         <label for="clientNumber">Client Number</label>
                                         <input type="text" class="form-control" name="client_number" id="clientNumber" value="<?= $selected_user->profile->client_number ?>" disabled>
                                     </div>
+                                    <?php endif; ?>
                                     <div class="input-group form-group position-relative info">
                                         <label>Coding Date</label>
-                                        <input type="text" class="form-control datepicker" name="coding_date" value="<?= date('m/d/Y', strtotime($selected_user->profile->coding_date)) ?>" style="width: 100%;" placeholder="Coding Date" disabled>
+                                        <input type="text" class="form-control datepicker" id="client-coding_date" name="coding_date" value="<?= date('m/d/Y', strtotime($selected_user->profile->coding_date)) ?>" style="width: 100%;" placeholder="Coding Date" disabled>
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
                                     </div>
                                     <input type="hidden" value="<?= $_GET['id'] ?>" name="user_id">
+                                    <?php if(isset($_GET['edit'])): ?>
                                     <button type="submit" class="btn btn-primary">Submit</button>
+                                    <?php else: ?>
+                                    <a href="profile.php?id=<?= $_GET['id'].'&tab=profile&edit=true' ?>" class=" btn btn-primary"><i class="iconsminds-trash-with-men">Edit</i></a>
+                                    <?php endif; ?>
                                 </form>
                             </div>
                             <div class="tab-pane fade <?= $active_tab === 'policy' ? 'show active' : null ?>" id="pills-policy" role="tabpanel" aria-labelledby="pills-policy-tab">
@@ -460,6 +463,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                 $('#addToDatatableForm').submit();
             })
             $('.alert-success').fadeIn('fast').fadeOut(8000);
+            const url = window.location.href
+            var parser = new URL(url)
+            var n = parser.search.search("edit");
+            if (n >= 0) {
+                $("#client-firstname").prop('disabled', false);
+                $("#client-lastname").prop('disabled', false);
+                $("#client-email").prop('disabled', false);
+                $("#client-dob").prop('disabled', false);
+                $("#client-advisor").prop('disabled', false);
+                $("#client-coding_date").prop('disabled', false);
+            }
         </script>
     </body>
 </html>

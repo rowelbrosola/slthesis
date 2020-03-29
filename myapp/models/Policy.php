@@ -9,11 +9,10 @@ class Policy extends Eloquent
 {
     use SoftDeletes;
     protected $table = 'policy';
-    protected $fillable = ['name', 'face_amount', 'commission', 'excess_premium', 'type', 'created_by', 'updated_at', 'updated_by'];
+    protected $fillable = ['name', 'commission', 'excess_premium', 'type', 'created_by', 'updated_at', 'updated_by'];
     public static function add($request) {
         self::create([
             'name' => $request['policy'],
-            'face_amount' => $request['face_amount'],
             'commission' => $request['commission'],
             'excess_premium' => $request['excess_premium'],
             'type' => $request['type'],
