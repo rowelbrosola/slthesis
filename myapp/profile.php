@@ -21,7 +21,7 @@ $benefits = Benefit::all();
 if(isset($_GET['policy_id'])) {
     $selected_user_policy = UserPolicy::where('policy_id', $_GET['policy_id'])
     ->with('policy', 'benefits', 'benefits.benefits')
-    ->whereHas('benefits', function($q) {
+    ->orWhereHas('benefits', function($q) {
         $q->where('user_id', $_GET['id']);
     })->first();
 
@@ -119,23 +119,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                 <div class="row">
                     <div class="col-12">
                         <?php include 'partials/message.php' ?>
-                        <h1>Profile</h1>
+                        <h1>Clients</h1>
                         <div class="top-right-button-container">
-                            <button type="button" class="btn btn-outline-primary btn-lg top-right-button mr-1" data-toggle="modal" data-target="#rightModal">ADD POLICY</button>
+                            <button type="button" class="btn btn-outline-primary btn-lg top-right-button mr-1" data-toggle="modal" data-target="#rightModal">ADD A PLAN</button>
                             <div class="modal fade modal-right" id="rightModal" tabindex="-1" role="dialog" aria-labelledby="rightModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="rightModalLabel">Add Policy</h5>
+                                            <h5 class="modal-title" id="rightModalLabel">Add a plan</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                         </div>
                                         <div class="modal-body">
                                             <p>Submitting below form will add the policy to <?= $selected_user->profile->firstname.' '.$selected_user->profile->lastname ?>'s profile</p>
                                             <form class="tooltip-right-top" id="addToDatatableForm" novalidate method="POST">
                                                 <div class="form-group position-relative">
-                                                    <label>Policy</label> 
+                                                    <label>Plan Name</label> 
                                                     <select class="form-control select2-single" name="policy" data-width="100%">
-                                                        <option>Select Policy</option>
+                                                        <option>Select Plan</option>
                                                         <?php foreach($policies as $key => $policy): ?>
                                                         <option value="<?= $policy->id ?>"><?= $policy->name ?></option>
                                                         <?php endforeach; ?>
@@ -149,6 +149,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                         <?php endforeach; ?>
                                                     </select>
                                                 </div>
+                                                <div class="form-group">
+                                                    <label for="annualPremium">Face Amount</label>
+                                                    <input type="text" class="form-control" name="face_amount" id="faceAmount" placeholder="Face Amount">
+                                                </div>
                                                 <div class="form-group position-relative">
                                                     <label>Annual Premium Amount</label> 
                                                     <div class="input-group">
@@ -156,7 +160,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                     </div>
                                                 </div>
                                                 <div class="form-group position-relative">
-                                                    <label>ode of Payment</label> 
+                                                    <label>Excess Premium Amount</label> 
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" name="excess_premium_amount" placeholder="Excess Premium Amount" autocomplete="off">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group position-relative">
+                                                    <label>Policy Number</label> 
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" name="policy_number" placeholder="Policy Number" autocomplete="off">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group position-relative">
+                                                    <label>Mode of Payment</label> 
                                                     <select class="form-control select2-single" name="mode_of_payment" data-width="100%">
                                                         <option>Select Mode of Payment</option>
                                                         <option value="Annual">Annual</option>
@@ -194,7 +210,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                         </div>
                         <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
                             <ol class="breadcrumb pt-0">
-                                <li class="breadcrumb-item"><a href="clients.php">Users</a></li>
+                                <li class="breadcrumb-item"><a href="clients.php">Profile</a></li>
                                 <!-- <li class="breadcrumb-item"><a href="#">Library</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">Data</li> -->
                             </ol>
@@ -344,7 +360,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                 <input type="text" class="form-control" name="face_amount" placeholder="Face Amount" value="<?= '&#8369;'.number_format($policy->face_amount) ?>" disabled>
                                             </div>
                                         </div>
-                                        <div class="form-group">
+                                        <!-- <div class="form-group">
                                             <label>Benefits</label> 
                                             <select class="form-control select2-multiple" multiple="multiple"  name="benefits[]" disabled>
                                                 <?php foreach($benefits as $key => $value): ?>
@@ -356,7 +372,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                     value="<?= $value->id ?>"><?= $value->name ?></option>
                                                 <?php endforeach; ?>
                                             </select>
-                                        </div>
+                                        </div> -->
                                         <div class="form-group position-relative">
                                             <label>Annual Premium Amount</label> 
                                             <div class="input-group">
@@ -372,13 +388,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                         <div class="input-group date form-group position-relative info">
                                             <label>Issue Date</label>
                                             <input type="text" class="form-control" name="issue_date" style="width: 100%;" placeholder="Issue Date" value="<?= $selected_user_policy->issue_date ?>" disabled>
-                                            <span class="input-group-addon">
-                                                <span class="glyphicon glyphicon-calendar"></span>
-                                            </span>
-                                        </div>
-                                        <div class="input-group date form-group position-relative info">
-                                            <label>Premium Due Date</label>
-                                            <input type="text" class="form-control" name="premium_due_date" style="width: 100%;" placeholder="Premium Due Date" value="<?= $selected_user_policy->premium_due_date ?>" disabled>
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
                                             </span>

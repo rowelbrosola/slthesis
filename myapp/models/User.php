@@ -263,12 +263,14 @@ class User extends Eloquent
 		]);
 
 		$time = strtotime($request['issue_date']);
-		$premium_due_date = date("Y-m-d", strtotime("+1 month", $time));
+		$premium_due_date = self::getDue($time, $request['mode_of_payment']);
 
 		UserPolicy::create([
 			'user_id' => $user->id,
 			'policy_id' => $request['product'],
-			'advisor_id' => Session::get('user_id'),
+			'face_amount' => $request['face_amount'],
+			'benefits' => $request['benefits'],
+			// 'advisor_id' => Session::get('user_id'),
 			'annual_premium_amount' => $request['annual_premium'],
 			'mode_of_payment' => $request['mode_of_payment'],
 			'issue_date' => date('Y-m-d', strtotime($request['issue_date'])),
@@ -285,6 +287,29 @@ class User extends Eloquent
 
 		Session::flash('success', 'Successfully added client');
 		Redirect::to('clients.php');
+	}
+
+	/**
+	 * var $date is date issued
+	 * var $mop is Mode of Payment
+	 */
+	public static function getDue($date, $mop) {
+		switch ($mop) {
+			case 'Annual':
+				$premium_due_date = date("Y-m-d", strtotime("+365 day", $date));
+				break;
+			case 'Semi-Annual':
+				$premium_due_date = date("Y-m-d", strtotime("+6 month", $date));
+				break;
+			case 'Quarterly':
+				$premium_due_date = date("Y-m-d", strtotime("+3 month", $date));
+				break;
+			default:
+				$premium_due_date = date("Y-m-d", strtotime("+1 month", $date));
+				break;
+		}
+
+		return $premium_due_date;
 	}
 
 	public static function deleteClient($request) {

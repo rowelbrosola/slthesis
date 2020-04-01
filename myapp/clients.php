@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                         <?php include 'partials/error-message.php' ?>
                         <h1>Clients</h1>
                         <div class="top-right-button-container">
-                            <a href="add-financial-advisor.php" class="btn btn-outline-primary btn-lg top-right-button mr-1">ADD NEW</a>
+                            <a href="add-a-client.php" class="btn btn-outline-primary btn-lg top-right-button mr-1">ADD NEW</a>
                         </div>
                         <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
                             <ol class="breadcrumb pt-0">
