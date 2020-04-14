@@ -1,0 +1,17 @@
+{
+  "name": "slthesis",
+  "homepage": "https://github.com/rowelbrosola/slthesis",
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "eonasdan-bootstrap-datetimepicker": "^4.17.47"
+  }
+}

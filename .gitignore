@@ -1,4 +1,4 @@
 vendor/*
 .DS_Store
 .env
-myapp/bower_components/*
+bower_components/*
