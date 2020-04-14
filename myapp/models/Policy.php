@@ -20,7 +20,7 @@ class Policy extends Eloquent
         ]);
 
         Session::flash('success', 'Successfully added new policy!');
-        Redirect::to('policies.php');
+        Redirect::to('products.php');
     }
 
     public static function updatePolicy($request) {
@@ -33,7 +33,7 @@ class Policy extends Eloquent
             ]);
 
         Session::flash('success', 'Successfully updated Policy');
-        Redirect::to('policies.php');
+        Redirect::to('products.php');
     }
 
     public static function deletePolicy($id) {
@@ -41,6 +41,6 @@ class Policy extends Eloquent
         $find->delete();
 
         Session::flash('success', 'Successfully deleted product');
-        Redirect::to('policies.php');
+        Redirect::to('products.php');
     }
 }

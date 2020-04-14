@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Appointments - Personal Production and Client Monitoring System for Financial Advisors</title>
+        <title><?= $current_unit->name ?> - Personal Production and Client Monitoring System for Financial Advisors</title>
         <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
         <link rel="stylesheet" href="font/iconsmind-s/css/iconsminds.css">
         <link rel="stylesheet" href="font/simple-line-icons/css/simple-line-icons.css">
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                         <div class="mb-2">
                             <?php include 'partials/message.php' ?>
                             <?php include 'partials/error-message.php' ?>
-                            <h1>Dagupan Sales Team</h1>
+                            <h1><?= $current_unit->name ?></h1>
                             <div class="top-right-button-container">
                                 <button type="button" class="btn btn-outline-primary btn-lg top-right-button mr-1" data-toggle="modal" data-target="#rightModal">ADD NEW</button>
                                 <div class="modal fade modal-right" id="rightModal" tabindex="-1" role="dialog" aria-labelledby="rightModalLabel" aria-hidden="true">
@@ -141,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             </div>
                             <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
                                 <ol class="breadcrumb pt-0">
-                                    <li class="breadcrumb-item"><a href="#"><?= $current_unit->name ?></a></li>
+                                    <li class="breadcrumb-item"><a href="#">Dagupan Sales Team</a></li>
                                     <!-- <li class="breadcrumb-item"><a href="#">Library</a></li>
                                     <li class="breadcrumb-item active" aria-current="page">Data</li> -->
                                 </ol>
@@ -193,7 +193,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             <div class="app-menu">
                 <div class="p-4 h-100">
                     <div class="scroll">
-                        <p class="text-muted text-small">Production</p>
+                        <p class="text-muted text-small">Team Production</p>
                         <ul class="list-unstyled mb-5">
                             <!-- <li><i class="simple-icon-check"></i> Completed <span class="float-right">Paid</span></a></li> -->
                         </ul>
@@ -208,13 +208,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             <li>
                                 <div class="custom-control custom-checkbox"><input type="checkbox" class="custom-control-input" id="category3"> <label class="custom-control-label" for="category3">React</label></div>
                             </li>
-                        </ul>
-                        <p class="text-muted text-small">Labels</p>
-                        <div>
-                            <p class="d-sm-inline-block mb-1"><a href="#"><span class="badge badge-pill badge-outline-primary mb-1">NEW FRAMEWORK</span></a></p>
-                            <p class="d-sm-inline-block mb-1"><a href="#"><span class="badge badge-pill badge-outline-theme-3 mb-1">EDUCATION</span></a></p>
-                            <p class="d-sm-inline-block mb-1"><a href="#"><span class="badge badge-pill badge-outline-secondary mb-1">PERSONAL</span></a></p>
-                        </div> -->
+                        </ul> -->
                     </div>
                 </div>
                 <a class="app-menu-button d-inline-block d-xl-none" href="#"><i class="simple-icon-options"></i></a>
