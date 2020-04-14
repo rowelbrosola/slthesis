@@ -59,6 +59,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
+                                    <label for="firstName">Middle Name</label>
+                                    <input type="text" class="form-control" name="middlename" oninput="this.className = ''" id="middlename" placeholder="Middle Name">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
                                     <label for="lastName">Last Name</label>
                                     <input type="text" class="form-control" name="lastname" oninput="this.className = ''" id="lastName" placeholder="Last Name">
                                 </div>
@@ -78,9 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                     <input type="email" class="form-control" name="email" oninput="this.className = ''" id="email" placeholder="Email">
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
+                            <div class="col-6">
                                 <div class="form-group input-group date">
                                     <label>Date of Birth</label>
                                     <input type="text" class="form-control" name="dob" oninput="this.className = ''" style="width: 100%;" placeholder="Date of Birth">

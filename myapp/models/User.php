@@ -152,10 +152,10 @@ class User extends Eloquent
 		$profile = UserProfile::where('user_id', $request['user_id'])
 		->update([
 			'firstname' => $request['firstname'],
+			'middlename' => $request['middlename'],
 			'lastname' => $request['lastname'],
 			'dob' => date('Y-m-d', strtotime($request['clientDob'])),
 			'advisor_id' => $request['advisor'],
-			'coding_date' => date('Y-m-d', strtotime($request['coding_date'])),
 		]);
 
 		$user = User::find($request['user_id'])
@@ -255,6 +255,7 @@ class User extends Eloquent
 		UserProfile::create([
 			'user_id' => $user->id,
 			'firstname' => $request['firstname'],
+			'middlename' => $request['middlename'],
 			'lastname' => $request['lastname'],
 			'advisor_id' => Session::get('user_id'),
 			'dob' => isset($request['dob']) ? date('Y-m-d', strtotime($request['dob'])) : null,

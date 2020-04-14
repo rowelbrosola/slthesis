@@ -265,6 +265,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                         <input type="text" class="form-control" name="firstname" id="client-firstname" value="<?= $selected_user->profile->firstname ?>" disabled="false">
                                     </div>
                                     <div class="form-group">
+                                        <label for="client-lastname">Middle Name</label>
+                                        <input type="text" class="form-control" name="middlename" id="client-middlename" value="<?= $selected_user->profile->middlename ?>" disabled>
+                                    </div>
+                                    <div class="form-group">
                                         <label for="client-lastname">Last Name</label>
                                         <input type="text" class="form-control" name="lastname" id="client-lastname" value="<?= $selected_user->profile->lastname ?>" disabled>
                                     </div>
@@ -328,11 +332,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="clientNumber">Client Number</label>
-                                        <input type="text" class="form-control" name="client_number" id="clientNumber" value="<?= $selected_user->profile->client_number ?>" disabled>
-                                    </div>
-                                    <?php endif; ?>
                                     <div class="input-group form-group position-relative info">
                                         <label>Coding Date</label>
                                         <input type="text" class="form-control datepicker" id="client-coding_date" name="coding_date" value="<?= date('m/d/Y', strtotime($selected_user->profile->coding_date)) ?>" style="width: 100%;" placeholder="Coding Date" disabled>
@@ -340,8 +339,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
                                     </div>
+                                    <?php endif; ?>
+                                    <div class="form-group">
+                                        <label for="clientNumber">Client Number</label>
+                                        <input type="text" class="form-control" name="client_number" id="clientNumber" value="<?= $selected_user->profile->client_number ?>" disabled>
+                                    </div>
                                     <input type="hidden" value="<?= $_GET['id'] ?>" name="user_id">
                                     <?php if(isset($_GET['edit'])): ?>
+                                    <button type="button" class="btn btn-secondary">Cancel</button>
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                     <?php else: ?>
                                     <a href="profile.php?id=<?= $_GET['id'].'&tab=profile&edit=true' ?>" class=" btn btn-primary"><i class="iconsminds-trash-with-men">Edit</i></a>
@@ -376,18 +381,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                         <div class="form-group position-relative">
                                             <label>Annual Premium Amount</label> 
                                             <div class="input-group">
-                                                <input type="text" class="form-control" name="annual_premium_amount" placeholder="Annual Premium Amount" autocomplete="off" value="<?= $selected_user_policy->annual_premium_amount ?>" disabled>
+                                                <input type="text" class="form-control" name="annual_premium_amount" autocomplete="off" value="<?= $selected_user_policy->annual_premium_amount ?>" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="form-group position-relative">
+                                            <label>Excess Premium Amount</label> 
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" name="excess_premium_amount" autocomplete="off" value="<?= $policy->face_amount * ($policy->excess_premium / 100) ?>" disabled>
                                             </div>
                                         </div>
                                         <div class="form-group position-relative">
                                             <label>Mode of Payment</label> 
                                             <div class="input-group">
-                                                <input type="text" class="form-control" name="mode_of_payment" placeholder="Mode of Payment" autocomplete="off" value="<?= $selected_user_policy->mode_of_payment ?>" disabled>
+                                                <input type="text" class="form-control" name="mode_of_payment" value="<?= $selected_user_policy->mode_of_payment ?>" disabled>
                                             </div>
                                         </div>
                                         <div class="input-group date form-group position-relative info">
                                             <label>Issue Date</label>
-                                            <input type="text" class="form-control" name="issue_date" style="width: 100%;" placeholder="Issue Date" value="<?= $selected_user_policy->issue_date ?>" disabled>
+                                            <input type="text" class="form-control" name="issue_date" style="width: 100%;" value="<?= $selected_user_policy->issue_date ?>" disabled>
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
                                             </span>
@@ -477,6 +488,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             var n = parser.search.search("edit");
             if (n >= 0) {
                 $("#client-firstname").prop('disabled', false);
+                $("#client-middlename").prop('disabled', false);
                 $("#client-lastname").prop('disabled', false);
                 $("#client-email").prop('disabled', false);
                 $("#client-dob").prop('disabled', false);

@@ -151,7 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                     </td>
                                                     <td><?= $value->members->count() ?></td>
                                                     <td><?= isset($value->production) ? $sum : '&#8369;0' ?></td>
-                                                    <td><?= 'Love Month' ?></td>
+                                                    <td><?= 'Production' ?></td>
                                                 </tr>
                                                 <?php endforeach; ?>
                                             </tbody>

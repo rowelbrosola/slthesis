@@ -178,7 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                     <td><?= isset($value->status) ? $value->status->name : null ?></td>
                                                     <td><?= isset($value->advisor) ? $value->advisor->firstname.' '.$value->advisor->lastname : null ?></td>
                                                     <td><?= isset($value->production) ? $sum : '&#8369;0' ?></td>
-                                                    <td><?= 'Love Month' ?></td>
+                                                    <td><?= 'Production' ?></td>
                                                 </tr>
                                                 <?php endforeach; ?>
                                             </tbody>
