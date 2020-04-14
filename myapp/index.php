@@ -30,7 +30,7 @@ User::isLogged();
         <link rel="stylesheet" href="css/vendor/perfect-scrollbar.css">
         <link rel="stylesheet" href="css/main.css">
         <link rel="stylesheet" href="css/vendor/fullcalendar.min.css">
-        <link rel="stylesheet" href="../bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+        <link rel="stylesheet" href="../vendor/eonasdan/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
     </head>
     <body id="app-container" class="menu-default show-spinner">
         <?php include 'partials/header.php'; ?>
@@ -374,7 +374,7 @@ User::isLogged();
         <script src="js/dore.script.js"></script>
         <script src="js/scripts.js"></script>
         <script src="js/vendor/moment.min.js"></script>
-        <script src="../bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+        <script src="../vendor/eonasdan/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
         <script src="js/vendor/fullcalendar.min.js"></script>
         <script>
             $(function () {
