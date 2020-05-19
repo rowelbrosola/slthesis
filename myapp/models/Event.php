@@ -8,5 +8,5 @@ class Event extends Eloquent
     use SoftDeletes;
 
     protected $dates = ['deleted_at'];
-    protected $fillable = ['title', 'start_date', 'end_date'];
+    protected $fillable = ['user_id', 'title', 'description', 'audience', 'start_date', 'end_date'];
 }

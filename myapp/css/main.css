@@ -140,6 +140,11 @@ div.dataTables_wrapper div.dataTables_length select {
   margin-bottom: 1rem;
 }
 
+.timepicker-picker>table>tr {
+  background: #000;
+  width: 200px;
+}
+
 /* APPOINTMENT PAGE */
 .app-menu .app-menu-button {
   background: #145388;

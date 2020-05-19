@@ -31,6 +31,7 @@ User::isLogged();
         <link rel="stylesheet" href="css/main.css">
         <link rel="stylesheet" href="css/vendor/fullcalendar.min.css">
         <link rel="stylesheet" href="../components/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+        <link rel='stylesheet' href='../components/glyphicons-only-bootstrap/css/bootstrap.min.css' />
     </head>
     <body id="app-container" class="menu-default show-spinner">
         <?php include 'partials/header.php'; ?>
@@ -312,6 +313,8 @@ User::isLogged();
                 </div>
                 <div class="modal-body">
                 <form>
+                    <p>From: <span class="from"></span></p>
+                    <p>To: <span class="to"></span></p>
                     <div class="form-group">
                         <label for="event-title">Title</label>
                         <input type="text" class="form-control" id="event-title" aria-describedby="titleHelp" placeholder="Enter title">
@@ -320,7 +323,7 @@ User::isLogged();
                         <label for="description">Description</label>
                         <textarea class="form-control" id="description" rows="3"></textarea>
                     </div>
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col">
                             <div class="form-group">
                                 <label for="timeStarts">Time Starts</label>
@@ -343,10 +346,10 @@ User::isLogged();
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="form-group">
-                        <label for="exampleFormControlSelect1">Who should see this?</label>
-                        <select class="form-control" id="exampleFormControlSelect1">
+                        <label for="audience">Who should see this?</label>
+                        <select class="form-control" id="audience">
                         <option>All Units</option>
                         <option>My Unit Only</option>
                         <option>Only Me</option>
@@ -357,7 +360,7 @@ User::isLogged();
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-primary" id="save-event-modal">Save</button>
                 </div>
                 </div>
             </div>
@@ -398,22 +401,50 @@ User::isLogged();
                 select: function(start, end, allDay) {
                     $('#event-modal').modal('show');
                     $('#event-modal-label').html('Add an event');
+                    var title = $('#event-title').val();
+                    var description = $('#description').val();
+                    var audience = $('#audience').val();
+                    var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm");
+                    var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm");
+
+                    $('.from').html(start);
+                    $('.to').html(end);
+                    $("#save-event-modal").click(function() {
+                        $.ajax({
+                            url:"functions/insert.php",
+                            type:"POST",
+                            data:{
+                                title: title,
+                                start: start,
+                                end: end,
+                                description: description,
+                                audience: audience
+                            },
+                            success:function() {
+                                calendar.fullCalendar('refetchEvents');
+                                alert("Added Successfully");
+                            },
+                            error: function(err) {
+                                console.log(err)
+                            }
+                        })
+                    });
                     // var title = prompt("Enter Event Title");
                     // if (title) {
-                    //     var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
-                    //     var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
-                        // $.ajax({
-                        //     url:"functions/insert.php",
-                        //     type:"POST",
-                        //     data:{title:title, start:start, end:end},
-                        //     success:function() {
-                        //         calendar.fullCalendar('refetchEvents');
-                        //         alert("Added Successfully");
-                        //     },
-                        //     error: function(err) {
-                        //         console.log(err)
-                        //     }
-                        // })
+                        // var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
+                        // var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
+                    //     $.ajax({
+                    //         url:"functions/insert.php",
+                    //         type:"POST",
+                    //         data:{title:title, start:start, end:end},
+                    //         success:function() {
+                    //             calendar.fullCalendar('refetchEvents');
+                    //             alert("Added Successfully");
+                    //         },
+                    //         error: function(err) {
+                    //             console.log(err)
+                    //         }
+                    //     })
                     // }
                 },
                 editable:true,
