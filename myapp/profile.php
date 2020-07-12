@@ -413,6 +413,9 @@ $mode_of_payment = ['Annual', 'Semi-Annual', 'Quarterly', 'Monthly'];
                                         <input type="hidden" name="update_policy" value="update_policy">
                                         <input type="hidden" name="profile_user_id" value="<?= $_GET['id'] ?>">
                                         <input type="hidden" name="profile_policy_id" value="<?= $_GET['policy_id'] ?>">
+                                        <a href="profile.php?id=<?= $selected_user_policy->user_id ?>&tab=policy">
+                                            <button type="button" class="btn btn-secondary">Back</button>
+                                        </a>
                                         <button type="submit" class="btn btn-primary">Submit</button>
                                     </form>
                                 <?php elseif($user_policies->count()): ?>
