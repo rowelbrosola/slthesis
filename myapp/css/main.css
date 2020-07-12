@@ -141,8 +141,11 @@ div.dataTables_wrapper div.dataTables_length select {
 }
 
 .timepicker-picker>table>tr {
-  background: #000;
+  /* background: #000; */
   width: 200px;
+}
+.input-group-addon > span {
+  display: none;
 }
 
 /* APPOINTMENT PAGE */

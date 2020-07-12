@@ -313,8 +313,8 @@ User::isLogged();
                 </div>
                 <div class="modal-body">
                 <form>
-                    <p>From: <span class="from"></span></p>
-                    <p>To: <span class="to"></span></p>
+                    <!-- <p>From: <span class="from"></span></p>
+                    <p>To: <span class="to"></span></p> -->
                     <div class="form-group">
                         <label for="event-title">Title</label>
                         <input type="text" class="form-control" id="event-title" aria-describedby="titleHelp" placeholder="Enter title">
@@ -323,7 +323,7 @@ User::isLogged();
                         <label for="description">Description</label>
                         <textarea class="form-control" id="description" rows="3"></textarea>
                     </div>
-                    <!-- <div class="row">
+                    <div class="row">
                         <div class="col">
                             <div class="form-group">
                                 <label for="timeStarts">Time Starts</label>
@@ -346,7 +346,7 @@ User::isLogged();
                                 </div>
                             </div>
                         </div>
-                    </div> -->
+                    </div>
                     <div class="form-group">
                         <label for="audience">Who should see this?</label>
                         <select class="form-control" id="audience">
@@ -360,7 +360,7 @@ User::isLogged();
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="save-event-modal">Save</button>
+                    <button type="submit" class="btn btn-primary" id="save-event-modal">Save</button>
                 </div>
                 </div>
             </div>
@@ -406,23 +406,43 @@ User::isLogged();
                     var audience = $('#audience').val();
                     var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm");
                     var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm");
-
+                    console.log(title)
+                    console.log(description)
+                    console.log(audience)
+                    console.log(start)
+                    console.log(end)
                     $('.from').html(start);
                     $('.to').html(end);
                     $("#save-event-modal").click(function() {
+                        const pamagat = $('#event-title').val();
+                        const paglalarawan = $('#description').val();
+                        const madla = $('#audience').val();
+                        const simula = $('#timeStarts').val();
+                        const huli = $('#timeEnds').val();
+                        alert(pamagat);
+                        alert(paglalarawan);
+                        alert(madla);
+                        alert(start);
+                        alert(end);
                         $.ajax({
                             url:"functions/insert.php",
                             type:"POST",
                             data:{
-                                title: title,
+                                title: pamagat,
                                 start: start,
                                 end: end,
-                                description: description,
-                                audience: audience
+                                description: paglalarawan,
+                                audience: madla,
+                                am: simula,
+                                pm: huli
                             },
                             success:function() {
+                                $('#event-title').val('');
+                                $('#description').val('');
+                                $('#audience').val('');
+                                $('#event-modal').modal('hide');
+                                $('#save-event-modal').unbind('click');
                                 calendar.fullCalendar('refetchEvents');
-                                alert("Added Successfully");
                             },
                             error: function(err) {
                                 console.log(err)
