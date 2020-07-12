@@ -129,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                     <th>Advisor Code</th>
                                                     <th>Unit Manager</th>
                                                     <th>Man Power</th>
-                                                    <th>TYD Production</th>
+                                                    <th>YTD Production</th>
                                                     <th>Campaign</th>
                                                 </tr>
                                             </thead>

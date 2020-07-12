@@ -71,6 +71,7 @@ class User extends Eloquent
 			UserProfile::create([
 				'user_id' => $user->id,
 				'firstname' => $request['firstname'],
+				'middlename' => $request['middlename'],
 				'lastname' => $request['lastname'],
 				'advisor_id' => isset($request['advisor']) && $request['advisor'] ? $request['advisor'] : null,
 				'advisor_code' => $request['advisor_code'],
@@ -93,11 +94,14 @@ class User extends Eloquent
 	
 			self::sendMail($content);
 	
-			Session::flash('success', 'Succesfully added new user.');
+			Session::flash('success', 'Succesfully added new user!');
 			if ($request['addtounit']) {
 				Redirect::to('unit.php?unit_id='.$request['unit']);
+			} elseif($user->role_id) {
+				Redirect::to('users.php');
 			}
 		}
+		Session::flash('success', 'Succesfully added new client!');
 		Redirect::to('clients.php');
 	}
 
@@ -317,8 +321,18 @@ class User extends Eloquent
 		$client = User::find($request['user_id']);
 		$client->delete();
 
-		Session::flash('success', 'Successfully deleted client');
-		Redirect::to('clients.php');
+		if ($client->role_id) {
+			$message = 'Successfully deleted user';
+		} else {
+			$message = 'Successfully deleted client';
+		}
+
+		Session::flash('success', $message);
+		if ($client->role_id) {
+			Redirect::to('users.php');
+		} else {
+			Redirect::to('clients.php');
+		}
 	}
 
 	public function profile()

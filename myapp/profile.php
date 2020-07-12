@@ -119,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                 <div class="row">
                     <div class="col-12">
                         <?php include 'partials/message.php' ?>
-                        <h1>Clients</h1>
+                        <h1><?= $selected_user->role_id ? 'Users' : 'Clients' ?></h1>
                         <div class="top-right-button-container">
                             <button type="button" class="btn btn-outline-primary btn-lg top-right-button mr-1" data-toggle="modal" data-target="#rightModal">ADD A PLAN</button>
                             <div class="modal fade modal-right" id="rightModal" tabindex="-1" role="dialog" aria-labelledby="rightModalLabel" aria-hidden="true">

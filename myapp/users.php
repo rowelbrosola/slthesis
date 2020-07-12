@@ -32,7 +32,11 @@ $clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'pro
 $logged_user = User::find(Session::get('user_id'));
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
-    User::add($_POST);
+    if(isset($_POST['delete-policy'])) {
+        User::deleteClient($_POST['delete-user']);
+    } else {
+        User::add($_POST);
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -110,6 +114,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                     <input type="text" class="form-control" name="firstname" placeholder="First Name" required>
                                                 </div>
                                                 <div class="form-group position-relative info">
+                                                    <label>Middle Name</label>
+                                                    <input type="text" class="form-control" name="middlename" placeholder="Middle Name" required>
+                                                </div>
+                                                <div class="form-group position-relative info">
                                                     <label>Last Name</label>
                                                     <input type="text" class="form-control" name="lastname" placeholder="Last Name" required>
                                                 </div>
@@ -181,10 +189,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                         <tr>
                                             <th>Name</th>
                                             <th>Email</th>
-                                            <th>Advisor</th>
+                                            <th>Manager</th>
                                             <th>Unit Name</th>
                                             <th>Status</th>
-                                            <th>Role</th>
+                                            <!-- <th>Role</th> -->
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -213,7 +222,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                 : null
                                                 ?>
                                             </td>
-                                            <td><?= $value->role->name ?></td>
+                                            <!-- <td><?= $value->role->name ?></td> -->
+                                            <td>
+                                                <button onClick="deleteRecord(<?=$value->id ?>)" class="delete btn btn-danger" id="<?= 'delete-'.$value->id ?>"><i class="iconsminds-trash-with-men">Delete</i></button>
+                                            </td>
                                         </tr>
                                     <?php endforeach; ?>
                                     </tbody>
@@ -223,6 +235,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     </div>
                 </div>
 
+            </div>
+            <div id="delete-modal" class="modal fade">
+                <div class="modal-dialog modal-confirm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Are you sure?</h4>	
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Do you really want to delete this record? This process cannot be undone.</p>
+                            <form method="POST" id="delete-user-form">
+                                <input type="hidden" id="delete-user" name="delete-user">
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-danger delete-user">Delete</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
         <script src="js/vendor/jquery-3.3.1.min.js"></script>
@@ -253,6 +285,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             });
             $('.alert-success').fadeIn('fast').fadeOut(8000);
             $('.alert-danger').fadeIn('fast').fadeOut(10000);
+            function deleteRecord(id) {
+                $('#delete-user').val(id);
+                $('#delete-modal').modal('toggle');
+            }
+            $('.delete-user').click(function () {
+                $('#delete-user-form').submit();
+            })
         </script>
     </body>
 </html>
