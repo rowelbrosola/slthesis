@@ -40,8 +40,10 @@ if (!$selected_user->role_id) {
     $active = 'clients';
 }
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
-{
-    if (isset($_POST['update_policy'])) {
+{ 
+    if (isset($_POST['uploadImage'])) {
+        UserProfile::upload($_FILES, $_POST);
+    } else if (isset($_POST['update_policy'])) {
         UserPolicy::updatePolicy($_POST);
     } else if(isset($_POST['add_policy'])) {
         UserPolicy::addPolicy($_POST);
@@ -224,7 +226,13 @@ $mode_of_payment = ['Annual', 'Semi-Annual', 'Quarterly', 'Monthly'];
                     </div>
                     <div class="col-3 profile-image">
                         <div class="card" style="width: 18rem;">
-                            <img src="img/no-photo.png" class="card-img-top" alt="...">
+                            <img src="<?= $selected_user->profile->image_path ?>" class="card-img-top" alt="...">
+                            <form method="post" enctype="multipart/form-data">
+                                Select image to upload:
+                                <input type="file" name="fileToUpload" id="fileToUpload">
+                                <input type="hidden" name="user_id" value="<?= $_GET['id'] ?>">
+                                <input type="submit" value="Upload Image" name="uploadImage">
+                            </form>
                             <div class="card-body">
                                 <h5 class="card-title"><?= $selected_user->profile->firstname.' '.$selected_user->profile->lastname  ?></h5>
                                 <p class="card-text"><?= $selected_user->email ?></p>

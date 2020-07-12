@@ -6,7 +6,7 @@ class UserProfile extends Eloquent
 {
     protected $fillable = array('user_id', 'firstname', 'middlename', 'lastname', 'gender', 'advisor_id', 'advisor_code', 'unit_id', 'status_id', 'dob', 'coding_date', 'client_number', 'image_path');
 
-    public function upload($request) {
+    public function uploadImage($request) {
         header('Content-Type: text/plain; charset=utf-8');
 
         try {
@@ -72,6 +72,60 @@ class UserProfile extends Eloquent
 
             echo $e->getMessage();
 
+        }
+    }
+
+    public static function upload($request, $post) {
+        try {
+            $currentDirectory = getcwd();
+            $uploadDirectory = "/uploads/";
+
+            $errors = []; // Store errors here
+
+            $fileExtensionsAllowed = ['jpeg','jpg','png']; // These will be the only file extensions allowed 
+
+            $fileName = $_FILES['fileToUpload']['name'];
+            $fileSize = $_FILES['fileToUpload']['size'];
+            $fileTmpName  = $_FILES['fileToUpload']['tmp_name'];
+            $fileType = $_FILES['fileToUpload']['type'];
+            $tmp = explode('.', $fileName);
+            $fileExtension = strtolower(end($tmp));
+            // $fileExtension = strtolower(end(explode('.',$fileName)));
+
+            $uploadPath = $currentDirectory . $uploadDirectory . basename($fileName); 
+
+            if (isset($_POST['uploadImage'])) {
+
+                if (! in_array($fileExtension,$fileExtensionsAllowed)) {
+                    $errors[] = "This file extension is not allowed. Please upload a JPEG or PNG file";
+                }
+
+                if ($fileSize > 4000000) {
+                    $errors[] = "File exceeds maximum size (4MB)";
+                }
+
+                if (empty($errors)) {
+                    $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
+
+                    if ($didUpload) {
+                        $image = UserProfile::where('user_id',  $post['user_id'])->first();
+                        $image->image_path = 'uploads/'.basename($fileName);
+                        $image->save();
+                        // echo "The file " . basename($fileName) . " has been uploaded";
+                        Session:: flash('error', 'Successfully uploaded photo!');
+                        Redirect::to('profile.php?id='.$post['user_id'].'&tab=profile');
+                    } else {
+                        echo "An error occurred. Please contact the administrator.";
+                    }
+                } else {
+                    foreach ($errors as $error) {
+                        echo $error . "These are the errors" . "\n";
+                    }
+                    Redirect::to('profile.php?id='.$post['user_id'].'&tab=profile');
+                }
+            }
+        } catch (RuntimeException $e) {
+            echo $e->getMessage();
         }
     }
 
