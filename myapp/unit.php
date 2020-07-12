@@ -119,7 +119,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                     <input type="hidden" value="<?= $_GET['unit_id'] ?>" name="unit">
                                                     <input type="hidden" value="true" name="addtounit">
                                                     <input type="hidden" value="2" name="role">
-                                                    <input type="hidden" value="1" name="status">
                                                     <input type="hidden" value="<?= Session::get('user_id') ?>" name="advisor">
                                                 </form>
                                             </div>

@@ -111,4 +111,8 @@ class UserProfile extends Eloquent
     public function latestPayment() {
         return $this->hasOne('App\Payment', 'user_id', 'user_id')->latest();
     }
+
+    public function userPolicy() {
+        return $this->hasOne('App\UserPolicy', 'user_id', 'user_id')->latest();
+    }
 }

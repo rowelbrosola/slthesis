@@ -32,7 +32,7 @@ $clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'pro
 $logged_user = User::find(Session::get('user_id'));
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
-    if(isset($_POST['delete-policy'])) {
+    if(isset($_POST['delete-user'])) {
         User::deleteClient($_POST['delete-user']);
     } else {
         User::add($_POST);

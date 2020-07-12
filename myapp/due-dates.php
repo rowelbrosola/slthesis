@@ -3,6 +3,7 @@ require_once 'init.php';
 use App\User;
 User::isLogged();
 $active = 'due-dates';
+$clients = User::getDueDates();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -46,10 +47,24 @@ $active = 'due-dates';
                             <div class="card-body">
                                 <table class="data-table data-table-feature payment-table">
                                     <thead>
-                                        <tr>
-                                        </tr>
+                                        <th>Name</th>
+                                        <th>Plan Name</th>
+                                        <th>Last Payment</th>
+                                        <th>Next Due Date</th>
+                                        <th>Payment Method</th>
+                                        <th></th>
                                     </thead>
                                     <tbody>
+                                        <?php foreach ($clients as $key => $value): ?>
+                                        <tr>
+                                            <td><?= $value->profile->firstname.' '.$value->profile->lastname ?></td>
+                                            <td><?= $value->userPolicy->policy->name ?></td>
+                                            <td><?= date('Y-m-d', strtotime($value->profile->latestPayment->created_at)) ?></td>
+                                            <td><?= date('Y-m-d', strtotime($value->premium_due_date)) ?></td>
+                                            <td><?= $value->userPolicy->mode_of_payment ?></td>
+                                            <td></td>
+                                        </tr>
+                                        <?php endforeach; ?>
                                     </tbody>
                                 </table>
                             </div>

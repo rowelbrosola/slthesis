@@ -60,7 +60,17 @@ class User extends Eloquent
 		$temporary_password = Hash::encrypt($random_password);
 		$exists = User::where('email', '=', $request['email'])->first();
 		if ($exists) {
-			Session::flash('error', 'Email already exists!');
+			if ($request['addtounit']) {
+				$advisor = User::find(Session::get('user_id'));
+				$exists->role_id = 2;
+				$exists->advisor_id = $advisor->advisor_id;
+				$exists->advisor_code = $request['advisor_code'];
+				$exists->unit_id = $advisor->unit_id;
+				$exists->status_id = isset($request['status']) ? $request['status'] : null;
+				$exists->save();
+			} else {
+				Session::flash('error', 'Email already exists!');
+			}
 		} else {
 			$user = self::create([
 				'email' => $request['email'],
@@ -160,6 +170,10 @@ class User extends Eloquent
 			'lastname' => $request['lastname'],
 			'dob' => date('Y-m-d', strtotime($request['clientDob'])),
 			'advisor_id' => $request['advisor'],
+			'unit_id' => $request['unit'] ?: null,
+			'status_id' => $request['status'] ?: null,
+			// 'gender' => $request['gender'] ?: null,
+			'client_number' => $request['client_number'],
 		]);
 
 		$user = User::find($request['user_id'])
@@ -277,6 +291,7 @@ class User extends Eloquent
 			'benefits' => $request['benefits'],
 			// 'advisor_id' => Session::get('user_id'),
 			'annual_premium_amount' => $request['annual_premium'],
+			'policy_number' => $request['policy_number'],
 			'mode_of_payment' => $request['mode_of_payment'],
 			'issue_date' => date('Y-m-d', strtotime($request['issue_date'])),
 			'premium_due_date' => $premium_due_date
@@ -299,22 +314,45 @@ class User extends Eloquent
 	 * var $mop is Mode of Payment
 	 */
 	public static function getDue($date, $mop) {
-		switch ($mop) {
-			case 'Annual':
-				$premium_due_date = date("Y-m-d", strtotime("+365 day", $date));
-				break;
-			case 'Semi-Annual':
-				$premium_due_date = date("Y-m-d", strtotime("+6 month", $date));
-				break;
-			case 'Quarterly':
-				$premium_due_date = date("Y-m-d", strtotime("+3 month", $date));
-				break;
-			default:
-				$premium_due_date = date("Y-m-d", strtotime("+1 month", $date));
-				break;
+			switch ($value->policy->mode_of_payment) {
+				case 'Annual':
+					$premium_due_date = date("Y-m-d", strtotime("+365 day", $date));
+					break;
+				case 'Semi-Annual':
+					$premium_due_date = date("Y-m-d", strtotime("+6 month", $date));
+					break;
+				case 'Quarterly':
+					$premium_due_date = date("Y-m-d", strtotime("+3 month", $date));
+					break;
+				default:
+					$premium_due_date = date("Y-m-d", strtotime("+1 month", $date));
+					break;
+			}
+		return $clients;
+	}
+
+	public static function getDueDates() {
+		$clients = User::whereNull('role_id')->with('profile', 'profile.userPolicy', 'profile.latestPayment', 'userPolicy' ,'userPolicy.policy')->get();
+		foreach ($clients as $key => $value) {
+			$latest_payment = $value->profile->latestPayment->created_at;
+			switch ($value->profile->userPolicy->mode_of_payment) {
+				case 'Annual':
+					$premium_due_date = $latest_payment->addMonths(12);
+					break;
+				case 'Semi-Annual':
+					$premium_due_date = $latest_payment->addMonths(6);
+					break;
+				case 'Quarterly':
+					$premium_due_date = $latest_payment->addMonths(3);
+					break;
+				default:
+					$premium_due_date = $latest_payment->addMonths(1);
+					break;
+			}
+			$clients[$key]->premium_due_date = $premium_due_date->toDateString();
 		}
 
-		return $premium_due_date;
+		return $clients;
 	}
 
 	public static function deleteClient($request) {
@@ -343,5 +381,10 @@ class User extends Eloquent
 	public function role()
     {
         return $this->hasOne('App\Role', 'id', 'role_id');
+	}
+	
+	public function userPolicy()
+	{
+		return $this->hasOne('App\UserPolicy');
 	}
 }

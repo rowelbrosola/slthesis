@@ -41,12 +41,17 @@ if (!$selected_user->role_id) {
 }
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
-    if(isset($_POST['add_policy'])) {
+    if (isset($_POST['update_policy'])) {
+        UserPolicy::updatePolicy($_POST);
+    } else if(isset($_POST['add_policy'])) {
         UserPolicy::addPolicy($_POST);
     } else {
         User::updateUser($_POST);
     }
 }
+
+$mode_of_payment = ['Annual', 'Semi-Annual', 'Quarterly', 'Monthly'];
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -262,30 +267,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                 <form method="POST">
                                     <div class="form-group">
                                         <label for="client-firstname">First Name</label>
-                                        <input type="text" class="form-control" name="firstname" id="client-firstname" value="<?= $selected_user->profile->firstname ?>" disabled="false">
+                                        <input type="text" class="form-control" name="firstname" id="client-firstname" value="<?= $selected_user->profile->firstname ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="client-lastname">Middle Name</label>
-                                        <input type="text" class="form-control" name="middlename" id="client-middlename" value="<?= $selected_user->profile->middlename ?>" disabled>
+                                        <input type="text" class="form-control" name="middlename" id="client-middlename" value="<?= $selected_user->profile->middlename ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="client-lastname">Last Name</label>
-                                        <input type="text" class="form-control" name="lastname" id="client-lastname" value="<?= $selected_user->profile->lastname ?>" disabled>
+                                        <input type="text" class="form-control" name="lastname" id="client-lastname" value="<?= $selected_user->profile->lastname ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="client-email">Email</label>
-                                        <input type="email" class="form-control" id="client-email" name="email" id="client-email" value="<?= $selected_user->email ?>" disabled>
+                                        <input type="email" class="form-control" id="client-email" name="email" id="client-email" value="<?= $selected_user->email ?>">
                                     </div>
                                     <div class="input-group form-group position-relative info">
                                         <label>Date of Birth</label>
-                                        <input type="text" class="form-control datepicker" id="client-dob" name="clientDob" value="<?= date('m/d/Y', strtotime($selected_user->profile->dob)) ?>" style="width: 100%;" disabled>
+                                        <input type="text" class="form-control datepicker" id="client-dob" name="clientDob" value="<?= date('m/d/Y', strtotime($selected_user->profile->dob)) ?>" style="width: 100%;">
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label>Advisor</label> 
-                                        <select class="form-control select2-single" id="client-advisor" name="advisor" data-width="100%" disabled>
+                                        <select class="form-control select2-single" id="client-advisor" name="advisor" data-width="100%">
                                             <option label="&nbsp;">&nbsp;</option>
                                             <?php foreach($advisors as $key => $value): ?>
                                                 <option
@@ -302,7 +307,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                     <?php if($selected_user->role_id): ?>
                                     <div class="form-group">
                                         <label>Unit</label>
-                                        <select class="form-control select2-single" name="unit" data-width="100%" disabled>
+                                        <select class="form-control select2-single" name="unit" data-width="100%">
                                             <option label="&nbsp;">&nbsp;</option>
                                             <?php foreach($units as $key => $value): ?>
                                                 <option
@@ -318,7 +323,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                     </div>
                                     <div class="form-group">
                                         <label>Status</label>
-                                        <select class="form-control select2-single" name="status" data-width="100%" disabled>
+                                        <select class="form-control select2-single" name="status" data-width="100%">
                                             <option label="&nbsp;">&nbsp;</option>
                                             <?php foreach($status as $key => $value): ?>
                                                 <option
@@ -334,23 +339,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                     </div>
                                     <div class="input-group form-group position-relative info">
                                         <label>Coding Date</label>
-                                        <input type="text" class="form-control datepicker" id="client-coding_date" name="coding_date" value="<?= date('m/d/Y', strtotime($selected_user->profile->coding_date)) ?>" style="width: 100%;" placeholder="Coding Date" disabled>
+                                        <input type="text" class="form-control datepicker" id="client-coding_date" name="coding_date" value="<?= date('m/d/Y', strtotime($selected_user->profile->coding_date)) ?>" style="width: 100%;" placeholder="Coding Date">
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
                                     </div>
                                     <?php endif; ?>
+                                    <?php if ($selected_user->role_id === null): ?>
                                     <div class="form-group">
                                         <label for="clientNumber">Client Number</label>
-                                        <input type="text" class="form-control" name="client_number" id="clientNumber" value="<?= $selected_user->profile->client_number ?>" disabled>
+                                        <input type="text" class="form-control" name="client_number" id="clientNumber" value="<?= $selected_user->profile->client_number ?>">
                                     </div>
-                                    <input type="hidden" value="<?= $_GET['id'] ?>" name="user_id">
-                                    <?php if(isset($_GET['edit'])): ?>
-                                    <button type="button" class="btn btn-secondary">Cancel</button>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                    <?php else: ?>
-                                    <a href="profile.php?id=<?= $_GET['id'].'&tab=profile&edit=true' ?>" class=" btn btn-primary"><i class="iconsminds-trash-with-men">Edit</i></a>
                                     <?php endif; ?>
+                                    <input type="hidden" value="<?= $_GET['id'] ?>" name="user_id">
+                                    <button type="submit" class="btn btn-primary">Submit</button>
                                 </form>
                             </div>
                             <div class="tab-pane fade <?= $active_tab === 'policy' ? 'show active' : null ?>" id="pills-policy" role="tabpanel" aria-labelledby="pills-policy-tab">
@@ -392,9 +394,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                         </div>
                                         <div class="form-group position-relative">
                                             <label>Mode of Payment</label> 
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" name="mode_of_payment" value="<?= $selected_user_policy->mode_of_payment ?>" disabled>
-                                            </div>
+                                            <select class="form-control select2-single" name="mode_of_payment" data-width="100%">
+                                                <?php foreach ($mode_of_payment as $value): ?>
+                                                <option <?= $value === $selected_user_policy->mode_of_payment
+                                                        ? 'selected'
+                                                        : null
+                                                    ?> value=<?= $value ?>><?= $value ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
                                         </div>
                                         <div class="input-group date form-group position-relative info">
                                             <label>Issue Date</label>
@@ -403,8 +410,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                 <span class="glyphicon glyphicon-calendar"></span>
                                             </span>
                                         </div>
-                                        <input type="hidden" name="add_policy" value="add_policy">
+                                        <input type="hidden" name="update_policy" value="update_policy">
                                         <input type="hidden" name="profile_user_id" value="<?= $_GET['id'] ?>">
+                                        <input type="hidden" name="profile_policy_id" value="<?= $_GET['policy_id'] ?>">
+                                        <button type="submit" class="btn btn-primary">Submit</button>
                                     </form>
                                 <?php elseif($user_policies->count()): ?>
                                 <ul class="list-group list-group-flush">
