@@ -387,4 +387,9 @@ class User extends Eloquent
 	{
 		return $this->hasOne('App\UserPolicy');
 	}
+	
+	public function image()
+	{
+		return $this->hasOne('App\Image');
+	}
 }

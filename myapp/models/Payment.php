@@ -50,6 +50,13 @@ class Payment extends Eloquent
 		Redirect::to('payments.php');
     }
 
+    public static function paymentsDueThisMonth() {
+        $currentMonth = date('m');
+        $dues = People::whereRaw('MONTH(created_at) = ?',[$currentMonth])->get();
+
+        return $dues->count();
+    }
+
     public function profile() {
         return $this->hasOne('App\UserProfile', 'user_id', 'user_id');
     }

@@ -5,15 +5,28 @@ use App\Redirect;
 use App\User;
 use App\Session;
 use App\Event;
+use App\People;
+use App\Payment;
 
 $currentMonth = date('m');
 $new_clients = User::whereRaw('MONTH(created_at) = ?',[$currentMonth])
     ->whereNull('role_id')->get();
 
+$follow_ups = People::followUps();
+$prospects = People::prospects();
+
+$follow_up_count = People::followUpsThisMonth();
+$prospects_count = People::prospectsThisMonth();
+$payment_due = Payment::paymentsDueThisMonth();
+
 if(isset($_GET['logout'])) {
     User::logout();
 }
 User::isLogged();
+if ($_SERVER['REQUEST_METHOD'] == 'POST') 
+{
+    People::add($_POST);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,6 +41,7 @@ User::isLogged();
         <link rel="stylesheet" href="css/vendor/bootstrap.rtl.only.min.css">
         <link rel="stylesheet" href="css/vendor/component-custom-switch.min.css">
         <link rel="stylesheet" href="css/vendor/perfect-scrollbar.css">
+        <link rel="stylesheet" href="css/vendor/bootstrap-datepicker3.min.css">
         <link rel="stylesheet" href="css/main.css">
         <link rel="stylesheet" href="css/vendor/fullcalendar.min.css">
         <link rel="stylesheet" href="../components/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
@@ -40,6 +54,8 @@ User::isLogged();
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
+                        <?php include 'partials/message.php' ?>
+                        <?php include 'partials/error-message.php' ?>
                         <h1>Dashboard</h1>
                         <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
                             <ol class="breadcrumb pt-0">
@@ -64,8 +80,8 @@ User::isLogged();
                     <div class="col-xl-3 col-lg-6 mb-4">
                         <div class="card">
                             <div class="card-body d-flex justify-content-between align-items-center">
-                                <h6 class="mb-0">Completed <br/> <small><i>This Month</i></small></h6>
-                                <div role="progressbar" class="progress-bar-circle position-relative" data-color="#922c88" data-trailcolor="#d7d7d7" aria-valuemax="100" aria-valuenow="64" data-show-percent="true"></div>
+                                <h6 class="mb-0">Prospects <br/> <small><i>This Month</i></small></h6>
+                                <div role="progressbar" class="progress-bar-circle position-relative" data-color="#922c88" data-trailcolor="#d7d7d7" aria-valuemax="100" aria-valuenow="<?= $prospects_count ?>" data-show-percent="true"></div>
                             </div>
                         </div>
                     </div>
@@ -73,7 +89,7 @@ User::isLogged();
                         <div class="card">
                             <div class="card-body d-flex justify-content-between align-items-center">
                                 <h6 class="mb-0">Follow up <br/> <small><i>This Month</i></small></h6>
-                                <div role="progressbar" class="progress-bar-circle position-relative" data-color="#922c88" data-trailcolor="#d7d7d7" aria-valuemax="100" aria-valuenow="75" data-show-percent="true"></div>
+                                <div role="progressbar" class="progress-bar-circle position-relative" data-color="#922c88" data-trailcolor="#d7d7d7" aria-valuemax="100" aria-valuenow="<?= $follow_up_count ?>" data-show-percent="true"></div>
                             </div>
                         </div>
                     </div>
@@ -81,7 +97,7 @@ User::isLogged();
                         <div class="card">
                             <div class="card-body d-flex justify-content-between align-items-center">
                                 <h6 class="mb-0">Payment Due <br/> <small><i>This Month</i></small></h6>
-                                <div role="progressbar" class="progress-bar-circle position-relative" data-color="#922c88" data-trailcolor="#d7d7d7" aria-valuemax="100" aria-valuenow="32" data-show-percent="true"></div>
+                                <div role="progressbar" class="progress-bar-circle position-relative" data-color="#922c88" data-trailcolor="#d7d7d7" aria-valuemax="100" aria-valuenow="<?= $payment_due ?>" data-show-percent="true"></div>
                             </div>
                         </div>
                     </div>
@@ -105,96 +121,24 @@ User::isLogged();
                     <div class="col-xl-6 col-lg-12 mb-4">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">For Follow up (7)</h5>
+                                <button type="button" style="float: right;" class="btn btn-primary follow-up" data-toggle="modal" data-target="#addFollowUp">
+                                    Add new
+                                </button>
+                                <h5 class="card-title">For Follow up (<?= $follow_ups->count() ?>)</h5>
                                 <div class="scroll dashboard-list-with-thumbs">
+                                    <?php foreach ( $follow_ups as $key => $value): ?>
                                     <div class="d-flex flex-row mb-3">
                                         <div class="">
                                             <a href="#">
-                                                <p class="list-item-heading">John Estrella</p>
+                                                <p class="list-item-heading"><?= $value->firstname.' '.$value->lastname ?></p>
                                                 <div class="pr-4 d-none d-sm-block">
-                                                    <p class="text-muted mb-1 text-small">Latashia Nagy - 100-148 Warwick Trfy, Kansas City, USA</p>
+                                                    <p class="text-muted mb-1 text-small"><?= $value->address ?></p>
                                                 </div>
-                                                <div class="text-primary text-small font-weight-medium d-none d-sm-block">January 09, 2018</div>
+                                                <div class="text-primary text-small font-weight-medium d-none d-sm-block"><?= date('F j, Y', strtotime($value->created_at)) ?></div>
                                             </a>
                                         </div>
                                     </div>
-                                    <div class="d-flex flex-row mb-3">
-                                        <div class="">
-                                            <a href="#">
-                                                <p class="list-item-heading">Fruitcake</p>
-                                                <div class="pr-4 d-none d-sm-block">
-                                                    <p class="text-muted mb-1 text-small">Marty Otte - 166-156 Rue de Varennes, Gatineau, QC J8T 8G4, Canada</p>
-                                                </div>
-                                                <div class="text-primary text-small font-weight-medium d-none d-sm-block">January 09, 2018</div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-row mb-3">
-                                        <div class="">
-                                            <a href="#">
-                                                <p class="list-item-heading">Chocolate Cake</p>
-                                                <div class="pr-4 d-none d-sm-block">
-                                                    <p class="text-muted mb-1 text-small">Linn Ronning - Rasen 2-14, 98547 Kühndorf, Germany</p>
-                                                </div>
-                                                <div class="text-primary text-small font-weight-medium d-none d-sm-block">January 09, 2018</div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-row mb-3">
-                                        <div class="">
-                                            <a href="#">
-                                                <p class="list-item-heading">Fat Rascal</p>
-                                                <div class="pr-4 d-none d-sm-block">
-                                                    <p class="text-muted mb-1 text-small">Rasheeda Vaquera - 37 Rue des Grands Prés, 03100 Montluçon, France</p>
-                                                </div>
-                                                <div class="text-primary text-small font-weight-medium d-none d-sm-block">January 09, 2018</div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-row mb-3">
-                                        <div class="">
-                                            <a href="#">
-                                                <p class="list-item-heading">Marble Cake</p>
-                                                <div class="pr-4 d-none d-sm-block">
-                                                    <p class="text-muted mb-1 text-small">Latashia Nagy - 100-148 Warwick Trfy, Kansas City, USA</p>
-                                                </div>
-                                                <div class="text-primary text-small font-weight-medium d-none d-sm-block">January 09, 2018</div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-row mb-3">
-                                        <div class="">
-                                            <a href="#">
-                                                <p class="list-item-heading">Fruitcake</p>
-                                                <div class="pr-4 d-none d-sm-block">
-                                                    <p class="text-muted mb-1 text-small">Marty Otte - 166-156 Rue de Varennes, Gatineau, QC J8T 8G4, Canada</p>
-                                                </div>
-                                                <div class="text-primary text-small font-weight-medium d-none d-sm-block">January 09, 2018</div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-row mb-3">
-                                        <div class="">
-                                            <a href="#">
-                                                <p class="list-item-heading">Streuselkuchen</p>
-                                                <div class="pr-4 d-none d-sm-block">
-                                                    <p class="text-muted mb-1 text-small">Mimi Carreira - 36-71 Victoria St, Birmingham, UK</p>
-                                                </div>
-                                                <div class="text-primary text-small font-weight-medium d-none d-sm-block">January 09, 2018</div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-row mb-3">
-                                        <div class="">
-                                            <a href="#">
-                                                <p class="list-item-heading">Cremeschnitte</p>
-                                                <div class="pr-4 d-none d-sm-block">
-                                                    <p class="text-muted mb-1 text-small">Lenna Majeed - 6 Hertford St Mayfair, London, UK</p>
-                                                </div>
-                                                <div class="text-primary text-small font-weight-medium d-none d-sm-block">January 09, 2018</div>
-                                            </a>
-                                        </div>
-                                    </div>
+                                    <?php endforeach; ?>
                                 </div>
                             </div>
                         </div>
@@ -205,96 +149,24 @@ User::isLogged();
                     <div class="col-xl-6 col-lg-12 mb-4">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">Prospects (11)</h5>
+                                <button type="button" style="float: right;" class="btn btn-primary prospects" data-toggle="modal" data-target="#addProspects">
+                                    Add new
+                                </button>
+                                <h5 class="card-title">Prospects (<?= $prospects->count() ?>)</h5>
                                 <div class="scroll dashboard-list-with-thumbs">
+                                    <?php foreach ( $prospects as $key => $value): ?>
                                     <div class="d-flex flex-row mb-3">
                                         <div class="">
                                             <a href="#">
-                                                <p class="list-item-heading">John Estrella</p>
+                                                <p class="list-item-heading"><?= $value->firstname.' '.$value->lastname ?></p>
                                                 <div class="pr-4 d-none d-sm-block">
-                                                    <p class="text-muted mb-1 text-small">Latashia Nagy - 100-148 Warwick Trfy, Kansas City, USA</p>
+                                                    <p class="text-muted mb-1 text-small"><?= $value->address ?></p>
                                                 </div>
-                                                <div class="text-primary text-small font-weight-medium d-none d-sm-block">January 09, 2018</div>
+                                                <div class="text-primary text-small font-weight-medium d-none d-sm-block"><?= date('F j, Y', strtotime($value->created_at)) ?></div>
                                             </a>
                                         </div>
                                     </div>
-                                    <div class="d-flex flex-row mb-3">
-                                        <div class="">
-                                            <a href="#">
-                                                <p class="list-item-heading">Fruitcake</p>
-                                                <div class="pr-4 d-none d-sm-block">
-                                                    <p class="text-muted mb-1 text-small">Marty Otte - 166-156 Rue de Varennes, Gatineau, QC J8T 8G4, Canada</p>
-                                                </div>
-                                                <div class="text-primary text-small font-weight-medium d-none d-sm-block">January 09, 2018</div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-row mb-3">
-                                        <div class="">
-                                            <a href="#">
-                                                <p class="list-item-heading">Chocolate Cake</p>
-                                                <div class="pr-4 d-none d-sm-block">
-                                                    <p class="text-muted mb-1 text-small">Linn Ronning - Rasen 2-14, 98547 Kühndorf, Germany</p>
-                                                </div>
-                                                <div class="text-primary text-small font-weight-medium d-none d-sm-block">January 09, 2018</div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-row mb-3">
-                                        <div class="">
-                                            <a href="#">
-                                                <p class="list-item-heading">Fat Rascal</p>
-                                                <div class="pr-4 d-none d-sm-block">
-                                                    <p class="text-muted mb-1 text-small">Rasheeda Vaquera - 37 Rue des Grands Prés, 03100 Montluçon, France</p>
-                                                </div>
-                                                <div class="text-primary text-small font-weight-medium d-none d-sm-block">January 09, 2018</div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-row mb-3">
-                                        <div class="">
-                                            <a href="#">
-                                                <p class="list-item-heading">Marble Cake</p>
-                                                <div class="pr-4 d-none d-sm-block">
-                                                    <p class="text-muted mb-1 text-small">Latashia Nagy - 100-148 Warwick Trfy, Kansas City, USA</p>
-                                                </div>
-                                                <div class="text-primary text-small font-weight-medium d-none d-sm-block">January 09, 2018</div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-row mb-3">
-                                        <div class="">
-                                            <a href="#">
-                                                <p class="list-item-heading">Fruitcake</p>
-                                                <div class="pr-4 d-none d-sm-block">
-                                                    <p class="text-muted mb-1 text-small">Marty Otte - 166-156 Rue de Varennes, Gatineau, QC J8T 8G4, Canada</p>
-                                                </div>
-                                                <div class="text-primary text-small font-weight-medium d-none d-sm-block">January 09, 2018</div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-row mb-3">
-                                        <div class="">
-                                            <a href="#">
-                                                <p class="list-item-heading">Streuselkuchen</p>
-                                                <div class="pr-4 d-none d-sm-block">
-                                                    <p class="text-muted mb-1 text-small">Mimi Carreira - 36-71 Victoria St, Birmingham, UK</p>
-                                                </div>
-                                                <div class="text-primary text-small font-weight-medium d-none d-sm-block">January 09, 2018</div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex flex-row mb-3">
-                                        <div class="">
-                                            <a href="#">
-                                                <p class="list-item-heading">Cremeschnitte</p>
-                                                <div class="pr-4 d-none d-sm-block">
-                                                    <p class="text-muted mb-1 text-small">Lenna Majeed - 6 Hertford St Mayfair, London, UK</p>
-                                                </div>
-                                                <div class="text-primary text-small font-weight-medium d-none d-sm-block">January 09, 2018</div>
-                                            </a>
-                                        </div>
-                                    </div>
+                                    <?php endforeach; ?>
                                 </div>
                             </div>
                         </div>
@@ -303,67 +175,199 @@ User::isLogged();
             </div>
             <!-- Modal -->
             <div class="modal fade" id="event-modal" tabindex="-1" role="dialog" aria-labelledby="event-modal-label" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="event-modal-label">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                <form>
-                    <!-- <p>From: <span class="from"></span></p>
-                    <p>To: <span class="to"></span></p> -->
-                    <div class="form-group">
-                        <label for="event-title">Title</label>
-                        <input type="text" class="form-control" id="event-title" aria-describedby="titleHelp" placeholder="Enter title">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="event-modal-label">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    <div class="form-group">
-                        <label for="description">Description</label>
-                        <textarea class="form-control" id="description" rows="3"></textarea>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="form-group">
-                                <label for="timeStarts">Time Starts</label>
-                                <div class='input-group date' id='date-time-starts'>
-                                    <input type='text' name="time-starts" id="timeStarts" class="form-control" />
-                                    <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-time"></span>
-                                    </span>
+                    <div class="modal-body">
+                    <form>
+                        <!-- <p>From: <span class="from"></span></p>
+                        <p>To: <span class="to"></span></p> -->
+                        <div class="form-group">
+                            <label for="event-title">Title</label>
+                            <input type="text" class="form-control" id="event-title" aria-describedby="titleHelp" placeholder="Enter title">
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea class="form-control" id="description" rows="3"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="timeStarts">Time Starts</label>
+                                    <div class='input-group date' id='date-time-starts'>
+                                        <input type='text' name="time-starts" id="timeStarts" class="form-control" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-time"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="timeEnds">Time Ends</label>
+                                    <div class='input-group date' id='date-time-ends'>
+                                        <input type='text' name="time-ends" id="timeEnds" class="form-control" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-time"></span>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col">
-                            <div class="form-group">
-                                <label for="timeEnds">Time Ends</label>
-                                <div class='input-group date' id='date-time-ends'>
-                                    <input type='text' name="time-ends" id="timeEnds" class="form-control" />
-                                    <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-time"></span>
-                                    </span>
-                                </div>
-                            </div>
+                        <div class="form-group">
+                            <label for="audience">Who should see this?</label>
+                            <select class="form-control" id="audience">
+                            <option>All Units</option>
+                            <option>My Unit Only</option>
+                            <option>Only Me</option>
+                            </select>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="audience">Who should see this?</label>
-                        <select class="form-control" id="audience">
-                        <option>All Units</option>
-                        <option>My Unit Only</option>
-                        <option>Only Me</option>
-                        </select>
-                    </div>
 
-                </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" id="save-event-modal">Save</button>
-                </div>
+                    </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" id="save-event-modal">Save</button>
+                    </div>
+                    </div>
                 </div>
             </div>
+            <div class="modal fade" id="addFollowUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add Follow Up</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="follow-up-form" method="post">
+                            <div class="form-group">
+                                <label for="event-title">First Name</label>
+                                <input type="text" class="form-control" name="firstname" aria-describedby="titleHelp" placeholder="Enter first name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="event-title">Middle Name</label>
+                                <input type="text" class="form-control" name="middlename" aria-describedby="titleHelp" placeholder="Enter middle name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="event-title">Last Name</label>
+                                <input type="text" class="form-control" name="lastname" aria-describedby="titleHelp" placeholder="Enter last name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="event-title">Address</label>
+                                <input type="text" class="form-control" name="address" aria-describedby="titleHelp" placeholder="Enter address" required>
+                            </div>
+                            <div class="input-group date form-group position-relative info">
+                                <label>Birth Date</label>
+                                <input type="text" class="form-control" name="birthdate" style="width: 100%;" placeholder="Birth Date" required>
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                            <input type="hidden" name="status" value="follow_up">
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" id="follow-up-btn">Save changes</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="addProspects" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add Prospect</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="prospect-form" method="post">
+                            <div class="form-group">
+                                <label for="event-title">First Name</label>
+                                <input type="text" class="form-control" name="firstname" aria-describedby="titleHelp" placeholder="Enter first name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="event-title">Middle Name</label>
+                                <input type="text" class="form-control" name="middlename" aria-describedby="titleHelp" placeholder="Enter middle name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="event-title">Last Name</label>
+                                <input type="text" class="form-control" name="lastname" aria-describedby="titleHelp" placeholder="Enter last name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="event-title">Address</label>
+                                <input type="text" class="form-control" name="address" aria-describedby="titleHelp" placeholder="Enter address" required>
+                            </div>
+                            <div class="input-group date form-group position-relative info">
+                                <label>Birth Date</label>
+                                <input type="text" class="form-control" name="birthdate" style="width: 100%;" placeholder="Birth Date" required>
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                            <input type="hidden" name="status" value="prospect">
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" id="prospect-btn">Save changes</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="viewPeople" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add Prospect</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="view-form" method="post">
+                            <div class="form-group">
+                                <label for="event-title">First Name</label>
+                                <input type="text" class="form-control" name="firstname" aria-describedby="titleHelp" placeholder="Enter first name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="event-title">Middle Name</label>
+                                <input type="text" class="form-control" name="middlename" aria-describedby="titleHelp" placeholder="Enter middle name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="event-title">Last Name</label>
+                                <input type="text" class="form-control" name="lastname" aria-describedby="titleHelp" placeholder="Enter last name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="event-title">Address</label>
+                                <input type="text" class="form-control" name="address" aria-describedby="titleHelp" placeholder="Enter address" required>
+                            </div>
+                            <div class="input-group date form-group position-relative info">
+                                <label>Birth Date</label>
+                                <input type="text" class="form-control" name="birthdate" style="width: 100%;" placeholder="Birth Date" required>
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                            <input type="hidden" name="status" value="prospect">
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" id="prospect-btn">Save changes</button>
+                    </div>
+                    </div>
+                </div>
             </div>
         </main>
         <script src="js/vendor/jquery-3.3.1.min.js"></script>
@@ -374,6 +378,7 @@ User::isLogged();
         <script src="js/vendor/Chart.bundle.min.js"></script>
         <script src="js/vendor/chartjs-plugin-datalabels.js"></script>
         <script src="js/vendor/progressbar.min.js"></script>
+        <script src="js/vendor/bootstrap-datepicker.js"></script>
         <script src="js/dore.script.js"></script>
         <script src="js/scripts.js"></script>
         <script src="js/vendor/moment.min.js"></script>
@@ -388,6 +393,14 @@ User::isLogged();
                     format: 'LT'
                 });
             });
+            $('#follow-up-btn').click(function () {
+                $('#follow-up-form').submit();
+            });
+            $('#prospect-btn').click(function () {
+                $('#prospect-form').submit();
+            });
+            $('.alert-success').fadeIn('fast').fadeOut(8000);
+            $('.alert-danger').fadeIn('fast').fadeOut(8000);
             var calendar = $('#calendar').fullCalendar({
                 editable:true,
                 header: {
@@ -406,11 +419,6 @@ User::isLogged();
                     var audience = $('#audience').val();
                     var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm");
                     var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm");
-                    console.log(title)
-                    console.log(description)
-                    console.log(audience)
-                    console.log(start)
-                    console.log(end)
                     $('.from').html(start);
                     $('.to').html(end);
                     $("#save-event-modal").click(function() {
@@ -419,11 +427,6 @@ User::isLogged();
                         const madla = $('#audience').val();
                         const simula = $('#timeStarts').val();
                         const huli = $('#timeEnds').val();
-                        alert(pamagat);
-                        alert(paglalarawan);
-                        alert(madla);
-                        alert(start);
-                        alert(end);
                         $.ajax({
                             url:"functions/insert.php",
                             type:"POST",
@@ -502,6 +505,7 @@ User::isLogged();
                 },
 
                 eventClick:function(event) {
+                    console.log(event.id)
                     if(confirm("Are you sure you want to remove it?")) {
                         var id = event.id;
                         $.ajax({
