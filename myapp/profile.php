@@ -128,7 +128,9 @@ $mode_of_payment = ['Annual', 'Semi-Annual', 'Quarterly', 'Monthly'];
                         <?php include 'partials/message.php' ?>
                         <h1><?= $selected_user->role_id ? 'Users' : 'Clients' ?></h1>
                         <div class="top-right-button-container">
+                            <?php if (!$selected_user->role_id): ?>
                             <button type="button" class="btn btn-outline-primary btn-lg top-right-button mr-1" data-toggle="modal" data-target="#rightModal">ADD A PLAN</button>
+                            <?php endif; ?>
                             <div class="modal fade modal-right" id="rightModal" tabindex="-1" role="dialog" aria-labelledby="rightModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
