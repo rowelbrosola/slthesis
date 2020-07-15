@@ -210,8 +210,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             <div class="col">
                                 <div class="form-group">
                                     <label for="timeStarts">Time Starts</label>
-                                    <div class='input-group date' id='date-time-starts'>
-                                        <input type='text' name="time-starts" id="timeStarts" class="form-control" />
+                                    <div class='input-group' id='date-time-starts'>
+                                        <input type='date-time' name="time-starts" id="timeStarts" class="form-control" />
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-time"></span>
                                         </span>
@@ -221,8 +221,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             <div class="col">
                                 <div class="form-group">
                                     <label for="timeEnds">Time Ends</label>
-                                    <div class='input-group date' id='date-time-ends'>
-                                        <input type='text' name="time-ends" id="timeEnds" class="form-control" />
+                                    <div class='input-group' id='date-time-ends'>
+                                        <input type='date-time' name="time-ends" id="timeEnds" class="form-control" />
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-time"></span>
                                         </span>
