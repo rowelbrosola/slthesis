@@ -175,7 +175,8 @@ $current_production = Production::currentProduction();
                                                     }
                                                 ?>
                                                 <tr>
-                                                    <td class="user-name" id="<?= $value->user_id ?>"><a href="#"><?= $value->firstname.' '.$value->lastname ?></a></td>
+                                                    <!-- <td class="user-name" id="<?= $value->user_id ?>"><a href="#"><?= $value->firstname.' '.$value->lastname ?></a></td> -->
+                                                    <td><?= $value->firstname.' '.$value->lastname ?></td>
                                                     <td><?= $value->advisor_code ?></td>
                                                     <td><?= isset($value->status) ? $value->status->name : null ?></td>
                                                     <td><?= isset($value->advisor) ? $value->advisor->firstname.' '.$value->advisor->lastname : null ?></td>

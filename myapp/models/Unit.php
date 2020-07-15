@@ -7,7 +7,7 @@ use App\Redirect;
 class Unit extends Eloquent
 {
     protected $table = 'unit';
-    protected $fillable = ['name', 'created_by'];
+    protected $fillable = ['name', 'owner_id', 'created_by'];
 
     public static function add($post) {
         Unit::create([

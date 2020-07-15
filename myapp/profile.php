@@ -228,7 +228,7 @@ $mode_of_payment = ['Annual', 'Semi-Annual', 'Quarterly', 'Monthly'];
                     </div>
                     <div class="col-3 profile-image">
                         <div class="card" style="width: 18rem;">
-                            <img src="<?= $selected_user->profile->image_path ?>" class="card-img-top" alt="...">
+                            <img src="<?= $selected_user->profile->image_path ?: 'img/no-photo.png' ?>" class="card-img-top" alt="...">
                             <form method="post" enctype="multipart/form-data">
                                 Select image to upload:
                                 <input type="file" name="fileToUpload" id="fileToUpload">

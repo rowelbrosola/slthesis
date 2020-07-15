@@ -63,6 +63,10 @@ $production = Production::eachUnitProduction();
                                                         <input type="text" class="form-control" name="firstname" placeholder="Manager First Name" required>
                                                     </div>
                                                     <div class="form-group position-relative info">
+                                                        <label>Manager Middle Name</label>
+                                                        <input type="text" class="form-control" name="middlename" placeholder="Manager Middle Name" required>
+                                                    </div>
+                                                    <div class="form-group position-relative info">
                                                         <label>Manager Last Name</label>
                                                         <input type="text" class="form-control" name="lastname" placeholder="Manager Last Name" required>
                                                     </div>

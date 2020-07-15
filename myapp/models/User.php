@@ -128,12 +128,14 @@ class User extends Eloquent
 
 		$unit = Unit::create([
 			'name' => $request['unit'],
+			'owner_id' => $user->id,
 			'created_by' => Session::get('user_id')
 		]);
 		
 		UserProfile::create([
 			'user_id' => $user->id,
 			'firstname' => $request['firstname'],
+			'middlename' => $request['middlename'],
 			'lastname' => $request['lastname'],
 			'unit_id' => $unit->id,
 			'advisor_code' => $request['advisor_code'],
