@@ -381,7 +381,7 @@ class User extends Eloquent
 	}
 
 	public static function deleteClient($request) {
-		$client = User::find($request['user_id']);
+		$client = User::find($request);
 		$client->delete();
 
 		if ($client->role_id) {
