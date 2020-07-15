@@ -165,3 +165,6 @@ div.dataTables_wrapper div.dataTables_length select {
 .card-body .follow-up {
   float: right;
 } */
+.card {
+  border-top: 2px solid #e6a802 !important;
+}

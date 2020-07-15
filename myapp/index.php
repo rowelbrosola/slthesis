@@ -52,6 +52,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         <link rel="stylesheet" href="css/vendor/fullcalendar.min.css">
         <link rel="stylesheet" href="../components/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
         <link rel='stylesheet' href='../components/glyphicons-only-bootstrap/css/bootstrap.min.css' />
+        <style>
+            .card {
+                border-top: 2px solid #e6a802 !important;
+            }
+        </style>
     </head>
     <body id="app-container" class="menu-default show-spinner">
         <?php include 'partials/header.php'; ?>

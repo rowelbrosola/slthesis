@@ -4,6 +4,11 @@ use App\User;
 use App\Session;
 $account = User::find(Session::get('user_id'));
 ?>
+<style>
+    .fixed-top {
+        border-bottom: 2px solid #e6a802;
+    }
+</style>
 <nav class="navbar fixed-top">
     <div class="d-flex align-items-center navbar-left">
         <a href="#" class="menu-button d-none d-md-block">
