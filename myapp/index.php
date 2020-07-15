@@ -25,7 +25,13 @@ if(isset($_GET['logout'])) {
 User::isLogged();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
-    People::add($_POST);
+    if (isset($_POST['action']) && $_POST['action'] == 'delete') {
+        People::deleteRecord($_POST);
+    } else if (isset($_POST['action']) && $_POST['action'] == 'update') {
+        People::updateRecord($_POST);
+    } else {
+        People::add($_POST);
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -127,9 +133,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                 <h5 class="card-title">For Follow up (<?= $follow_ups->count() ?>)</h5>
                                 <div class="scroll dashboard-list-with-thumbs">
                                     <?php foreach ( $follow_ups as $key => $value): ?>
-                                    <div class="d-flex flex-row mb-3">
+                                    <div class="d-flex flex-row mb-3" style="float: left;">
                                         <div class="">
-                                            <a href="#">
+                                            <a href="#" onClick="showPeople(<?= $value->id ?>)">
                                                 <p class="list-item-heading"><?= $value->firstname.' '.$value->lastname ?></p>
                                                 <div class="pr-4 d-none d-sm-block">
                                                     <p class="text-muted mb-1 text-small"><?= $value->address ?></p>
@@ -157,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                     <?php foreach ( $prospects as $key => $value): ?>
                                     <div class="d-flex flex-row mb-3">
                                         <div class="">
-                                            <a href="#">
+                                            <a href="#" onClick="showPeople(<?= $value->id ?>)">
                                                 <p class="list-item-heading"><?= $value->firstname.' '.$value->lastname ?></p>
                                                 <div class="pr-4 d-none d-sm-block">
                                                     <p class="text-muted mb-1 text-small"><?= $value->address ?></p>
@@ -329,7 +335,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Add Prospect</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">View</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
@@ -338,33 +344,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                         <form id="view-form" method="post">
                             <div class="form-group">
                                 <label for="event-title">First Name</label>
-                                <input type="text" class="form-control" name="firstname" aria-describedby="titleHelp" placeholder="Enter first name" required>
+                                <input type="text" class="form-control" name="firstname" id="firstname" aria-describedby="titleHelp" placeholder="Enter first name" required>
                             </div>
                             <div class="form-group">
                                 <label for="event-title">Middle Name</label>
-                                <input type="text" class="form-control" name="middlename" aria-describedby="titleHelp" placeholder="Enter middle name" required>
+                                <input type="text" class="form-control" name="middlename" id="middlename" aria-describedby="titleHelp" placeholder="Enter middle name" required>
                             </div>
                             <div class="form-group">
                                 <label for="event-title">Last Name</label>
-                                <input type="text" class="form-control" name="lastname" aria-describedby="titleHelp" placeholder="Enter last name" required>
+                                <input type="text" class="form-control" name="lastname" id="lastname" aria-describedby="titleHelp" placeholder="Enter last name" required>
                             </div>
                             <div class="form-group">
                                 <label for="event-title">Address</label>
-                                <input type="text" class="form-control" name="address" aria-describedby="titleHelp" placeholder="Enter address" required>
+                                <input type="text" class="form-control" name="address" id="address" aria-describedby="titleHelp" placeholder="Enter address" required>
                             </div>
                             <div class="input-group date form-group position-relative info">
                                 <label>Birth Date</label>
-                                <input type="text" class="form-control" name="birthdate" style="width: 100%;" placeholder="Birth Date" required>
+                                <input type="text" class="form-control" name="birthdate" id="birthdate" style="width: 100%;" placeholder="Birth Date" required>
                                 <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar"></span>
                                 </span>
                             </div>
-                            <input type="hidden" name="status" value="prospect">
+                            <input type="hidden" name="status" value="prospect" id="status">
+                            <input type="hidden" name="id" id="id">
+                            <input type="hidden" name="action" id="action">
                         </form>
                     </div>
                     <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" id="delete-btn" style="position: absolute; left: 15px;" onClick="deleteThis()" data-dismiss="modal">Delete</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary" id="prospect-btn">Save changes</button>
+                        <button type="submit" class="btn btn-primary" onClick="updateThis()" id="view-btn">Save changes</button>
                     </div>
                     </div>
                 </div>
@@ -399,6 +408,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             $('#prospect-btn').click(function () {
                 $('#prospect-form').submit();
             });
+            $('#view-btn').click(function () {
+                $('#view-form').submit();
+            });
+            function showPeople(id) {
+                $('#viewPeople').modal('toggle');
+                $.ajax({
+                    url:"functions/fetch-people.php",
+                    type:"POST",
+                    data:{id},
+                    success:function(data) {
+                        var parsed = JSON.parse(data)
+                        $('#firstname').val(parsed.firstname); 
+                        $('#middlename').val(parsed.middlename); 
+                        $('#lastname').val(parsed.lastname); 
+                        $('#address').val(parsed.address); 
+                        $('#birthdate').val(parsed.birthdate); 
+                        $('#status').val(parsed.status); 
+                        $('#id').val(parsed.id); 
+                    }
+                })
+            };
+            function deleteThis() {
+                $('#action').val('delete');
+                $('#view-form').submit();
+            };
+            function updateThis() {
+                $('#action').val('update');
+                $('#view-form').submit();
+            };
             $('.alert-success').fadeIn('fast').fadeOut(8000);
             $('.alert-danger').fadeIn('fast').fadeOut(8000);
             var calendar = $('#calendar').fullCalendar({

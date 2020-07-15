@@ -1,11 +1,13 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Session;
 use App\Redirect;
 
 class People extends Eloquent
 {
+    use SoftDeletes;
     protected $table = 'people';
 
     protected $fillable = ['firstname', 'middlename', 'lastname', 'address', 'birthdate', 'status'];
@@ -43,6 +45,27 @@ class People extends Eloquent
         } else {
             Session:: flash('error', 'Error encountred! Please try again.');
         }
+        Redirect::to('index.php');
+    }
+
+    public static function deleteRecord($request) {
+        $id = $request['id'];
+        $people = People::find($id);
+        $people->delete();
+        Session:: flash('success', 'Succesfully deleted!');
+        Redirect::to('index.php');
+    }
+
+    public static function updateRecord($request) {
+        $people = People::find($request['id']);
+        $people->firstname = $request['firstname'];
+        $people->middlename = $request['middlename'];
+        $people->lastname = $request['lastname'];
+        $people->address = $request['address'];
+        $people->birthdate = date('Y-m-d', strtotime($request['birthdate']));
+        $people->status = $request['status'];
+        $people->save();
+        Session:: flash('success', 'Succesfully updated!');
         Redirect::to('index.php');
     }
 
