@@ -6,6 +6,7 @@ use App\UserProfile;
 use App\Session;
 use App\Payment;
 use App\Status;
+use App\Production;
 User::isLogged();
 $status = Status::all();
 $my_unit = UserProfile::where('user_id', Session::get('user_id'))->with('unit')->get();
@@ -27,6 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
     User::add($_POST);
 }
+
+$current_production = Production::currentProduction();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -177,7 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                     <td><?= isset($value->status) ? $value->status->name : null ?></td>
                                                     <td><?= isset($value->advisor) ? $value->advisor->firstname.' '.$value->advisor->lastname : null ?></td>
                                                     <td><?= isset($value->production) ? $sum : '&#8369;0' ?></td>
-                                                    <td><?= 'Production' ?></td>
+                                                    <td><?= $current_production ?></td>
                                                 </tr>
                                                 <?php endforeach; ?>
                                             </tbody>
