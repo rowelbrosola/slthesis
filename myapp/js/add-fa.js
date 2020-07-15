@@ -40,8 +40,7 @@ function nextPrev(n) {
 	// if you have reached the end of the form...
 	if (currentTab >= x.length) {
 		// ... the form gets submitted:
-		console.log(currentTab)
-		// document.getElementById("regForm").submit();
+		document.getElementById("regForm").submit();
 		return false;
 	}
 	// Otherwise, display the correct tab:
