@@ -5,6 +5,8 @@ use App\Session;
 use App\Redirect;
 use App\UserProfile;
 use Carbon\Carbon;
+use App\Unit;
+use App\Production;
 class Production extends Eloquent
 {
     protected $table = 'production';
@@ -38,5 +40,34 @@ class Production extends Eloquent
             ->sum('amount');
 
         return $total_production;
-	}
+    }
+    
+    public static function eachUnitProduction() {
+        $units = Unit::all();
+
+        $end_date = Carbon::now()->startOfMonth()->addMonth(3);
+        $end_date->endOfMonth();
+
+        $start_date = Carbon::now()->startOfMonth(); 
+        $start_date->startOfMonth();
+
+        if ($units) {
+            foreach ($units as $key => $value) {
+                $total_production[$value->name] = Production::select('amount','created_at')
+                    ->whereBetween('created_at',[$start_date, $end_date])
+                    ->where('advisor_unit_id', $value->id)
+                    ->sum('amount');
+            }
+        }
+
+        return $total_production;
+    }
+
+    // public static function loveMonth() {
+    //     $now = Carbon::now();
+    //     $year = $now->year;
+    //     $month = $now->month;
+
+    //     print_r($year);exit;
+    // }
 }

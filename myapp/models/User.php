@@ -177,6 +177,12 @@ class User extends Eloquent
 			'client_number' => $request['client_number'],
 		]);
 
+		if (isset($request['role'])) {
+			$find = User::find($request['user_id']);
+			$find->role_id = $request['role'];
+			$find->save();
+		}
+
 		$user = User::find($request['user_id'])
 		->update([
 			'email' =>  $request['email']

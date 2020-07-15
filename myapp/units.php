@@ -3,16 +3,16 @@ require_once 'init.php';
 use App\User;
 use App\Unit;
 use App\Status;
+use App\Production;
 User::isLogged();
 $active = 'units';
 $units = Unit::with('creator', 'owner', 'members', 'production')->get();
-// echo "<pre>";
-// print_r($units);exit;
 $status = Status::all();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
     User::addUnit($_POST);
 }
+$production = Production::eachUnitProduction();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -151,7 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                     </td>
                                                     <td><?= $value->members->count() ?></td>
                                                     <td><?= isset($value->production) ? $sum : '&#8369;0' ?></td>
-                                                    <td><?= 'Production' ?></td>
+                                                    <td><?= $production[$value->name] ?></td>
                                                 </tr>
                                                 <?php endforeach; ?>
                                             </tbody>
