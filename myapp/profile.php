@@ -51,6 +51,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         User::updateUser($_POST);
     }
 }
+$logged_user = User::with('role')->find(Session::get('user_id'));
+
+// echo "<pre>";
+// print_r($selected_user->role->rank);exit;
+// print_r($logged_user->role->rank);exit;
 
 $mode_of_payment = ['Annual', 'Semi-Annual', 'Quarterly', 'Monthly'];
 
@@ -353,6 +358,26 @@ $mode_of_payment = ['Annual', 'Semi-Annual', 'Quarterly', 'Monthly'];
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
+                                    </div>
+                                    <?php endif; ?>
+                                    <?php if(isset($selected_user->role->rank) && $logged_user->role->rank < $selected_user->role->rank): ?>
+                                    <div class="form-group">
+                                        <label>Role</label>
+                                        <select class="form-control select2-single" name="status" data-width="100%">
+                                            <option label="&nbsp;">&nbsp;</option>
+                                            <?php foreach($roles as $key => $value): ?>
+                                                <?php if(isset($selected_user->role->rank) && $logged_user->role->rank <= $value->rank): ?>
+                                                <option
+                                                    <?= isset($selected_user->role->id) && $value->id === $selected_user->role->id
+                                                        ? 'selected'
+                                                        : null
+                                                    ?>
+                                                    value="<?= $value->id ?>">
+                                                    <?= $value->name ?>
+                                                </option>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        </select>
                                     </div>
                                     <?php endif; ?>
                                     <?php if ($selected_user->role_id === null): ?>

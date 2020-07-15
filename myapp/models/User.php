@@ -103,7 +103,7 @@ class User extends Eloquent
 				'body' => 'Use this as your temporary password: '.$random_password
 			];
 	
-			self::sendMail($content);
+			// self::sendMail($content);
 	
 			Session::flash('success', 'Succesfully added new user!');
 			if ($request['addtounit']) {
@@ -151,7 +151,7 @@ class User extends Eloquent
 			'body' => 'You have been appointed as a Unit Manager. To log in, use this as your temporary password: '.$random_password
 		];
 
-		self::sendMail($content);
+		// self::sendMail($content);
 
 		Session::flash('success', 'Succesfully added new user.');
 		Redirect::to('units.php');
