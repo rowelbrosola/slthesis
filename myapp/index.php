@@ -274,6 +274,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             <div class="form-group">
                                 <label for="event-title">Contact</label>
                                 <input type="text" class="form-control" name="contact" aria-describedby="titleHelp" placeholder="Contact No." required>
+                            </div>
                             <div class="form-group">
                                 <label for="event-title">Address</label>
                                 <input type="text" class="form-control" name="address" aria-describedby="titleHelp" placeholder="Enter address" required>
@@ -319,6 +320,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                 <input type="text" class="form-control" name="lastname" aria-describedby="titleHelp" placeholder="Enter last name" required>
                             </div>
                             <div class="form-group">
+                                <label for="event-title">Contact</label>
+                                <input type="text" class="form-control" name="contact" aria-describedby="titleHelp" placeholder="Contact No." required>
+                            </div>
+                            <div class="form-group">
                                 <label for="event-title">Address</label>
                                 <input type="text" class="form-control" name="address" aria-describedby="titleHelp" placeholder="Enter address" required>
                             </div>
@@ -361,6 +366,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             <div class="form-group">
                                 <label for="event-title">Last Name</label>
                                 <input type="text" class="form-control" name="lastname" id="lastname" aria-describedby="titleHelp" placeholder="Enter last name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="event-title">Contact</label>
+                                <input type="text" class="form-control" name="contact" id="contact" aria-describedby="titleHelp" placeholder="Contact No." required>
                             </div>
                             <div class="form-group">
                                 <label for="event-title">Address</label>
