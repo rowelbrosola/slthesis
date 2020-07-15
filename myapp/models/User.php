@@ -12,6 +12,7 @@ use Swift_Message;
 use App\UserPolicy;
 use App\PolicyBenefit;
 use App\Production;
+use App\Beneficiaries;
 
 class User extends Eloquent
 {
@@ -281,6 +282,23 @@ class User extends Eloquent
 			'created_by' => Session::get('user_id')
 		]);
 
+		
+		if (!empty($request['fullname'][0]) &&
+			!empty($request['beneficiary_relationship'][0]) &&
+			!empty($request['beneficiaries_dob'][0]) &&
+			!empty($request['designation'][0])
+		) {
+			foreach ($request['fullname'] as $key => $value) {
+				Beneficiaries::create([
+					'user_id' => $user->id,
+					'name' => $value,
+					'relationship' => $request['beneficiary_relationship'][$key],
+					'birthdate' => $request['beneficiaries_dob'][$key],
+					'designation' => $request['designation'][$key]
+				]);
+			}
+		}
+
 		$time = strtotime($request['issue_date']);
 		$premium_due_date = self::getDue($time, $request['mode_of_payment']);
 
@@ -304,6 +322,7 @@ class User extends Eloquent
 				'user_id' => $user->id
 			]);
 		}
+		
 
 		Session::flash('success', 'Successfully added client');
 		Redirect::to('clients.php');

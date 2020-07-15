@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                 <form id="regForm" method="POST">
                     <h1 id="title">Basic Information:</h1>
                     <!-- One "tab" for each step in the form: -->
-                    <div class="tab">
+                    <div class="tab" id="basic-form">
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
@@ -91,6 +91,51 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Beneficiaries</h2>
+                        <br />
+                        <div class="beneficiaries">
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="form-group">
+                                        <label for="fullname">Full Name</label>
+                                        <input type="text" class="form-control" name="fullname[]" oninput="this.className = ''" placeholder="Full Name">
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-group">
+                                        <label>Relationship</label> 
+                                        <select class="form-control select2" data-width="100%" name="beneficiary_relationship[]">
+                                            <option value="">Choose...</option>
+                                            <option value="Mother">Mother</option>
+                                            <option value="Father">Father</option>
+                                            <option value="Daughter">Daughter</option>
+                                            <option value="Sibling">Sibling</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-group">
+                                        <label>Designation</label> 
+                                        <select class="form-control select2" data-width="100%" name="designation[]">
+                                            <option value="">Choose...</option>
+                                            <option value="Revocable">Revocable</option>
+                                            <option value="Irrevocable">Irrevocable</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-group input-group">
+                                        <label>Date of Birth</label>
+                                        <input type="date" class="form-control" name="beneficiaries_dob[]" style="width: 100%;" placeholder="Date of Birth">
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                    <a href="#" onclick="return false;" style="position: absolute; top:0; right:0;" class="btn btn-primary addRow">+</a>
                                 </div>
                             </div>
                         </div>
@@ -161,7 +206,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                         </div>
                     </div>
                     <div style="overflow:auto;">
-                        <div style="float:right;">
+                        <div style="float:right; margin-top: 2rem;">
                             <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
                             <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
                         </div>
@@ -183,6 +228,60 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         <script src="js/dore.script.js"></script>
         <script src="js/scripts.js"></script>
         <script src="js/add-fa.js"></script>
-        
+        <script>
+            $('.addRow').on('click', function() {
+                addRow();
+            });
+
+            function addRow() {
+                var div = '<div class="row">'+
+                            '<div class="col-3">'+
+                                '<div class="form-group">'+
+                                    '<label for="fullname">Full Name</label>'+
+                                    '<input type="text" class="form-control" name="fullname[]" placeholder="Full Name">'+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="col-3">'+
+                                '<div class="form-group">'+
+                                    '<label>Relationship</label> '+
+                                    '<select class="form-control select2" data-width="100%" name="beneficiary_relationship[]">'+
+                                        '<option value="">Choose...</option>'+
+                                        '<option value="Mother">Mother</option>'+
+                                        '<option value="Father">Father</option>'+
+                                        '<option value="Daughter">Daughter</option>'+
+                                        '<option value="Sibling">Sibling</option>'+
+                                        '<option value="Other">Other</option>'+
+                                    '</select>'+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="col-3">'+
+                                    '<div class="form-group">'+
+                                        '<label>Designation</label> '+
+                                        '<select class="form-control select2" data-width="100%" name="designation[]">'+
+                                            '<option value="">Choose...</option>'+
+                                            '<option value="Revocable">Revocable</option>'+
+                                            '<option value="Irrevocable">Irrevocable</option>'+
+                                        '</select>'+
+                                    '</div>'+
+                                '</div>'+
+                            '<div class="col-3">'+
+                                '<div class="form-group input-group date">'+
+                                    '<label>Date of Birth</label>'+
+                                    '<input type="date" class="form-control" name="beneficiaries_dob[]" style="width: 100%;" placeholder="Date of Birth">'+
+                                    '<span class="input-group-addon">'+
+                                        '<span class="glyphicon glyphicon-calendar"></span>'+
+                                    '</span>'+
+                                '</div>'+
+                                '<a href="#" onclick="return false;" style="position: absolute; top:0; right:0;" class="btn btn-danger remove">-</a>'+
+                            '</div>'+
+                        '</div>';
+                $('.beneficiaries').append(div);
+            };
+
+            $('.beneficiaries').on('click', '.remove', function() {
+                $(this).parent().parent().remove();
+            });
+
+        </script>
     </body>
 </html>
