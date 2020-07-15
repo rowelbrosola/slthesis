@@ -272,6 +272,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                 <input type="text" class="form-control" name="lastname" aria-describedby="titleHelp" placeholder="Enter last name" required>
                             </div>
                             <div class="form-group">
+                                <label for="event-title">Contact</label>
+                                <input type="text" class="form-control" name="contact" aria-describedby="titleHelp" placeholder="Contact No." required>
+                            <div class="form-group">
                                 <label for="event-title">Address</label>
                                 <input type="text" class="form-control" name="address" aria-describedby="titleHelp" placeholder="Enter address" required>
                             </div>
@@ -427,6 +430,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                         $('#firstname').val(parsed.firstname); 
                         $('#middlename').val(parsed.middlename); 
                         $('#lastname').val(parsed.lastname); 
+                        $('#contact').val(parsed.contact); 
                         $('#address').val(parsed.address); 
                         $('#birthdate').val(parsed.birthdate); 
                         $('#status').val(parsed.status); 

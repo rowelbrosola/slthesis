@@ -10,7 +10,7 @@ class People extends Eloquent
     use SoftDeletes;
     protected $table = 'people';
 
-    protected $fillable = ['firstname', 'middlename', 'lastname', 'address', 'birthdate', 'status'];
+    protected $fillable = ['firstname', 'middlename', 'lastname', 'contact', 'address', 'birthdate', 'status'];
 
     const FOLLOW_UP = 'follow_up';
     const PROSPECT = 'prospect';

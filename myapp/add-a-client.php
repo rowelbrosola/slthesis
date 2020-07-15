@@ -106,15 +106,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                 </div>
                                 <div class="col-3">
                                     <div class="form-group">
-                                        <label>Relationship</label> 
-                                        <select class="form-control select2" data-width="100%" name="beneficiary_relationship[]">
-                                            <option value="">Choose...</option>
-                                            <option value="Mother">Mother</option>
-                                            <option value="Father">Father</option>
-                                            <option value="Daughter">Daughter</option>
-                                            <option value="Sibling">Sibling</option>
-                                            <option value="Other">Other</option>
-                                        </select>
+                                        <label for="fullname">Relationship</label>
+                                        <input type="text" class="form-control" name="beneficiary_relationship[]" oninput="this.className = ''" placeholder="Relationship">
                                     </div>
                                 </div>
                                 <div class="col-3">
@@ -243,15 +236,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             '</div>'+
                             '<div class="col-3">'+
                                 '<div class="form-group">'+
-                                    '<label>Relationship</label> '+
-                                    '<select class="form-control select2" data-width="100%" name="beneficiary_relationship[]">'+
-                                        '<option value="">Choose...</option>'+
-                                        '<option value="Mother">Mother</option>'+
-                                        '<option value="Father">Father</option>'+
-                                        '<option value="Daughter">Daughter</option>'+
-                                        '<option value="Sibling">Sibling</option>'+
-                                        '<option value="Other">Other</option>'+
-                                    '</select>'+
+                                    '<label for="fullname">Relationship</label>'+
+                                    '<input type="text" class="form-control" name="beneficiary_relationship[]" placeholder="Relationship">'+
                                 '</div>'+
                             '</div>'+
                             '<div class="col-3">'+
