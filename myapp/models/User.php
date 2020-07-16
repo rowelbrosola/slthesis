@@ -133,8 +133,8 @@ class User extends Eloquent
 		$email = trim($request['email']);
 		$user = User::where('email', $email)->first();
 		if ($user) {
-			$user->role_id = $request['role'];
-			$user->save();
+			// $user->role_id = $request['role'];
+			// $user->save();
 
 			$unit = Unit::create([
 				'name' => $request['unit'],
