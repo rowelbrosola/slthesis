@@ -13,6 +13,7 @@ use App\UserPolicy;
 use App\PolicyBenefit;
 use App\Production;
 use App\Beneficiaries;
+use Carbon\Carbon;
 
 class User extends Eloquent
 {
@@ -62,13 +63,19 @@ class User extends Eloquent
 		$exists = User::where('email', '=', $request['email'])->first();
 		if ($exists) {
 			if ($request['addtounit']) {
-				$advisor = User::find(Session::get('user_id'));
-				$exists->role_id = 2;
-				$exists->advisor_id = $advisor->advisor_id;
-				$exists->advisor_code = $request['advisor_code'];
-				$exists->unit_id = $advisor->unit_id;
-				$exists->status_id = isset($request['status']) ? $request['status'] : null;
-				$exists->save();
+				$user = User::find($exists->id);
+				$user->role_id = 2;
+				$user->save();
+				
+				$profile = UserProfile::where('user_id', $user->id)->first();
+				$profile->advisor_id = $request['advisor'];
+				$profile->advisor_code = $request['advisor_code'];
+				$profile->unit_id = $request['unit'];
+				$profile->status_id = isset($request['status']) ? $request['status'] : null;
+				$profile->save();
+
+				Session::flash('success', 'Succesfully added new user!');
+				Redirect::to('unit.php?unit_id='.$request['unit']);
 			} else {
 				Session::flash('error', 'Email already exists!');
 			}
@@ -361,7 +368,8 @@ class User extends Eloquent
 	public static function getDueDates() {
 		$clients = User::whereNull('role_id')->with('profile', 'profile.userPolicy', 'profile.latestPayment', 'userPolicy' ,'userPolicy.policy')->get();
 		foreach ($clients as $key => $value) {
-			$latest_payment = $value->profile->latestPayment->created_at;
+			$latest_payment = isset($value->profile->latestPayment->created_at) ? $value->profile->latestPayment->created_at : $value->profile->userPolicy->issue_date;
+			$latest_payment = new Carbon($latest_payment);
 			switch ($value->profile->userPolicy->mode_of_payment) {
 				case 'Annual':
 					$premium_due_date = $latest_payment->addMonths(12);

@@ -59,7 +59,10 @@ $clients = User::getDueDates();
                                         <tr>
                                             <td><?= $value->profile->firstname.' '.$value->profile->lastname ?></td>
                                             <td><?= $value->userPolicy->policy->name ?></td>
-                                            <td><?= date('Y-m-d', strtotime($value->profile->latestPayment->created_at)) ?></td>
+                                            <td><?= isset($value->profile->latestPayment->created_a) ?
+                                                date('Y-m-d', strtotime($value->profile->latestPayment->created_at)) :
+                                                $value->profile->userPolicy->issue_date
+                                            ?></td>
                                             <td><?= date('Y-m-d', strtotime($value->premium_due_date)) ?></td>
                                             <td><?= $value->userPolicy->mode_of_payment ?></td>
                                             <td></td>

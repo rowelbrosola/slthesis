@@ -77,6 +77,10 @@ $current_production = Production::currentProduction();
                                                         <input type="text" class="form-control" name="firstname" placeholder="First Name" required>
                                                     </div>
                                                     <div class="form-group position-relative info">
+                                                        <label>Middle Name</label>
+                                                        <input type="text" class="form-control" name="middle" placeholder="Middle Name" required>
+                                                    </div>
+                                                    <div class="form-group position-relative info">
                                                         <label>Last Name</label>
                                                         <input type="text" class="form-control" name="lastname" placeholder="Last Name" required>
                                                     </div>
