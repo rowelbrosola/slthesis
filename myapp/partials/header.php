@@ -49,8 +49,6 @@ $account = User::find(Session::get('user_id'));
             <div class="dropdown-menu dropdown-menu-right mt-3">
                 <a class="dropdown-item" href="profile.php?id=<?= $account->id.'&tab=profile' ?>">My Account</a>
                 <a class="dropdown-item" href="due-dates.php">Due Dates</a>
-                <a class="dropdown-item" href="#">History</a>
-                <a class="dropdown-item" href="#">Support</a>
                 <a class="dropdown-item" href="index.php?logout=true">Sign out</a>
             </div>
         </div>
