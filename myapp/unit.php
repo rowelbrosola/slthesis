@@ -23,6 +23,8 @@ $unit_members = UserProfile::where('unit_id', $_GET['unit_id'])
     //     $q->where('owner_id', '!=', Session::get('owner_id'));
     // })
     ->get();
+
+$unit_manager = User::with('profile')->find(Session::get('owner_id'));
 $payments = Payment::where('unit_id', $_GET['unit_id'])->get();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
@@ -183,7 +185,7 @@ $current_production = Production::currentProduction();
                                                     <td><?= $value->firstname.' '.$value->lastname ?></td>
                                                     <td><?= $value->advisor_code ?></td>
                                                     <td><?= isset($value->status) ? $value->status->name : null ?></td>
-                                                    <td><?= isset($value->advisor) ? $value->advisor->firstname.' '.$value->advisor->lastname : null ?></td>
+                                                    <td><?= isset($unit_manager) ? $unit_manager->profile->firstname.' '.$unit_manager->profile->lastname : null ?></td>
                                                     <td><?= isset($value->production) ? $sum : '&#8369;0' ?></td>
                                                     <td><?= $current_production ?></td>
                                                 </tr>
