@@ -37,6 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 }
 
 $current_production = Production::currentProduction();
+$total_campaign = Production::currentCampaign($_GET['unit_id']);
+$total_ytd = Production::currentYTD($_GET['unit_id']);
+$totalManPower = Unit::totalManPower($_GET['unit_id']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -219,9 +222,12 @@ $current_production = Production::currentProduction();
                         <ul class="list-unstyled mb-5">
                             <!-- <li><i class="simple-icon-check"></i> Completed <span class="float-right">Paid</span></a></li> -->
                         </ul>
-                        <p class="text-muted">Total YTD</p>
-                        <p class="text-muted">Total Campaign</p>
-                        <p class="text-muted">Total Man Power</p>
+                        <p class="text-muted" style="margin-top:3rem;">Total YTD</p>
+                        <p class="text-muted" style="font-size:2rem;">&#8369;<?= $total_ytd ?></p>
+                        <p class="text-muted" style="margin-top:3rem;">Total Campaign</p>
+                        <p class="text-muted" style="font-size:2rem;">&#8369;<?= $total_campaign ?></p>
+                        <p class="text-muted" style="margin-top:3rem;">Total Man Power</p>
+                        <p class="text-muted" style="font-size:2rem;"><?= $unit_members->count() ?></p>
                         
                     </div>
                 </div>

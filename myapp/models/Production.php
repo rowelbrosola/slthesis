@@ -73,27 +73,59 @@ class Production extends Eloquent
             ->sum('amount');
     }
 
-    public static function currentCampaign() {
+    public static function currentCampaign($id = null) {
         $now = Carbon::now();
         $love_month = ['01', '02', '03'];
         $summer_campaign = ['04', '05', '06'];
         $august_champions = ['07', '08', '09'];
         $presidents_month = ['10', '11', '12'];
         $current_month = $now->format('m');
-        if (array_search($current_month, $love_month)) {
+        if (array_search($current_month, $love_month) !== FALSE) {
             $start = Carbon::parse('first day of January');
             $end = Carbon::parse('last day of March');
-        } else if (array_search($current_month, $love_month)) {
+        } else if (array_search($current_month, $summer_campaign) !== FALSE) {
             $start = Carbon::parse('first day of April');
             $end = Carbon::parse('last day of June');
-        } else if (array_search($current_month, $love_month)) {
+        } else if (array_search($current_month, $august_champions) !== FALSE) {
             $start = Carbon::parse('first day of July');
             $end = Carbon::parse('last day of September');
-        } else if (array_search($current_month, $love_month)) {
+        } else if (array_search($current_month, $presidents_month) !== FALSE) {
             $start = Carbon::parse('first day of October');
             $end = Carbon::parse('last day of December');
         }
+
+        if ($id) {
+            $total_production = Production::select('amount','created_at')
+                ->whereBetween('created_at',[$start, $end])
+                ->where('advisor_unit_id', $id)
+                ->sum('amount');
+        } else {
+            $total_production = Production::select('amount','created_at')
+                ->whereBetween('created_at',[$start, $end])
+                ->sum('amount');
+        }
+
+        return $total_production;
         
+    }
+
+    public static function currentYTD($id = null) {
+        $date = Carbon::now();
+        $startOfYear = $date->copy()->startOfYear();
+        $endOfYear   = $date->copy()->endOfYear();
+
+        if ($id) {
+            $total_production = Production::select('amount','created_at')
+                ->whereBetween('created_at',[$startOfYear, $endOfYear])
+                ->where('advisor_unit_id', $id)
+                ->sum('amount');
+        } else {
+            $total_production = Production::select('amount','created_at')
+                ->whereBetween('created_at',[$startOfYear, $endOfYear])
+                ->sum('amount');
+        }
+
+        return $total_production;
     }
 
     public static function exportUnits() {

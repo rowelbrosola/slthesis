@@ -17,6 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     }
 }
 $production = Production::eachUnitProduction();
+$total_campaign = Production::currentCampaign();
+$total_ytd = Production::currentYTD();
+$total_manpower = Unit::totalManPower();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -181,6 +184,24 @@ $production = Production::eachUnitProduction();
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="app-menu">
+                <div class="p-4 h-100">
+                    <div class="scroll">
+                        <p class="text-muted text-small">Sales Team Production</p>
+                        <ul class="list-unstyled mb-5">
+                            <!-- <li><i class="simple-icon-check"></i> Completed <span class="float-right">Paid</span></a></li> -->
+                        </ul>
+                        <p class="text-muted" style="margin-top:3rem;">Total YTD</p>
+                        <p class="text-muted" style="font-size:2rem;">&#8369;<?= $total_ytd ?></p>
+                        <p class="text-muted" style="margin-top:3rem;">Total Campaign</p>
+                        <p class="text-muted" style="font-size:2rem;">&#8369;<?= $total_campaign ?></p>
+                        <p class="text-muted" style="margin-top:3rem;">Total Man Power</p>
+                        <p class="text-muted" style="font-size:2rem;"><?= $total_manpower ?></p>
+                        
+                    </div>
+                </div>
+                <a class="app-menu-button d-inline-block d-xl-none" href="#"><i class="simple-icon-options"></i></a>
             </div>
         </main>
         <script src="js/vendor/jquery-3.3.1.min.js"></script>

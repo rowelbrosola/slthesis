@@ -129,6 +129,11 @@ class UserProfile extends Eloquent
         }
     }
 
+    public static function totalManPower() {
+        $units = UserProfile::with('unit')->get();
+        return $units->count();
+    }
+
     public function user()
     {
         return $this->belongsTo('App\User');

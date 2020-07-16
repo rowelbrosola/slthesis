@@ -1,6 +1,7 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use App\Session;
 use App\Redirect;
 
@@ -17,6 +18,15 @@ class Unit extends Eloquent
 
         Session::flash('success', 'Successfully added new unit');
         Redirect::to('units.php');
+    }
+
+    public static function totalManPower() {
+        $units = $units = Unit::with('members')->get();
+        $count = 0;
+        foreach ($units as $key => $value) {
+            $count += $value->members->count();
+        }
+        return $count;
     }
 
     public function creator() {
