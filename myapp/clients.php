@@ -13,22 +13,11 @@ $status = Status::all();
 $units = Unit::all();
 $advisors = User::whereIn('role_id', [4, 2, 3])->with('profile')->get();
 $user = User::find(Session::get('user_id'));
-if ($user->role_id === 2) {
-    $clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status', 'profile.latestPayment')
-    ->whereHas('profile', function($q) {
-        $q->where('advisor_id', Session::get('user_id'));
-    })->whereNull('role_id')->get();
-} else if($user->role_id === 3) {
-    $clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status', 'profile.latestPayment')
-    ->whereHas('profile', function($q) {
-        $q->where('advisor_id', Session::get('user_id'));
-    })->whereNull('role_id')->get();
-} else {
-    $clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status', 'profile.latestPayment')
-    ->whereHas('profile', function($q) {
-        $q->whereNotNull('advisor_id');
-    })->whereNull('role_id')->get();
-}
+
+$clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status', 'profile.latestPayment')
+->whereHas('profile', function($q) {
+    $q->where('advisor_id', Session::get('user_id'));
+})->whereNull('role_id')->get();
 
 // $logged_user = User::find(Session::get('user_id'));
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
