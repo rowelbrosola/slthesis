@@ -24,6 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
     if (isset($_POST['user_id'])) {
         User::deleteClient($_POST['user_id']);
+    } else if (isset($_POST['export'])) {
+        User::exportClients();
     } else {
         User::add($_POST);
     }
@@ -76,6 +78,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     <div class="col-12 mb-4">
                         <div class="card">
                             <div class="card-body">
+                                <button style="float:right;margin-bottom:10px;" onclick="report()" class="btn btn-primary">Export</button>
+                                <form method="post" id="export">
+                                    <input type="hidden" name="export">
+                                </form>
                                 <table class="data-table data-table-feature payment-table">
                                     <thead>
                                         <tr>
@@ -169,6 +175,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             $('#addToDatatable').click(function () {
                 $('#addToDatatableForm').submit();
             });
+            function report() {
+                $('#export').submit();
+            }
             $("select.role").change(function(){
                 var selectedRole = $(this).children("option:selected").val();
                 if (selectedRole != 2) {

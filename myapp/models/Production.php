@@ -123,6 +123,7 @@ class Production extends Eloquent
                 }
             </style>
             <img src="img/sunlife-logo.png" />
+            <p style="position:absolute; top:0;right:0;">Date: '.date('Y-m-d', time()).'</p>
             <body>
                 <table>
                     <tr>
@@ -135,23 +136,30 @@ class Production extends Eloquent
                     </tr>';
                     foreach($units as $key => $value) {
                         $sum = 0;
+                        $name = isset($value->name) ? $value->name : '';
+                        $owner_firstname = isset($value->owner->firstname) ? $value->owner->firstname : '';
+                        $owner_lastname = isset($value->owner->lastname) ? $value->owner->lastname : '';
+                        $members_count = isset($value->members) ? $value->members->count() : 0;
+                        $campaign = isset($production[$value->name]) ? $production[$value->name] : 'N/A';
                         foreach($value->production as $k => $v)
                         {
                             $sum+= $v->amount;
                         }
                         $html .= '<tr>
-                            <td>'.$value->name.'</td>
+                            <td>'.$name.'</td>
                             <td>'.$value->owner->advisor_code.'</td>
-                            <td>'.$value->owner->firstname.' '.$value->owner->lastname.'</td>
-                            <td>'.$value->members->count().'</td>
+                            <td>'.$owner_firstname.' '.$owner_lastname.'</td>
+                            <td>'.$members_count.'</td>
                             <td>'.$sum.'</td>
-                            <td>'.$production[$value->name].'</td>
+                            <td>'.$campaign.'</td>
                         </tr>';
                     }
         $html .= '</table>
             </body>
-            <p>Date: '.date('Y-m-d', time()).'</p>
         </html> ' ;
+
+        echo "<pre>";
+        print_r($html);exit;
 
         // instantiate and use the dompdf class
         $dompdf = new Dompdf();
@@ -183,7 +191,7 @@ class Production extends Eloquent
         <html>
             <head>
                 <meta charset="utf-8">
-                <title>Units Report</title>
+                <title>'.$unit->name.' Report</title>
             </head>
             <style>
                 table {
@@ -200,8 +208,9 @@ class Production extends Eloquent
                     background-color: #dddddd;
                 }
             </style>
-            <img src="img/sunlife-logo.png" />
             <body>
+                <img src="img/sunlife-logo.png" />
+                <p style="position:absolute; top:0;right:0;">Date: '.date('Y-m-d', time()).'</p>
                 <table>
                     <tr>
                         <th>Unit Name</th>
@@ -213,22 +222,26 @@ class Production extends Eloquent
                     </tr>';
                     foreach($unit_members as $key => $value) {
                         $sum = 0;
+                        $firstname = isset($value->firstname) ? $value->firstname : '';
+                        $lastname = isset($value->lastname) ? $value->lastname : '';
+                        $advisor_code = isset($value->advisor_code) ? $value->advisor_code : '';
+                        $um_firstname = isset($unit_manager->profile->firstname) ? $unit_manager->profile->firstname : '';
+                        $um_lastname = isset($unit_manager->profile->lastname) ? $unit_manager->profile->lastname : '';
                         foreach($value->production as $k => $v)
                         {
                             $sum+= $v->amount;
                         }
                         $html .= '<tr>
-                            <td>'.$value->firstname.' '.$value->lastname.'</td>
+                            <td>'.$firstname.' '.$lastname.'</td>
                             <td>'.$value->advisor_code.'</td>
                             <td>'.$value->status->name.'</td>
-                            <td>'.$unit_manager->profile->firstname.' '.$unit_manager->profile->lastname.'</td>
+                            <td>'.$um_firstname.' '.$um_lastname.'</td>
                             <td>'.$sum.'</td>
                             <td>'.$current_production.'</td>
                         </tr>';
                     }
         $html .= '</table>
             </body>
-            <p>Date: '.date('Y-m-d', time()).'</p>
         </html> ' ;
 
         // instantiate and use the dompdf class

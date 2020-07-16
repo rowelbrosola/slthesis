@@ -15,6 +15,7 @@ use App\Production;
 use App\Beneficiaries;
 use App\Unit;
 use Carbon\Carbon;
+use Dompdf\Dompdf;
 use Illuminate\Database\Eloquent\Builder;
 
 class User extends Eloquent
@@ -511,6 +512,178 @@ class User extends Eloquent
 
 		return $data;
 	}
+
+	public static function exportClients() {
+        $clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status', 'profile.latestPayment')
+			->whereHas('profile', function($q) {
+				$q->where('advisor_id', Session::get('user_id'));
+			})->whereNull('role_id')->get();
+
+        //create new dompdf object
+        $html = ' <!doctype html>
+        <html>
+            <head>
+                <meta charset="utf-8">
+                <title>Clients Report</title>
+            </head>
+            <style>
+                table {
+                    font-family: arial, sans-serif;
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+                td, th {
+                    border: 1px solid #dddddd;
+                    text-align: left;
+                    padding: 8px;
+                }
+                tr:nth-child(even) {
+                    background-color: #dddddd;
+                }
+            </style>
+            <img src="img/sunlife-logo.png" />
+            <p style="position:absolute; top:0;right:0;">Date: '.date('Y-m-d', time()).'</p>
+            <body>
+                <table>
+                    <tr>
+						<th>Name</th>
+						<th>Email</th>
+						<th>Date of Birth</th>
+						<th>Advisor</th>
+						<th>Gender</th>
+						<th>Latest Payment</th>
+                    </tr>';
+                    foreach($clients as $key => $value) {
+						$firstname = isset($value->profile->firstname) ? $value->profile->firstname : '';
+						$lastname = isset($value->profile->lastname) ? $value->profile->lastname : '';
+						$email = isset($value->email) ? $value->email : '';
+						$dob = isset($value->profile->dob) ? date('Y-m-d', strtotime($value->profile->dob)) : '';
+						$advisor_firstname = isset($value->profile->advisor->firstname) ? $value->profile->advisor->firstname : '';
+						$advisor_lastname = isset($value->profile->advisor->lastname) ? $value->profile->advisor->lastname : '';
+						$gender = isset($value->profile->gender) ? $value->profile->gender : '';
+						$payment_date = 'N/A';
+						if (isset($value->profile->lastPayment->payment_date)) {
+							$payment_date = date('Y-m-d', strtotime($value->profile->lastPayment->payment_date));
+						}
+                        $html .= '<tr>
+							<td>'.$firstname.' '.$lastname.'</td>
+							<td>'.$email.'</td>
+							<td>'.$dob.'</td>
+							<td>'.$advisor_firstname.' '.$advisor_lastname.'</td>
+							<td>'.$gender.'</td>
+							<td>'.$payment_date.'</td>
+                        </tr>';
+                    }
+        $html .= '</table>
+            </body>
+		</html> ' ;
+		
+        // instantiate and use the dompdf class
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
+
+        // (Optional) Setup the paper size and orientation
+        $dompdf->setPaper('A4', 'landscape');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Output the generated PDF to Browser
+        $dompdf->stream('clients-report');
+	}
+	
+	public static function exportUsers() {
+		$user = User::find(Session::get('user_id'));
+		$users = self::seeUsers($user->role_id);
+
+        //create new dompdf object
+        $html = ' <!doctype html>
+        <html>
+            <head>
+                <meta charset="utf-8">
+                <title>Users Report</title>
+            </head>
+            <style>
+                table {
+                    font-family: arial, sans-serif;
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+                td, th {
+                    border: 1px solid #dddddd;
+                    text-align: left;
+                    padding: 8px;
+                }
+                tr:nth-child(even) {
+                    background-color: #dddddd;
+                }
+            </style>
+            <img src="img/sunlife-logo.png" />
+            <p style="position:absolute; top:0;right:0;">Date: '.date('Y-m-d', time()).'</p>
+			<h1>Users List</h1>
+			<body>
+                <table>
+                    <tr>
+						<th>Name</th>
+						<th>Email</th>
+						<th>Manager</th>
+						<th>Unit Name</th>
+						<th>Status</th>
+                    </tr>';
+                    foreach($users as $key => $value) {
+						$user_firstname = '';
+						$user_lastname = '';
+						$email = '';
+						$advisor_firstname = '';
+						$advisor_lastname = '';
+						$unit_name = '';
+						$status = '';
+						if (isset($value->profile->firstname)) {
+							$user_firstname = $value->profile->firstname;
+						}
+						if (isset($value->profile->lastname)) {
+							$user_lastname = $value->profile->lastname;
+						}
+						if (isset($value->email)) {
+							$email = $value->email;
+						}
+						if (isset($value->profile->advisor->firstname)) {
+							$advisor_firstname = $value->profile->advisor->firstname;
+						}
+						if (isset($value->profile->advisor->lastname)) {
+							$advisor_lastname = $value->profile->advisor->lastname;
+						}
+						if (isset($value->profile->unit->name)) {
+							$unit_name = $value->profile->unit->name;
+						}
+						if (isset($value->profile->status->name)) {
+							$status = $value->profile->status->name;
+						}
+                        $html .= '<tr>
+							<td>'.$user_firstname.' '.$user_lastname.'</td>
+							<td>'.$email.'</td>
+							<td>'.$advisor_firstname.' '.$advisor_lastname.'</td>
+							<td>'.$unit_name.'</td>
+							<td>'.$status.'</td>
+                        </tr>';
+                    }
+        $html .= '</table>
+            </body>
+		</html> ' ;
+		
+        // instantiate and use the dompdf class
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
+
+        // (Optional) Setup the paper size and orientation
+        $dompdf->setPaper('A4', 'landscape');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Output the generated PDF to Browser
+        $dompdf->stream('users-report');
+    }
 
 	public function profile()
     {
