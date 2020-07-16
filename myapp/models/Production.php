@@ -96,7 +96,7 @@ class Production extends Eloquent
         
     }
 
-    public static function exportCampaign() {
+    public static function exportUnits() {
         $units = Unit::with('creator', 'owner', 'members', 'production')->get();
         $production = Production::eachUnitProduction();
 
@@ -165,6 +165,84 @@ class Production extends Eloquent
 
         // Output the generated PDF to Browser
         $dompdf->stream('units-report');
+    }
+
+    public static function exportUnit() {
+        $unit_members = UserProfile::where('unit_id', $_GET['unit_id'])
+            ->with('status', 'unit', 'advisor', 'production')
+            ->get();
+
+        $unit_manager = User::with('profile')->find(Session::get('owner_id'));
+
+        $current_production = Production::currentProduction();
+
+        $unit = Unit::find($unit_manager->profile->unit_id);
+        
+        //create new dompdf object
+        $html = ' <!doctype html>
+        <html>
+            <head>
+                <meta charset="utf-8">
+                <title>Units Report</title>
+            </head>
+            <style>
+                table {
+                    font-family: arial, sans-serif;
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+                td, th {
+                    border: 1px solid #dddddd;
+                    text-align: left;
+                    padding: 8px;
+                }
+                tr:nth-child(even) {
+                    background-color: #dddddd;
+                }
+            </style>
+            <img src="img/sunlife-logo.png" />
+            <body>
+                <table>
+                    <tr>
+                        <th>Unit Name</th>
+                        <th>Advisor Code</th>
+                        <th>Unit Manager</th>
+                        <th>Man Power</th>
+                        <th>YTD Production</th>
+                        <th>Campaign</th>
+                    </tr>';
+                    foreach($unit_members as $key => $value) {
+                        $sum = 0;
+                        foreach($value->production as $k => $v)
+                        {
+                            $sum+= $v->amount;
+                        }
+                        $html .= '<tr>
+                            <td>'.$value->firstname.' '.$value->lastname.'</td>
+                            <td>'.$value->advisor_code.'</td>
+                            <td>'.$value->status->name.'</td>
+                            <td>'.$unit_manager->profile->firstname.' '.$unit_manager->profile->lastname.'</td>
+                            <td>'.$sum.'</td>
+                            <td>'.$current_production.'</td>
+                        </tr>';
+                    }
+        $html .= '</table>
+            </body>
+            <p>Date: '.date('Y-m-d', time()).'</p>
+        </html> ' ;
+
+        // instantiate and use the dompdf class
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
+
+        // (Optional) Setup the paper size and orientation
+        $dompdf->setPaper('A4', 'landscape');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+        $date = date('Y-m-d', time());
+        // Output the generated PDF to Browser
+        $dompdf->stream($unit->name.'-report-'.$date);
     }
 
     // public static function loveMonth() {

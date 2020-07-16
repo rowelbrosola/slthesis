@@ -21,18 +21,16 @@ $current_unit = Unit::find($_GET['unit_id']);
 Session::put('owner_id', $current_unit->owner_id);
 $unit_members = UserProfile::where('unit_id', $_GET['unit_id'])
     ->with('status', 'unit', 'advisor', 'production')
-    // ->whereHas('unit', function($q) {
-    //     $q->where('owner_id', '!=', Session::get('owner_id'));
-    // })
     ->get();
 
-// Production::exportCampaign(6);
 $unit_manager = User::with('profile')->find(Session::get('owner_id'));
 $payments = Payment::where('unit_id', $_GET['unit_id'])->get();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
     if (isset($_POST['delete_unit'])) {
         User::deleteUnit($_POST);
+    } else if (isset($_POST['export'])) {
+        Production::exportUnit();
     } else {
         User::add($_POST);
     }
@@ -170,6 +168,10 @@ $current_production = Production::currentProduction();
                             <div class="col-12 mb-4">
                                 <div class="card">
                                     <div class="card-body">
+                                        <button style="float:right;margin-bottom:10px;" onclick="report()" class="btn btn-primary">Export</button>
+                                        <form method="post" id="export">
+                                            <input type="hidden" name="export">
+                                        </form>
                                         <table class="data-table data-table-feature payment-table">
                                             <thead>
                                                 <tr>
@@ -281,6 +283,11 @@ $current_production = Production::currentProduction();
                     $('#delete_unit').submit();
                 }
             }
+
+            function report() {
+                $('#export').submit();
+            }
+
             $('.user-name').click(function() {
                 let id = $(this).attr('id')
                 $.ajax({

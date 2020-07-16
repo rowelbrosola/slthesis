@@ -11,7 +11,7 @@ $status = Status::all();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
     if (isset($_POST['export'])) {
-        Production::exportCampaign();
+        Production::exportUnits();
     } else {
         User::addUnit($_POST);
     }
