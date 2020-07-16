@@ -146,6 +146,7 @@ class User extends Eloquent
 			$user_profile->firstname = $request['firstname'];
 			$user_profile->middlename = $request['middlename'];
 			$user_profile->lastname = $request['lastname'];
+			$user_profile->dob = date('Y-m-d', strtotime($request['dob']));
 			$user_profile->unit_id = $unit->id;
 			$user_profile->advisor_code = $request['advisor_code'];
 			$user_profile->status_id = $request['status'];
@@ -170,6 +171,7 @@ class User extends Eloquent
 				'firstname' => $request['firstname'],
 				'middlename' => $request['middlename'],
 				'lastname' => $request['lastname'],
+				'dob' => date('Y-m-d', strtotime($request['dob'])),
 				'unit_id' => $unit->id,
 				'advisor_code' => $request['advisor_code'],
 				'status_id' => $request['status'],
@@ -462,6 +464,52 @@ class User extends Eloquent
 
 		Session::flash('success', 'Successfully deleted unit');
 		Redirect::to('units.php');
+	}
+
+	public static function seeUsers($role)
+	{
+		$users = [];
+		$user = User::with('profile')->find(Session::get('user_id'));
+		if ($role === 3) {
+			$users = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status')
+				->whereNotNull('role_id')
+				->whereHas('profile', function (Builder $query) use ($user) {
+					$query->where('unit_id', $user->profile->unit_id);
+				})
+				->get();
+		} else if ($role === 1 || $role === 4) {
+			$users = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status')
+				->whereNotNull('role_id')
+				->get();
+		}
+
+		return $users;
+	}
+
+
+	public static function chartData()
+	{
+		$count = [1,2,3,4,5,6,7,8,9,10,11,12];
+		$data = [];
+		$date = new Carbon();
+		$year = $date->startOfYear();
+		foreach ($count as $key => $value) {
+			$currentMonth = $year->format('m');
+			$month_data = User::whereRaw('MONTH(created_at) = ?',[$currentMonth])->get();
+			$data['year'][] = $month_data->count();
+			$year->addMonth(1);
+		}
+
+		$last_year = $date->subYear(2);
+		foreach ($count as $key => $value) {
+			$start_date = $last_year;
+			$end_date = $last_year->endOfMonth();
+			$month_data = User::whereBetween('created_at',[$start_date, $end_date])->get();
+			$data['last_year'][] = $month_data->count();
+			$last_year->addMonth(1);
+		}
+
+		return $data;
 	}
 
 	public function profile()

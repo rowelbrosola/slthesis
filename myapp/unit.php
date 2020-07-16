@@ -201,7 +201,7 @@ $current_production = Production::currentProduction();
                                                 <?php endforeach; ?>
                                             </tbody>
                                         </table>
-                                        <button style="float:right;" onclick="deleteUnit()" class="btn btn-danger">Delete this Unit</button>
+                                        <a href="#" style="float:right;" onclick="deleteUnit()" >Delete this Unit</a>
                                     </div>
                                 </div>
                             </div>
@@ -216,18 +216,10 @@ $current_production = Production::currentProduction();
                         <ul class="list-unstyled mb-5">
                             <!-- <li><i class="simple-icon-check"></i> Completed <span class="float-right">Paid</span></a></li> -->
                         </ul>
-                        <!-- <p class="text-muted text-small">Categories</p>
-                        <ul class="list-unstyled mb-5">
-                            <li>
-                                <div class="custom-control custom-checkbox mb-2"><input type="checkbox" class="custom-control-input" id="category1"> <label class="custom-control-label" for="category1">Flexbox</label></div>
-                            </li>
-                            <li>
-                                <div class="custom-control custom-checkbox mb-2"><input type="checkbox" class="custom-control-input" id="category2"> <label class="custom-control-label" for="category2">Sass</label></div>
-                            </li>
-                            <li>
-                                <div class="custom-control custom-checkbox"><input type="checkbox" class="custom-control-input" id="category3"> <label class="custom-control-label" for="category3">React</label></div>
-                            </li>
-                        </ul> -->
+                        <p class="text-muted">Total YTD</p>
+                        <p class="text-muted">Total Campaign</p>
+                        <p class="text-muted">Total Man Power</p>
+                        
                     </div>
                 </div>
                 <a class="app-menu-button d-inline-block d-xl-none" href="#"><i class="simple-icon-options"></i></a>
@@ -284,7 +276,9 @@ $current_production = Production::currentProduction();
             })
 
             function deleteUnit() {
-                $('#delete_unit').submit();
+                if (confirm("This action is irrevocable once done! Are you sure you want to delete this unit?")) {
+                    $('#delete_unit').submit();
+                }
             }
             $('.user-name').click(function() {
                 let id = $(this).attr('id')

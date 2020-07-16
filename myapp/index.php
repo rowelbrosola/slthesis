@@ -19,6 +19,7 @@ $follow_up_count = People::followUpsThisMonth();
 $prospects_count = People::prospectsThisMonth();
 $payment_due = Payment::paymentsDueThisMonth();
 
+User::chartData();
 if(isset($_GET['logout'])) {
     User::logout();
 }

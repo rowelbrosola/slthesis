@@ -10,18 +10,18 @@ class People extends Eloquent
     use SoftDeletes;
     protected $table = 'people';
 
-    protected $fillable = ['firstname', 'middlename', 'lastname', 'contact', 'address', 'birthdate', 'status'];
+    protected $fillable = ['user_id', 'firstname', 'middlename', 'lastname', 'contact', 'address', 'birthdate', 'status'];
 
     const FOLLOW_UP = 'follow_up';
     const PROSPECT = 'prospect';
 
     public static function followUps() {
-        $follow_ups = People::where('status', self::FOLLOW_UP)->get();
+        $follow_ups = People::where('status', self::FOLLOW_UP)->where('user_id', Session::get('user_id'))->get();
         return $follow_ups;
     }
 
     public static function prospects() {
-        $prospects = People::where('status', self::PROSPECT)->get();
+        $prospects = People::where('status', self::PROSPECT)->where('user_id', Session::get('user_id'))->get();
         return $prospects;
     }
 
@@ -33,6 +33,7 @@ class People extends Eloquent
             !empty($request['birthdate'])
         ) {
             People::create([
+                'user_id' => Session::get('user_id'),
                 'firstname' => $request['firstname'],
                 'middlename' => $request['middlename'],
                 'lastname' => $request['lastname'],
@@ -71,14 +72,20 @@ class People extends Eloquent
 
     public static function followUpsThisMonth() {
         $currentMonth = date('m');
-        $follow_ups = People::whereRaw('MONTH(created_at) = ?',[$currentMonth])->where('status', 'follow_up')->get();
+        $follow_ups = People::whereRaw('MONTH(created_at) = ?',[$currentMonth])
+            ->where('status', 'follow_up')
+            ->where('user_id', Session::get('user_id'))
+            ->get();
 
         return $follow_ups->count();
     }
 
     public static function prospectsThisMonth() {
         $currentMonth = date('m');
-        $prospects = People::whereRaw('MONTH(created_at) = ?',[$currentMonth])->where('status', 'prospect')->get();
+        $prospects = People::whereRaw('MONTH(created_at) = ?',[$currentMonth])
+            ->where('status', 'prospect')
+            ->where('user_id', Session::get('user_id'))
+            ->get();
 
         return $prospects->count();
     }

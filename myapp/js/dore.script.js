@@ -648,6 +648,21 @@ $.fn.addCommas = function(e) {
                 }
                 if (document.getElementById("salesChart")) {
                     var O = document.getElementById("salesChart").getContext("2d");
+                    var thisYear = null
+                    var lastYear = null
+                    $.ajax({
+                        async: false,
+                        url:"functions/chartData.php",
+                        type:"POST",
+                        success:function(data) {
+                            const result = JSON.parse(data);
+                            thisYear = result.year
+                            lastYear = result.last_year
+                        },
+                        error: function(err) {
+                            console.log(err)
+                        }
+                    })
                     new Chart(O, {
                         type: "bar",
                         options: {
@@ -689,7 +704,7 @@ $.fn.addCommas = function(e) {
                             labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
                             datasets: [{
                                 label: "Previous year",
-                                data: [54, 60, 65, 60, 68, 60, 63, 60, 75, 60, 68, 100],
+                                data: lastYear,
                                 borderColor: t,
                                 pointBackgroundColor: f,
                                 pointBorderColor: t,
@@ -702,7 +717,7 @@ $.fn.addCommas = function(e) {
                             },{
                                 label: "This year",
 					            backgroundColor: "#145388",
-					            data: [59, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+					            data: thisYear,
                                 borderColor: "#145388",
                                 pointBackgroundColor: "#145388",
                                 pointBorderColor: "#145388",

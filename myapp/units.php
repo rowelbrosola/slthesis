@@ -74,6 +74,13 @@ $production = Production::eachUnitProduction();
                                                         <label>Email</label>
                                                         <input type="email" class="form-control" name="email" placeholder="Email" required>
                                                     </div>
+                                                    <div class="input-group date form-group position-relative info">
+                                                        <label>Birthdate</label>
+                                                        <input type="text" class="form-control" name="dob" style="width: 100%;" placeholder="Birth Date" required>
+                                                        <span class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                        </span>
+                                                    </div>
                                                     <div class="form-group position-relative info">
                                                         <label>Advisor Code</label>
                                                         <input type="text" class="form-control" name="advisor_code" placeholder="Advisor Code" required>

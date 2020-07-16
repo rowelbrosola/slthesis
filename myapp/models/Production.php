@@ -61,6 +61,37 @@ class Production extends Eloquent
         }
         return $total_production;
 
+    } 
+
+    public static function unitTotalCampaign($id) {
+
+        $total_campaign = Production::select('amount','created_at')
+            ->whereBetween('created_at',[$start_date, $end_date])
+            ->where('advisor_unit_id', $value->id)
+            ->sum('amount');
+    }
+
+    public static function currentCampaign() {
+        $now = Carbon::now();
+        $love_month = ['01', '02', '03'];
+        $summer_campaign = ['04', '05', '06'];
+        $august_champions = ['07', '08', '09'];
+        $presidents_month = ['10', '11', '12'];
+        $current_month = $now->format('m');
+        if (array_search($current_month, $love_month)) {
+            $start = Carbon::parse('first day of January');
+            $end = Carbon::parse('last day of March');
+        } else if (array_search($current_month, $love_month)) {
+            $start = Carbon::parse('first day of April');
+            $end = Carbon::parse('last day of June');
+        } else if (array_search($current_month, $love_month)) {
+            $start = Carbon::parse('first day of July');
+            $end = Carbon::parse('last day of September');
+        } else if (array_search($current_month, $love_month)) {
+            $start = Carbon::parse('first day of October');
+            $end = Carbon::parse('last day of December');
+        }
+        
     }
 
     // public static function loveMonth() {

@@ -26,9 +26,8 @@ if ($user->id === 1) {
     $advisors = User::whereIn('role_id', [4, 2, 3])->with('profile')->get();
 }
 
-$clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status')
-    ->whereNotNull('role_id')
-    ->get();
+$clients = User::seeUsers($user->role_id);
+
 $logged_user = User::find(Session::get('user_id'));
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
