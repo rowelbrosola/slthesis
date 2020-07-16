@@ -155,7 +155,7 @@ $production = Production::eachUnitProduction();
                                                     </td>
                                                     <td><?= $value->members->count() ?></td>
                                                     <td><?= isset($value->production) ? $sum : '&#8369;0' ?></td>
-                                                    <td><?= $production[$value->name] ?></td>
+                                                    <td><?= isset($production[$value->name]) ? $production[$value->name] : null ?></td>
                                                 </tr>
                                                 <?php endforeach; ?>
                                             </tbody>

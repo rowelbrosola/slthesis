@@ -9,10 +9,12 @@ use App\Status;
 use App\Production;
 User::isLogged();
 $status = Status::all();
-$my_unit = UserProfile::where('user_id', Session::get('user_id'))->with('unit')->get();
+$my_unit = UserProfile::where('user_id', Session::get('user_id'))->with('unit')->first();
 $active = 'units';
-if (isset($_GET['unit_id']) && $_GET['unit_id'] == $my_unit[0]->unit->id) {
-    $active = 'my_unit';
+if ($my_unit && isset($my_unit->unit->id) && isset($_GET['unit_id'])) {
+    if ($_GET['unit_id'] == $my_unit->unit->id) {
+        $active = 'my_unit';
+    }
 }
 $units = Unit::with('creator')->get();
 $current_unit = Unit::find($_GET['unit_id']);
@@ -28,7 +30,11 @@ $unit_manager = User::with('profile')->find(Session::get('owner_id'));
 $payments = Payment::where('unit_id', $_GET['unit_id'])->get();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
-    User::add($_POST);
+    if (isset($_POST['delete_unit'])) {
+        User::deleteUnit($_POST);
+    } else {
+        User::add($_POST);
+    }
 }
 
 $current_production = Production::currentProduction();
@@ -147,6 +153,9 @@ $current_production = Production::currentProduction();
                                     </div>
                                 </div>
                             </div>
+                            <form style="display:none;" id="delete_unit" method="post">
+                                <input type="hidden" name="delete_unit" value="<?= $_GET['unit_id'] ?>">
+                            </form>
                             <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
                                 <ol class="breadcrumb pt-0">
                                     <li class="breadcrumb-item"><a href="#">Dagupan Sales Team</a></li>
@@ -192,6 +201,7 @@ $current_production = Production::currentProduction();
                                                 <?php endforeach; ?>
                                             </tbody>
                                         </table>
+                                        <button style="float:right;" onclick="deleteUnit()" class="btn btn-danger">Delete this Unit</button>
                                     </div>
                                 </div>
                             </div>
@@ -272,6 +282,10 @@ $current_production = Production::currentProduction();
             $('#addToDatatable').click(function () {
                 $('#addToDatatableForm').submit();
             })
+
+            function deleteUnit() {
+                $('#delete_unit').submit();
+            }
             $('.user-name').click(function() {
                 let id = $(this).attr('id')
                 $.ajax({

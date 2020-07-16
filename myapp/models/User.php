@@ -13,7 +13,9 @@ use App\UserPolicy;
 use App\PolicyBenefit;
 use App\Production;
 use App\Beneficiaries;
+use App\Unit;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 
 class User extends Eloquent
 {
@@ -127,30 +129,56 @@ class User extends Eloquent
 		$random_password = bin2hex(random_bytes(5)); 
 		$temporary_password = Hash::encrypt($random_password);
 
-		$user = self::create([
-			'email' => $request['email'],
-			'password' => $temporary_password,
-			'role_id' => $request['role']
-		]);
+		// check if existing
+		$email = trim($request['email']);
+		$user = User::where('email', $email)->first();
+		if ($user) {
+			$user->role_id = $request['role'];
+			$user->save();
 
-		$unit = Unit::create([
-			'name' => $request['unit'],
-			'owner_id' => $user->id,
-			'created_by' => Session::get('user_id')
-		]);
+			$unit = Unit::create([
+				'name' => $request['unit'],
+				'owner_id' => $user->id,
+				'created_by' => Session::get('user_id')
+			]);
+
+			$user_profile = UserProfile::where('user_id', $user->id)->first();
+			$user_profile->firstname = $request['firstname'];
+			$user_profile->middlename = $request['middlename'];
+			$user_profile->lastname = $request['lastname'];
+			$user_profile->unit_id = $unit->id;
+			$user_profile->advisor_code = $request['advisor_code'];
+			$user_profile->status_id = $request['status'];
+			$user_profile->coding_date = date('Y-m-d', strtotime($request['coding_date']));
+			$user_profile->created_by = Session::get('user_id');
+			$user_profile->save();
+		} else {
+			$user = self::create([
+				'email' => $request['email'],
+				'password' => $temporary_password,
+				'role_id' => $request['role']
+			]);
+			
+			$unit = Unit::create([
+				'name' => $request['unit'],
+				'owner_id' => $user->id,
+				'created_by' => Session::get('user_id')
+			]);
+
+			UserProfile::create([
+				'user_id' => $user->id,
+				'firstname' => $request['firstname'],
+				'middlename' => $request['middlename'],
+				'lastname' => $request['lastname'],
+				'unit_id' => $unit->id,
+				'advisor_code' => $request['advisor_code'],
+				'status_id' => $request['status'],
+				'coding_date' => date('Y-m-d', strtotime($request['coding_date'])),
+				'created_by' => Session::get('user_id')
+			]);
+		}
+
 		
-		UserProfile::create([
-			'user_id' => $user->id,
-			'firstname' => $request['firstname'],
-			'middlename' => $request['middlename'],
-			'lastname' => $request['lastname'],
-			'unit_id' => $unit->id,
-			'advisor_code' => $request['advisor_code'],
-			'status_id' => $request['status'],
-			'coding_date' => date('Y-m-d', strtotime($request['coding_date'])),
-			'created_by' => Session::get('user_id')
-		]);
-
 		$content = [
 			'message' => 'You have been appointed as a Unit Manager',
 			'from' => [
@@ -406,6 +434,29 @@ class User extends Eloquent
 		} else {
 			Redirect::to('clients.php');
 		}
+	}
+
+	public static function deleteUnit($post) {
+		$sales_manager = User::where('role_id', 4)->with('profile')
+			->whereHas('profile', function (Builder $query) {
+				$query->whereNotNull('unit_id');
+			})->first();
+
+		$unit_members = UserProfile::where('unit_id', $post['delete_unit'])->get();
+
+		if ($unit_members) {
+			foreach($unit_members as $key => $value) {
+				$member = UserProfile::where('user_id', $value->user_id)->first();
+				$member->unit_id = isset($sales_manager->profile->unit_id) ? $sales_manager->profile->unit_id : null;
+				$member->save();
+			}
+		}
+
+		$unit = Unit::find($post['delete_unit']);
+		$unit->delete();
+
+		Session::flash('success', 'Successfully deleted unit');
+		Redirect::to('units.php');
 	}
 
 	public function profile()

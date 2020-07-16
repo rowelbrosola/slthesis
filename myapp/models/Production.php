@@ -50,7 +50,7 @@ class Production extends Eloquent
 
         $start_date = Carbon::now()->startOfMonth(); 
         $start_date->startOfMonth();
-
+        $total_production = [];
         if ($units) {
             foreach ($units as $key => $value) {
                 $total_production[$value->name] = Production::select('amount','created_at')
@@ -59,8 +59,8 @@ class Production extends Eloquent
                     ->sum('amount');
             }
         }
-
         return $total_production;
+
     }
 
     // public static function loveMonth() {
