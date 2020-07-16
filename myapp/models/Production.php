@@ -100,10 +100,6 @@ class Production extends Eloquent
         $units = Unit::with('creator', 'owner', 'members', 'production')->get();
         $production = Production::eachUnitProduction();
 
-        $current_production = self::currentProduction();
-
-        $unit_manager = User::with('profile')->find(Session::get('owner_id'));
-
         //create new dompdf object
         $html = ' <!doctype html>
         <html>
