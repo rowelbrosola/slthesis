@@ -10,7 +10,11 @@ $units = Unit::with('creator', 'owner', 'members', 'production')->get();
 $status = Status::all();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
-    User::addUnit($_POST);
+    if (isset($_POST['export'])) {
+        Production::exportCampaign();
+    } else {
+        User::addUnit($_POST);
+    }
 }
 $production = Production::eachUnitProduction();
 ?>
@@ -133,6 +137,10 @@ $production = Production::eachUnitProduction();
                             <div class="col-12 mb-4">
                                 <div class="card">
                                     <div class="card-body">
+                                        <button style="float:right;margin-bottom:10px;" onclick="report()" class="btn btn-primary">Export</button>
+                                        <form method="post" id="export">
+                                            <input type="hidden" name="export">
+                                        </form>
                                         <table class="data-table data-table-feature payment-table">
                                             <thead>
                                                 <tr>
@@ -189,6 +197,10 @@ $production = Production::eachUnitProduction();
                 $('#addToDatatableForm').submit();
             })
             $('.alert-success').fadeIn('fast').fadeOut(8000);
+
+            function report() {
+                $('#export').submit();
+            }
         </script>
     </body>
 </html>

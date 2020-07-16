@@ -26,6 +26,7 @@ $unit_members = UserProfile::where('unit_id', $_GET['unit_id'])
     // })
     ->get();
 
+// Production::exportCampaign(6);
 $unit_manager = User::with('profile')->find(Session::get('owner_id'));
 $payments = Payment::where('unit_id', $_GET['unit_id'])->get();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
