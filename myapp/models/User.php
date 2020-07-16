@@ -61,7 +61,7 @@ class User extends Eloquent
 
 	public static function add($request) {
 		$random_password = bin2hex(random_bytes(5)); 
-		$temporary_password = Hash::encrypt($random_password);
+		$temporary_password = Hash::encrypt('admin');
 		$exists = User::where('email', '=', $request['email'])->first();
 		if ($exists) {
 			if ($request['addtounit']) {
@@ -127,7 +127,7 @@ class User extends Eloquent
 
 	public static function addUnit($request) {
 		$random_password = bin2hex(random_bytes(5)); 
-		$temporary_password = Hash::encrypt($random_password);
+		$temporary_password = Hash::encrypt('admin');
 
 		// check if existing
 		$email = trim($request['email']);
@@ -394,7 +394,12 @@ class User extends Eloquent
 	}
 
 	public static function getDueDates() {
-		$clients = User::whereNull('role_id')->with('profile', 'profile.userPolicy', 'profile.latestPayment', 'userPolicy' ,'userPolicy.policy')->get();
+		$clients = User::whereNull('role_id')
+			->with('profile', 'profile.userPolicy', 'profile.latestPayment', 'userPolicy' ,'userPolicy.policy')
+			->whereHas('profile', function (Builder $query) {
+				$query->where('advisor_id', Session::get('user_id'));
+			})
+			->get();
 		foreach ($clients as $key => $value) {
 			$latest_payment = isset($value->profile->latestPayment->created_at) ? $value->profile->latestPayment->created_at : $value->profile->userPolicy->issue_date;
 			$latest_payment = new Carbon($latest_payment);

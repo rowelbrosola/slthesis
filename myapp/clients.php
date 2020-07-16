@@ -23,7 +23,7 @@ $clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'pro
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
     if (isset($_POST['user_id'])) {
-        User::deleteClient($_POST);
+        User::deleteClient($_POST['user_id']);
     } else {
         User::add($_POST);
     }

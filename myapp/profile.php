@@ -277,30 +277,30 @@ $mode_of_payment = ['Annual', 'Semi-Annual', 'Quarterly', 'Monthly'];
                                 <form method="POST">
                                     <div class="form-group">
                                         <label for="client-firstname">First Name</label>
-                                        <input type="text" class="form-control" name="firstname" id="client-firstname" value="<?= $selected_user->profile->firstname ?>" <?= $logged_user->role->rank > $selected_user->role->rank ? 'disabled' : 'null' ?>>
+                                        <input type="text" class="form-control" name="firstname" id="client-firstname" value="<?= $selected_user->profile->firstname ?>" <?= $logged_user->role->rank > (isset($selected_user->role->rank) ? $selected_user->role->rank : 0 ) ? 'disabled' : 'null' ?>>
                                     </div>
                                     <div class="form-group">
                                         <label for="client-lastname">Middle Name</label>
-                                        <input type="text" class="form-control" name="middlename" id="client-middlename" value="<?= $selected_user->profile->middlename ?>" <?= $logged_user->role->rank > $selected_user->role->rank ? 'disabled' : 'null' ?>>
+                                        <input type="text" class="form-control" name="middlename" id="client-middlename" value="<?= $selected_user->profile->middlename ?>" <?= $logged_user->role->rank > (isset($selected_user->role->rank) ? $selected_user->role->rank : 0 ) ? 'disabled' : 'null' ?>>
                                     </div>
                                     <div class="form-group">
                                         <label for="client-lastname">Last Name</label>
-                                        <input type="text" class="form-control" name="lastname" id="client-lastname" value="<?= $selected_user->profile->lastname ?>" <?= $logged_user->role->rank > $selected_user->role->rank ? 'disabled' : 'null' ?>>
+                                        <input type="text" class="form-control" name="lastname" id="client-lastname" value="<?= $selected_user->profile->lastname ?>" <?= $logged_user->role->rank > (isset($selected_user->role->rank) ? $selected_user->role->rank : 0 ) ? 'disabled' : 'null' ?>>
                                     </div>
                                     <div class="form-group">
                                         <label for="client-email">Email</label>
-                                        <input type="email" class="form-control" id="client-email" name="email" id="client-email" value="<?= $selected_user->email ?>" <?= $logged_user->role->rank > $selected_user->role->rank ? 'disabled' : 'null' ?>>
+                                        <input type="email" class="form-control" id="client-email" name="email" id="client-email" value="<?= $selected_user->email ?>" <?= $logged_user->role->rank > (isset($selected_user->role->rank) ? $selected_user->role->rank : 0 ) ? 'disabled' : 'null' ?>>
                                     </div>
                                     <div class="input-group form-group position-relative info">
                                         <label>Date of Birth</label>
-                                        <input type="text" class="form-control datepicker" id="client-dob" name="clientDob" value="<?= date('m/d/Y', strtotime($selected_user->profile->dob)) ?>" style="width: 100%;" <?= $logged_user->role->rank > $selected_user->role->rank ? 'disabled' : 'null' ?>>
+                                        <input type="text" class="form-control datepicker" id="client-dob" name="clientDob" value="<?= date('m/d/Y', strtotime($selected_user->profile->dob)) ?>" style="width: 100%;" <?= $logged_user->role->rank > (isset($selected_user->role->rank) ? $selected_user->role->rank : 0 ) ? 'disabled' : 'null' ?>>
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label>Advisor</label> 
-                                        <select class="form-control select2-single" id="client-advisor" name="advisor" data-width="100%" <?= $logged_user->role->rank > $selected_user->role->rank ? 'disabled' : 'null' ?>>
+                                        <select class="form-control select2-single" id="client-advisor" name="advisor" data-width="100%" <?= $logged_user->role->rank > (isset($selected_user->role->rank) ? $selected_user->role->rank : 0 ) ? 'disabled' : 'null' ?>>
                                             <option label="&nbsp;">&nbsp;</option>
                                             <?php foreach($advisors as $key => $value): ?>
                                                 <option
@@ -317,7 +317,7 @@ $mode_of_payment = ['Annual', 'Semi-Annual', 'Quarterly', 'Monthly'];
                                     <?php if($selected_user->role_id): ?>
                                     <div class="form-group">
                                         <label>Unit</label>
-                                        <select class="form-control select2-single" name="unit" data-width="100%" <?= $logged_user->role->rank > $selected_user->role->rank ? 'disabled' : 'null' ?>>
+                                        <select class="form-control select2-single" name="unit" data-width="100%" <?= $logged_user->role->rank > (isset($selected_user->role->rank) ? $selected_user->role->rank : 0 ) ? 'disabled' : 'null' ?>>
                                             <option label="&nbsp;">&nbsp;</option>
                                             <?php foreach($units as $key => $value): ?>
                                                 <option
@@ -333,7 +333,7 @@ $mode_of_payment = ['Annual', 'Semi-Annual', 'Quarterly', 'Monthly'];
                                     </div>
                                     <div class="form-group">
                                         <label>Status</label>
-                                        <select class="form-control select2-single" name="status" data-width="100%" <?= $logged_user->role->rank > $selected_user->role->rank ? 'disabled' : 'null' ?>>
+                                        <select class="form-control select2-single" name="status" data-width="100%" <?= $logged_user->role->rank > (isset($selected_user->role->rank) ? $selected_user->role->rank : 0 ) ? 'disabled' : 'null' ?>>
                                             <option label="&nbsp;">&nbsp;</option>
                                             <?php foreach($status as $key => $value): ?>
                                                 <option
