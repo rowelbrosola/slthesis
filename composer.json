@@ -14,7 +14,8 @@
         "vlucas/phpdotenv": "^4.1",
         "swiftmailer/swiftmailer": "^6.2",
         "eonasdan/bootstrap-datetimepicker": "^4.17.47",
-        "dompdf/dompdf": "^0.8.5"
+        "dompdf/dompdf": "^0.8.5",
+        "ext-gd": "*"
     },
     "autoload": {
         "psr-4": {
