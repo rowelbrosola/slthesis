@@ -12,6 +12,7 @@ use App\Policy;
 use App\UserPolicy;
 use App\Payment;
 use App\Benefit;
+use App\Production;
 User::isLogged();
 $roles = Role::all();
 $status = Status::all();
@@ -53,7 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 }
 $logged_user = User::with('role')->find(Session::get('user_id'));
 $mode_of_payment = ['Annual', 'Semi-Annual', 'Quarterly', 'Monthly'];
-
+$total_campaign = Production::userCampaign($_GET['id']);
+$total_ytd = Production::userYTD($_GET['id']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -271,7 +273,10 @@ $mode_of_payment = ['Annual', 'Semi-Annual', 'Quarterly', 'Monthly'];
                                 </ul>
                             </div>
                             <div class="tab-pane fade <?= $active_tab === 'home' ? 'show active' : null ?>" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-                                
+                                <p style="margin-top:3rem;">Total YTD</p>
+                                <p style="font-size:2rem;">&#8369;<?= number_format($total_ytd) ?></p>
+                                <p style="margin-top:3rem;">Total Campaign</p>
+                                <p style="font-size:2rem;">&#8369;<?= number_format($total_campaign) ?></p>
                             </div>
                             <div class="tab-pane fade <?= $active_tab === 'profile' ? 'show active' : null ?>" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
                                 <form method="POST">

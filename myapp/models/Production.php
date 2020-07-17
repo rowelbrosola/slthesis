@@ -338,11 +338,45 @@ class Production extends Eloquent
         $dompdf->stream($unit->name.'-report-'.$date);
     }
 
-    // public static function loveMonth() {
-    //     $now = Carbon::now();
-    //     $year = $now->year;
-    //     $month = $now->month;
+    public static function userCampaign($id) {
+        $now = Carbon::now();
+        $love_month = ['01', '02', '03'];
+        $summer_campaign = ['04', '05', '06'];
+        $august_champions = ['07', '08', '09'];
+        $presidents_month = ['10', '11', '12'];
+        $current_month = $now->format('m');
+        if (array_search($current_month, $love_month) !== FALSE) {
+            $start = Carbon::parse('first day of January');
+            $end = Carbon::parse('last day of March');
+        } else if (array_search($current_month, $summer_campaign) !== FALSE) {
+            $start = Carbon::parse('first day of April');
+            $end = Carbon::parse('last day of June');
+        } else if (array_search($current_month, $august_champions) !== FALSE) {
+            $start = Carbon::parse('first day of July');
+            $end = Carbon::parse('last day of September');
+        } else if (array_search($current_month, $presidents_month) !== FALSE) {
+            $start = Carbon::parse('first day of October');
+            $end = Carbon::parse('last day of December');
+        }
 
-    //     print_r($year);exit;
-    // }
+        $total_production = Production::select('amount','created_at')
+            ->whereBetween('created_at',[$start, $end])
+            ->where('advisor_user_id', $id)
+            ->sum('amount');
+        return $total_production;
+    }
+
+    public static function userYTD($id) {
+        $date = Carbon::now();
+        $startOfYear = $date->copy()->startOfYear();
+        $endOfYear   = $date->copy()->endOfYear();
+
+        $total_production = Production::select('amount','created_at')
+            ->whereBetween('created_at',[$startOfYear, $endOfYear])
+            ->where('advisor_user_id', $id)
+            ->sum('amount');
+
+        return $total_production;
+        
+    }
 }
