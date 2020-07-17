@@ -496,7 +496,12 @@ class User extends Eloquent
 		$year = $date->startOfYear();
 		foreach ($count as $key => $value) {
 			$currentMonth = $year->format('m');
-			$month_data = User::whereRaw('MONTH(created_at) = ?',[$currentMonth])->get();
+			$month_data = User::whereRaw('MONTH(created_at) = ?',[$currentMonth])
+				->whereHas('profile', function($q) {
+					$q->where('advisor_id', Session::get('user_id'));
+				})
+				->whereNull('role_id')
+				->get();
 			$data['year'][] = $month_data->count();
 			$year->addMonth(1);
 		}
@@ -505,7 +510,12 @@ class User extends Eloquent
 		foreach ($count as $key => $value) {
 			$start_date = $last_year;
 			$end_date = $last_year->endOfMonth();
-			$month_data = User::whereBetween('created_at',[$start_date, $end_date])->get();
+			$month_data = User::whereBetween('created_at',[$start_date, $end_date])
+			->whereHas('profile', function($q) {
+				$q->where('advisor_id', Session::get('user_id'));
+			})
+			->whereNull('role_id')
+			->get();
 			$data['last_year'][] = $month_data->count();
 			$last_year->addMonth(1);
 		}
