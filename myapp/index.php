@@ -238,19 +238,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                     </div>
                                 </div>
                             </div>
+                            <input type="hidden" name="event-action" id="event-action">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="see-who">
                             <label for="audience">Who should see this?</label>
                             <select class="form-control" id="audience">
-                            <option>All Units</option>
-                            <option>My Unit Only</option>
-                            <option>Only Me</option>
+                                <option>All Units</option>
+                                <option>My Unit Only</option>
+                                <option>Only Me</option>
                             </select>
                         </div>
 
                     </form>
                     </div>
                     <div class="modal-footer">
+                        <button type="button" style="float:left;display:none;" id="delete-event" class="btn btn-danger" data-dismiss="modal">Delete</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary" id="save-event-modal">Save</button>
                     </div>
@@ -476,6 +478,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             };
             $('.alert-success').fadeIn('fast').fadeOut(8000);
             $('.alert-danger').fadeIn('fast').fadeOut(8000);
+
+            $('#event-modal').on('hidden.bs.modal', function (e) {
+                $(this)
+                    .find("input,textarea,select")
+                    .val('')
+                    .end();
+            })
+
+            function formatAMPM(date) {
+                let hours = new Date(date);
+                hours = hours.getHours();
+                let minutes = new Date(date);
+                minutes = minutes.getMinutes();
+                var ampm = hours >= 12 ? 'pm' : 'am';
+                hours = hours % 12;
+                hours = hours ? hours : 12; // the hour '0' should be '12'
+                minutes = minutes < 10 ? '0'+minutes : minutes;
+                return timeDate = hours + ':' + minutes + ' ' + ampm;
+            }
             var calendar = $('#calendar').fullCalendar({
                 editable:true,
                 header: {
@@ -527,23 +548,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             }
                         })
                     });
-                    // var title = prompt("Enter Event Title");
-                    // if (title) {
-                        // var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
-                        // var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
-                    //     $.ajax({
-                    //         url:"functions/insert.php",
-                    //         type:"POST",
-                    //         data:{title:title, start:start, end:end},
-                    //         success:function() {
-                    //             calendar.fullCalendar('refetchEvents');
-                    //             alert("Added Successfully");
-                    //         },
-                    //         error: function(err) {
-                    //             console.log(err)
-                    //         }
-                    //     })
-                    // }
                 },
                 editable:true,
                 
@@ -580,19 +584,83 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                 },
 
                 eventClick:function(event) {
-                    console.log(event.id)
-                    if(confirm("Are you sure you want to remove it?")) {
-                        var id = event.id;
+                    var start
+                    var end
+                    $.ajax({
+                        url:"functions/fetch-event.php",
+                        type:"POST",
+                        data:{id:event.id},
+                        success:function(data) {
+                            $('#event-modal').modal('toggle');
+                            var parsed = JSON.parse(data);
+                            const start_date = formatAMPM(parsed.start_date)
+                            start = parsed.start_date
+                            const end_date = formatAMPM(parsed.end_date)
+                            end = parsed.end_date
+                            $('#event-title').val(parsed.title)
+                            $('#description').val(parsed.description)
+                            $('#timeStarts').val(start_date)
+                            $('#timeEnds').val(end_date)
+                            $("div#see-who select").val(parsed.audience);
+                            $('#event-action').val('update')
+                        }
+                    })
+                    $("#save-event-modal").click(function() {
+                        const pamagat = $('#event-title').val();
+                        const paglalarawan = $('#description').val();
+                        const madla = $('#audience').val();
+                        const simula = $('#timeStarts').val();
+                        const huli = $('#timeEnds').val();
+                        start = new Date(start)
+                        start.setHours(0,0,0,0);
+                        end = new Date(end)
+                        // end.setHours(end.getHours() - 24);
+                        end.setHours(0,0,0,0);
+                        var start_time = moment(simula, ["hh:mm A"]).format("HH:mm");
+                        var end_time = moment(huli, ["hh:mm A"]).format("HH:mm");
+                        const split = start_time.split(":");
+                        const split_end = end_time.split(":");
+                        start.setHours(split[0], split[1], 0)
+                        end.setHours(split_end[0], split_end[1], 0)
                         $.ajax({
-                            url:"functions/delete.php",
+                            url:"functions/insert.php",
                             type:"POST",
-                            data:{id:id},
+                            data:{
+                                id:event.id,
+                                title: pamagat,
+                                start: start.toLocaleString(),
+                                end: end.toLocaleString(),
+                                description: paglalarawan,
+                                audience: madla,
+                                am: simula,
+                                pm: huli,
+                                update: 'update'
+                            },
                             success:function() {
+                                $('#event-title').val('');
+                                $('#description').val('');
+                                $('#audience').val('');
+                                $('#event-modal').modal('hide');
+                                $('#save-event-modal').unbind('click');
                                 calendar.fullCalendar('refetchEvents');
-                                alert("Event Removed");
+                            },
+                            error: function(err) {
+                                console.log(err)
                             }
                         })
-                    }
+                    });
+                    // if(confirm("Are you sure you want to remove it?")) {
+                    //     var id = event.id;
+                    //     $.ajax({
+                    //         url:"functions/delete.php",
+                    //         type:"POST",
+                    //         data:{id:id},
+                    //         success:function() {
+                    //             calendar.fullCalendar('refetchEvents');
+                    //             alert("Event Removed");
+                    //         }
+                    //     })
+                    // }
                 },
             });
         </script>
