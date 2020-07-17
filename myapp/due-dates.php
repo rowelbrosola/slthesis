@@ -4,6 +4,11 @@ use App\User;
 User::isLogged();
 $active = 'due-dates';
 $clients = User::getDueDates();
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') 
+{
+    User::exportDueDates();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -45,6 +50,10 @@ $clients = User::getDueDates();
                     <div class="col-12 mb-4">
                         <div class="card">
                             <div class="card-body">
+                                <button style="float:right;margin-bottom:10px;" onclick="report()" class="btn btn-primary">Export</button>
+                                <form method="post" id="export">
+                                    <input type="hidden" name="export">
+                                </form>
                                 <table class="data-table data-table-feature payment-table">
                                     <thead>
                                         <th>Name</th>
@@ -88,5 +97,10 @@ $clients = User::getDueDates();
         <script src="js/vendor/typeahead.bundle.js"></script>
         <script src="js/dore.script.js"></script>
         <script src="js/scripts.js"></script>
+        <script>
+            function report() {
+                $('#export').submit();
+            }
+        </script>
     </body>
 </html>

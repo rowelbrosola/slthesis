@@ -683,6 +683,94 @@ class User extends Eloquent
 
         // Output the generated PDF to Browser
         $dompdf->stream('users-report');
+	}
+	
+	public static function exportDueDates() {
+		$clients = self::getDueDates();
+
+        //create new dompdf object
+        $html = ' <!doctype html>
+        <html>
+            <head>
+                <meta charset="utf-8">
+                <title>Due Dates Report</title>
+            </head>
+            <style>
+                table {
+                    font-family: arial, sans-serif;
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+                td, th {
+                    border: 1px solid #dddddd;
+                    text-align: left;
+                    padding: 8px;
+                }
+                tr:nth-child(even) {
+                    background-color: #dddddd;
+                }
+            </style>
+            <img src="img/sunlife-logo.png" />
+            <p style="position:absolute; top:0;right:0;">Date: '.date('Y-m-d', time()).'</p>
+			<h1>Users List</h1>
+			<body>
+                <table>
+                    <tr>
+						<th>Name</th>
+						<th>Plan Name</th>
+						<th>Last Payment</th>
+						<th>Next Due Date</th>
+						<th>Payment Method</th>
+                    </tr>';
+                    foreach($cilents as $key => $value) {
+						$firstname = '';
+						$lastname = '';
+						$policy = '';
+						$last_payment = '';
+						$due_date = '';
+						$mode_of_payment = '';
+						if (isset($value->profile->firstname)) {
+							$firstname = $value->profile->firstname;
+						}
+						if (isset($value->profile->lastname)) {
+							$lastname = $value->profile->lastname;
+						}
+						if (isset($value->userPolicy->policy->name)) {
+							$policy = $value->userPolicy->policy->name;
+						}
+						if (isset($value->profile->latestPayment->created_at)) {
+							$last_payment = date('Y-m-d', strtotime($value->profile->latestPayment->created_at));
+						}
+						if (isset($value->premium_due_date)) {
+							$due_date = $value->premium_due_date;
+						}
+						if (isset($value->userPolicy->mode_of_payment)) {
+							$mode_of_payment = $value->userPolicy->mode_of_payment;
+						}
+                        $html .= '<tr>
+							<td>'.$firstname.' '.$lastname.'</td>
+							<td>'.$policy.'</td>
+							<td>'.$last_payment.'</td>
+							<td>'.$due_date.'</td>
+							<td>'.$mode_of_payment.'</td>
+                        </tr>';
+                    }
+        $html .= '</table>
+            </body>
+		</html> ' ;
+		
+        // instantiate and use the dompdf class
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
+
+        // (Optional) Setup the paper size and orientation
+        $dompdf->setPaper('A4', 'landscape');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Output the generated PDF to Browser
+        $dompdf->stream('due-dates-report');
     }
 
 	public function profile()
