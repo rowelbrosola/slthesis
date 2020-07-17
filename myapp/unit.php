@@ -36,7 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     }
 }
 
-$current_production = Production::currentProduction();
 $total_campaign = Production::currentCampaign($_GET['unit_id']);
 $total_ytd = Production::currentYTD($_GET['unit_id']);
 $totalManPower = Unit::totalManPower($_GET['unit_id']);
@@ -194,6 +193,7 @@ $totalManPower = Unit::totalManPower($_GET['unit_id']);
                                                     {
                                                         $sum+= $v->amount;
                                                     }
+                                                    $current_production = Production::currentProduction($value->id);
                                                 ?>
                                                 <tr>
                                                     <!-- <td class="user-name" id="<?= $value->user_id ?>"><a href="#"><?= $value->firstname.' '.$value->lastname ?></a></td> -->

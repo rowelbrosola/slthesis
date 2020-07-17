@@ -19,7 +19,7 @@ if ($user->role_id === 1 || $user->role_id === 4) {
     })->whereNull('role_id')->get();
 }
 
-$production = Payment::with('profile', 'unit', 'policy')->get();
+$production = Payment::with('profile', 'policy')->where('advisor_id', Session::get('user_id'))->get();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
     Payment::add($_POST);

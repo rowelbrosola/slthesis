@@ -450,6 +450,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                         $('#birthdate').val(parsed.birthdate); 
                         $('#status').val(parsed.status); 
                         $('#id').val(parsed.id); 
+                        if (parsed.status === 'follow_up') {
+                            $('#move-btn').hide();
+                        } else {
+                            $('#move-btn').show();
+                        }
                     }
                 })
             };

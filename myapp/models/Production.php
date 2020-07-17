@@ -30,16 +30,23 @@ class Production extends Eloquent
         Redirect::to('sales-production.php?id='.$request['user_id']);
     }
 
-    public static function currentProduction() {
+    public static function currentProduction($id = null) {
         $end_date = Carbon::now()->startOfMonth()->addMonth(3);
         $end_date->endOfMonth();
 
         $start_date = Carbon::now()->startOfMonth(); 
         $start_date->startOfMonth();
 
-        $total_production = Production::select('amount','created_at')
-            ->whereBetween('created_at',[$start_date, $end_date])
-            ->sum('amount');
+        if ($id) {
+            $total_production = Production::select('amount','created_at')
+                ->whereBetween('created_at',[$start_date, $end_date])
+                ->where('advisor_user_id', $id)
+                ->sum('amount');
+        } else {
+            $total_production = Production::select('amount','created_at')
+                ->whereBetween('created_at',[$start_date, $end_date])
+                ->sum('amount');
+        }
 
         return $total_production;
     }
@@ -131,6 +138,23 @@ class Production extends Eloquent
     public static function exportUnits() {
         $units = Unit::with('creator', 'owner', 'members', 'production')->get();
         $production = Production::eachUnitProduction();
+        
+        $total_sum = 0;
+        $total = 0;
+        $total_campaign = 0;
+        $total_members = 0;
+        foreach($units as $key => $value) {
+            $campaign = isset($production[$value->name]) ? $production[$value->name] : 0;
+            $members_count = isset($value->members) ? $value->members->count() : 0;
+            foreach($value->production as $k => $v)
+            {
+                $total_sum += $v->amount;
+            }
+            $total += $total_sum;
+            $total_campaign += $campaign;
+            $total_members += $members_count;
+        }
+
 
         //create new dompdf object
         $html = ' <!doctype html>
@@ -175,7 +199,7 @@ class Production extends Eloquent
                         $campaign = isset($production[$value->name]) ? $production[$value->name] : 'N/A';
                         foreach($value->production as $k => $v)
                         {
-                            $sum+= $v->amount;
+                            $sum += $v->amount;
                         }
                         $html .= '<tr>
                             <td>'.$name.'</td>
@@ -186,12 +210,17 @@ class Production extends Eloquent
                             <td>'.$campaign.'</td>
                         </tr>';
                     }
+                    $html .= '<tr>
+                                <td></td>
+                                <td></td>
+                                <td style="font-weight:700">Total</td>
+                                <td>'.$total_members.'</td>
+                                <td>'.$total.'</td>
+                                <td>'.$total_campaign.'</td>
+                            </tr>';
         $html .= '</table>
             </body>
         </html> ' ;
-
-        echo "<pre>";
-        print_r($html);exit;
 
         // instantiate and use the dompdf class
         $dompdf = new Dompdf();
@@ -214,9 +243,17 @@ class Production extends Eloquent
 
         $unit_manager = User::with('profile')->find(Session::get('owner_id'));
 
-        $current_production = Production::currentProduction();
-
         $unit = Unit::find($unit_manager->profile->unit_id);
+
+        $ytd_production = 0;
+        $campaign_prod = 0;
+        foreach($unit_members as $key => $value) {
+            foreach($value->production as $k => $v)
+            {
+                $ytd_production+= $v->amount;
+            }
+            $campaign_prod += $current_production = self::currentProduction($value->user_id);
+        }
         
         //create new dompdf object
         $html = ' <!doctype html>
@@ -243,16 +280,18 @@ class Production extends Eloquent
             <body>
                 <img src="img/sunlife-logo.png" />
                 <p style="position:absolute; top:0;right:0;">Date: '.date('Y-m-d', time()).'</p>
+                <h1>'.$unit->name.'</h1>
                 <table>
                     <tr>
-                        <th>Unit Name</th>
+                        <th>Name</th>
                         <th>Advisor Code</th>
+                        <th>Status</th>
                         <th>Unit Manager</th>
-                        <th>Man Power</th>
                         <th>YTD Production</th>
                         <th>Campaign</th>
                     </tr>';
                     foreach($unit_members as $key => $value) {
+                        $current_prod = 0;
                         $sum = 0;
                         $firstname = isset($value->firstname) ? $value->firstname : '';
                         $lastname = isset($value->lastname) ? $value->lastname : '';
@@ -263,15 +302,24 @@ class Production extends Eloquent
                         {
                             $sum+= $v->amount;
                         }
+                        $current_prod += self::currentProduction($value->user_id);
                         $html .= '<tr>
                             <td>'.$firstname.' '.$lastname.'</td>
                             <td>'.$value->advisor_code.'</td>
                             <td>'.$value->status->name.'</td>
                             <td>'.$um_firstname.' '.$um_lastname.'</td>
                             <td>'.$sum.'</td>
-                            <td>'.$current_production.'</td>
+                            <td>'.$current_prod.'</td>
                         </tr>';
                     }
+                    $html .= '<tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td style="font-weight:700">Total</td>
+                                <td>'.$ytd_production.'</td>
+                                <td>'.$campaign_prod.'</td>
+                            </tr>';
         $html .= '</table>
             </body>
         </html> ' ;
