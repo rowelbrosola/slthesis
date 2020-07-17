@@ -712,7 +712,7 @@ class User extends Eloquent
             </style>
             <img src="img/sunlife-logo.png" />
             <p style="position:absolute; top:0;right:0;">Date: '.date('Y-m-d', time()).'</p>
-			<h1>Users List</h1>
+			<h1>Due Date List</h1>
 			<body>
                 <table>
                     <tr>
@@ -722,7 +722,7 @@ class User extends Eloquent
 						<th>Next Due Date</th>
 						<th>Payment Method</th>
                     </tr>';
-                    foreach($cilents as $key => $value) {
+                    foreach($clients as $key => $value) {
 						$firstname = '';
 						$lastname = '';
 						$policy = '';
@@ -758,7 +758,7 @@ class User extends Eloquent
         $html .= '</table>
             </body>
 		</html> ' ;
-		
+
         // instantiate and use the dompdf class
         $dompdf = new Dompdf();
         $dompdf->loadHtml($html);
