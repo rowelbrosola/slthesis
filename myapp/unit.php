@@ -180,9 +180,10 @@ $totalManPower = Unit::totalManPower($_GET['unit_id']);
                                                     <th>Name</th>
                                                     <th>Advisor Code</th>
                                                     <th>Status</th>
-                                                    <th>Unit Manager</th>
+                                                    <!-- <th>Unit Manager</th> -->
                                                     <th>Year-to-date Production</th>
                                                     <th>Campaign</th>
+                                                    <th></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -196,13 +197,17 @@ $totalManPower = Unit::totalManPower($_GET['unit_id']);
                                                     $current_production = Production::currentProduction($value->user_id);
                                                 ?>
                                                 <tr>
-                                                    <!-- <td class="user-name" id="<?= $value->user_id ?>"><a href="#"><?= $value->firstname.' '.$value->lastname ?></a></td> -->
-                                                    <td><?= $value->firstname.' '.$value->lastname ?></td>
+                                                    <td><a href="profile.php?id=<?= $value->user_id ?>&tab=profile"><?= $value->firstname.' '.$value->lastname ?></a></td>
                                                     <td><?= $value->advisor_code ?></td>
                                                     <td><?= isset($value->status) ? $value->status->name : null ?></td>
-                                                    <td><?= isset($unit_manager) ? $unit_manager->profile->firstname.' '.$unit_manager->profile->lastname : null ?></td>
-                                                    <td><?= isset($value->production) ? $sum : '&#8369;0' ?></td>
-                                                    <td><?= $current_production ?></td>
+                                                    <!-- <td>
+                                                        <a href="profile.php?id=<?= $unit_manager->profile->user_id ?>&tab=profile">
+                                                            <?= isset($unit_manager) ? $unit_manager->profile->firstname.' '.$unit_manager->profile->lastname : null ?>
+                                                        </a>
+                                                    </td> -->
+                                                    <td><?= isset($value->production) ? number_format($sum) : '&#8369;0' ?></td>
+                                                    <td><?= number_format($current_production) ?></td>
+                                                    <td></td>
                                                 </tr>
                                                 <?php endforeach; ?>
                                             </tbody>
@@ -222,12 +227,12 @@ $totalManPower = Unit::totalManPower($_GET['unit_id']);
                         <ul class="list-unstyled mb-5">
                             <!-- <li><i class="simple-icon-check"></i> Completed <span class="float-right">Paid</span></a></li> -->
                         </ul>
-                        <p class="text-muted" style="margin-top:3rem;">Total YTD</p>
-                        <p class="text-muted" style="font-size:2rem;">&#8369;<?= $total_ytd ?></p>
-                        <p class="text-muted" style="margin-top:3rem;">Total Campaign</p>
-                        <p class="text-muted" style="font-size:2rem;">&#8369;<?= $total_campaign ?></p>
-                        <p class="text-muted" style="margin-top:3rem;">Total Man Power</p>
-                        <p class="text-muted" style="font-size:2rem;"><?= $unit_members->count() ?></p>
+                        <p style="margin-top:3rem;">Total YTD</p>
+                        <p style="font-size:2rem;">&#8369;<?= number_format($total_ytd) ?></p>
+                        <p style="margin-top:3rem;">Total Campaign</p>
+                        <p style="font-size:2rem;">&#8369;<?= number_format($total_campaign) ?></p>
+                        <p style="margin-top:3rem;">Total Man Power</p>
+                        <p style="font-size:2rem;"><?= $unit_members->count() ?></p>
                         
                     </div>
                 </div>

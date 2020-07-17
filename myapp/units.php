@@ -172,8 +172,8 @@ $total_manpower = Unit::totalManPower();
                                                         </a>
                                                     </td>
                                                     <td><?= $value->members->count() ?></td>
-                                                    <td><?= isset($value->production) ? $sum : '&#8369;0' ?></td>
-                                                    <td><?= isset($production[$value->name]) ? $production[$value->name] : null ?></td>
+                                                    <td><?= isset($value->production) ? number_format($sum) : '&#8369;0' ?></td>
+                                                    <td><?= isset($production[$value->name]) ? number_format($production[$value->name]) : null ?></td>
                                                 </tr>
                                                 <?php endforeach; ?>
                                             </tbody>
@@ -192,12 +192,12 @@ $total_manpower = Unit::totalManPower();
                         <ul class="list-unstyled mb-5">
                             <!-- <li><i class="simple-icon-check"></i> Completed <span class="float-right">Paid</span></a></li> -->
                         </ul>
-                        <p class="text-muted" style="margin-top:3rem;">Total YTD</p>
-                        <p class="text-muted" style="font-size:2rem;">&#8369;<?= $total_ytd ?></p>
-                        <p class="text-muted" style="margin-top:3rem;">Total Campaign</p>
-                        <p class="text-muted" style="font-size:2rem;">&#8369;<?= $total_campaign ?></p>
-                        <p class="text-muted" style="margin-top:3rem;">Total Man Power</p>
-                        <p class="text-muted" style="font-size:2rem;"><?= $total_manpower ?></p>
+                        <p style="margin-top:3rem;">Total YTD</p>
+                        <p style="font-size:2rem;">&#8369;<?= number_format($total_ytd) ?></p>
+                        <p style="margin-top:3rem;">Total Campaign</p>
+                        <p style="font-size:2rem;">&#8369;<?= number_format($total_campaign) ?></p>
+                        <p style="margin-top:3rem;">Total Man Power</p>
+                        <p style="font-size:2rem;"><?= $total_manpower ?></p>
                         
                     </div>
                 </div>

@@ -438,6 +438,9 @@ class User extends Eloquent
 		$client = User::find($request);
 		$client->delete();
 
+		$profile = UserProfile::where('user_id', $request)->first();
+		$profile->delete();
+
 		if ($client->role_id) {
 			$message = 'Successfully deleted user';
 		} else {

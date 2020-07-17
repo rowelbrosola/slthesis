@@ -252,7 +252,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" style="float:left;display:none;" id="delete-event" class="btn btn-danger" data-dismiss="modal">Delete</button>
+                        <button type="button" style="position:absolute;left:15px;display:none;" id="delete-event" class="btn btn-danger" data-dismiss="modal">Delete</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary" id="save-event-modal">Save</button>
                     </div>
@@ -603,6 +603,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             $('#timeEnds').val(end_date)
                             $("div#see-who select").val(parsed.audience);
                             $('#event-action').val('update')
+                            $('#delete-event').show();
                         }
                     })
                     $("#save-event-modal").click(function() {
@@ -649,18 +650,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             }
                         })
                     });
-                    // if(confirm("Are you sure you want to remove it?")) {
-                    //     var id = event.id;
-                    //     $.ajax({
-                    //         url:"functions/delete.php",
-                    //         type:"POST",
-                    //         data:{id:id},
-                    //         success:function() {
-                    //             calendar.fullCalendar('refetchEvents');
-                    //             alert("Event Removed");
-                    //         }
-                    //     })
-                    // }
+                    $("#delete-event").click(function() {
+                        var id = event.id;
+                        $.ajax({
+                            url:"functions/delete.php",
+                            type:"POST",
+                            data:{id:id},
+                            success:function() {
+                                $('#delete-event').unbind('click');
+                                calendar.fullCalendar('refetchEvents');
+                                alert("Event Removed");
+                            }
+                        })
+                    });
                 },
             });
         </script>
