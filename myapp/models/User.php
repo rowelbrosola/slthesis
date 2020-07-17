@@ -21,7 +21,15 @@ use Illuminate\Database\Eloquent\Builder;
 class User extends Eloquent
 {
 	use SoftDeletes;
-	protected $fillable = array('email', 'password', 'email_verified', 'reset_password', 'token', 'token_expiry', 'role_id');
+	protected $fillable = array(
+		'email',
+		'password',
+		'email_verified',
+		'reset_password',
+		'token',
+		'token_expiry',
+		'role_id'
+	);
 	protected $hidden = ['password'];
 
     public static function login($email = null, $password = null)

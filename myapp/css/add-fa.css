@@ -29,7 +29,10 @@ input {
 
 /* Mark input boxes that gets an error on validation: */
 input.invalid {
-  background-color: #ffdddd;
+  background-color: #ffdddd !important;
+}
+select.invalid {
+  background-color: #ffdddd !important;
 }
 
 /* Hide all steps by default: */

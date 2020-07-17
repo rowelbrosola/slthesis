@@ -28,7 +28,8 @@ if ($user->id === 1) {
 
 $clients = User::seeUsers($user->role_id);
 
-$logged_user = User::find(Session::get('user_id'));
+$logged_user = User::with('role')->find(Session::get('user_id'));
+$roles = Role::where('rank', '>', $logged_user->role->rank)->get();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
     if(isset($_POST['delete-user'])) {

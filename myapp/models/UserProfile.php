@@ -1,10 +1,26 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class UserProfile extends Eloquent
 {
-    protected $fillable = array('user_id', 'firstname', 'middlename', 'lastname', 'gender', 'advisor_id', 'advisor_code', 'unit_id', 'status_id', 'dob', 'coding_date', 'client_number', 'image_path');
+    use SoftDeletes;
+    protected $fillable = array(
+        'user_id',
+        'firstname',
+        'middlename',
+        'lastname',
+        'gender',
+        'advisor_id',
+        'advisor_code',
+        'unit_id',
+        'status_id',
+        'dob',
+        'coding_date',
+        'client_number',
+        'image_path'
+    );
 
     public function uploadImage($request) {
         header('Content-Type: text/plain; charset=utf-8');

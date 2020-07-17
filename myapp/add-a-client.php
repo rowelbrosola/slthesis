@@ -54,25 +54,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="firstName">First Name</label>
-                                    <input type="text" class="form-control" name="firstname" oninput="this.className = ''" id="firstName" placeholder="First Name">
+                                    <input type="text" class="form-control" name="firstname" oninput="this.className = 'form-control'" id="firstName" placeholder="First Name">
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="firstName">Middle Name</label>
-                                    <input type="text" class="form-control" name="middlename" oninput="this.className = ''" id="middlename" placeholder="Middle Name">
+                                    <input type="text" class="form-control" name="middlename" oninput="this.className = 'form-control'" id="middlename" placeholder="Middle Name">
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="lastName">Last Name</label>
-                                    <input type="text" class="form-control" name="lastname" oninput="this.className = ''" id="lastName" placeholder="Last Name">
+                                    <input type="text" class="form-control" name="lastname" oninput="this.className = 'form-control'" id="lastName" placeholder="Last Name">
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label>Gender</label> 
-                                    <select class="form-control select2" data-width="100%" name="gender">
+                                    <select class="form-control select2" data-width="100%" name="gender" oninput="this.className = 'form-control'">
+                                        <option value="">Choose...</option>
                                         <option value="Male">Male</option>
                                         <option value="Female">Female</option>
                                     </select>
@@ -81,13 +82,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="email">Email</label>
-                                    <input type="email" class="form-control" name="email" oninput="this.className = ''" id="email" placeholder="Email">
+                                    <input type="email" class="form-control" name="email" oninput="this.className = 'form-control'" id="email" placeholder="Email">
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group input-group date">
                                     <label>Date of Birth</label>
-                                    <input type="text" class="form-control" name="dob" oninput="this.className = ''" style="width: 100%;" placeholder="Date of Birth">
+                                    <input type="text" class="form-control" name="dob" id="dob" style="width: 100%;" placeholder="Date of Birth">
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
@@ -101,19 +102,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                 <div class="col-3">
                                     <div class="form-group">
                                         <label for="fullname">Full Name</label>
-                                        <input type="text" class="form-control" name="fullname[]" oninput="this.className = ''" placeholder="Full Name">
+                                        <input type="text" class="form-control" name="fullname[]" oninput="this.className = 'form-control'" placeholder="Full Name">
                                     </div>
                                 </div>
                                 <div class="col-3">
                                     <div class="form-group">
                                         <label for="fullname">Relationship</label>
-                                        <input type="text" class="form-control" name="beneficiary_relationship[]" oninput="this.className = ''" placeholder="Relationship">
+                                        <input type="text" class="form-control" name="beneficiary_relationship[]" oninput="this.className = 'form-control'" placeholder="Relationship">
                                     </div>
                                 </div>
                                 <div class="col-3">
                                     <div class="form-group">
                                         <label>Designation</label> 
-                                        <select class="form-control select2" data-width="100%" name="designation[]">
+                                        <select class="form-control select2" data-width="100%" name="designation[]" oninput="this.className = 'form-control'">
                                             <option value="">Choose...</option>
                                             <option value="Revocable">Revocable</option>
                                             <option value="Irrevocable">Irrevocable</option>
@@ -123,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                 <div class="col-3">
                                     <div class="form-group input-group">
                                         <label>Date of Birth</label>
-                                        <input type="date" class="form-control" name="beneficiaries_dob[]" style="width: 100%;" placeholder="Date of Birth">
+                                        <input type="date" class="form-control" name="beneficiaries_dob[]" style="width: 100%;" placeholder="Date of Birth" oninput="this.className = 'form-control'">
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar"></span>
                                         </span>
@@ -222,6 +223,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         <script src="js/scripts.js"></script>
         <script src="js/add-fa.js"></script>
         <script>
+            $( "#dob" ).focus(function() {
+                $(this).removeClass("invalid");
+            });
             $('.addRow').on('click', function() {
                 addRow();
             });
