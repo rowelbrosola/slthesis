@@ -17,6 +17,7 @@ use App\User;
         $event->description = $_POST['description'];
         $event->start_date = date('Y-m-d H:i:s', strtotime($start_date));
         $event->end_date = date('Y-m-d H:i:s', strtotime($end_date));
+        $event->audience = $_POST['audience'];
         $event->save();
         return $_POST;
     } else {
