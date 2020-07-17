@@ -193,7 +193,7 @@ $totalManPower = Unit::totalManPower($_GET['unit_id']);
                                                     {
                                                         $sum+= $v->amount;
                                                     }
-                                                    $current_production = Production::currentProduction($value->id);
+                                                    $current_production = Production::currentProduction($value->user_id);
                                                 ?>
                                                 <tr>
                                                     <!-- <td class="user-name" id="<?= $value->user_id ?>"><a href="#"><?= $value->firstname.' '.$value->lastname ?></a></td> -->
