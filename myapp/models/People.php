@@ -72,6 +72,14 @@ class People extends Eloquent
         Redirect::to('index.php');
     }
 
+    public static function moveRecord($request) {
+        $people = People::find($request['id']);
+        $people->status = self::FOLLOW_UP;
+        $people->save();
+        Session:: flash('success', 'Succesfully moved to follow up!');
+        Redirect::to('index.php');
+    }
+
     public static function followUpsThisMonth() {
         $currentMonth = date('m');
         $follow_ups = People::whereRaw('MONTH(created_at) = ?',[$currentMonth])

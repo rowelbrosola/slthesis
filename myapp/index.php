@@ -30,6 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         People::deleteRecord($_POST);
     } else if (isset($_POST['action']) && $_POST['action'] == 'update') {
         People::updateRecord($_POST);
+    } else if (isset($_POST['action']) && $_POST['action'] == 'move') {
+        People::moveRecord($_POST);
     } else {
         People::add($_POST);
     }
@@ -392,6 +394,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" id="delete-btn" style="position: absolute; left: 15px;" onClick="deleteThis()" data-dismiss="modal">Delete</button>
+                        <button type="button" class="btn btn-warning" id="move-btn" onClick="moveThis()" data-dismiss="modal">Move to Follow Up</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary" onClick="updateThis()" id="view-btn">Save changes</button>
                     </div>
@@ -452,6 +455,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             };
             function deleteThis() {
                 $('#action').val('delete');
+                $('#view-form').submit();
+            };
+            function moveThis() {
+                $('#action').val('move');
                 $('#view-form').submit();
             };
             function updateThis() {
