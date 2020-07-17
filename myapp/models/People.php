@@ -64,6 +64,7 @@ class People extends Eloquent
         $people->firstname = $request['firstname'];
         $people->middlename = $request['middlename'];
         $people->lastname = $request['lastname'];
+        $people->contact = $request['contact'];
         $people->address = $request['address'];
         $people->birthdate = date('Y-m-d', strtotime($request['birthdate']));
         $people->status = $request['status'];
