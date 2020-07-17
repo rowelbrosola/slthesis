@@ -3,7 +3,7 @@ require_once '../init.php';
 use App\Event;
 
 $data = [];
-$results = Event::all();
+$results = Event::loadEvents();
 
 if ($results) {
     foreach($results as $key => $value) {
