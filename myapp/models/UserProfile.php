@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\AuditTrail;
 
 class UserProfile extends Eloquent
 {
@@ -128,6 +129,7 @@ class UserProfile extends Eloquent
                         $image->image_path = 'uploads/'.basename($fileName);
                         $image->save();
                         // echo "The file " . basename($fileName) . " has been uploaded";
+                        AuditTrail::add('Uploaded photo');
                         Session:: flash('error', 'Successfully uploaded photo!');
                         Redirect::to('profile.php?id='.$post['user_id'].'&tab=profile');
                     } else {

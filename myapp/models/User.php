@@ -14,6 +14,7 @@ use App\PolicyBenefit;
 use App\Production;
 use App\Beneficiaries;
 use App\Unit;
+use App\AuditTrail;
 use Carbon\Carbon;
 use Dompdf\Dompdf;
 use Illuminate\Database\Eloquent\Builder;
@@ -85,6 +86,8 @@ class User extends Eloquent
 				$profile->status_id = isset($request['status']) ? $request['status'] : null;
 				$profile->save();
 
+				AuditTrail::add('Added new user to unit');
+
 				Session::flash('success', 'Succesfully added new user!');
 				Redirect::to('unit.php?unit_id='.$request['unit']);
 			} else {
@@ -122,7 +125,7 @@ class User extends Eloquent
 			];
 	
 			// self::sendMail($content);
-	
+			AuditTrail::add('Added new user');
 			Session::flash('success', 'Succesfully added new user!');
 			if ($request['addtounit']) {
 				Redirect::to('unit.php?unit_id='.$request['unit']);
@@ -162,6 +165,8 @@ class User extends Eloquent
 			$user_profile->coding_date = date('Y-m-d', strtotime($request['coding_date']));
 			$user_profile->created_by = Session::get('user_id');
 			$user_profile->save();
+
+			AuditTrail::add('Added existing user as unit manager');
 		} else {
 			$user = self::create([
 				'email' => $request['email'],
@@ -187,6 +192,8 @@ class User extends Eloquent
 				'coding_date' => date('Y-m-d', strtotime($request['coding_date'])),
 				'created_by' => Session::get('user_id')
 			]);
+
+			AuditTrail::add('Added new user to unit');
 		}
 
 		
@@ -236,6 +243,8 @@ class User extends Eloquent
 			'email' =>  $request['email']
 		]);
 		$tab = 'profile';
+
+		AuditTrail::add('Updated user info');
 		
 		Session::flash('success', 'Succesfully updated user.');
 		Redirect::to('profile.php?id='.$request['user_id'].'&tab='.$tab);
@@ -297,7 +306,7 @@ class User extends Eloquent
 			];
 	
 			self::sendMail($content);
-	
+			AuditTrail::add('Requested for new password');
 			Redirect::to('reset-password-successful.php');
 		} else {
 			Session:: flash('error', 'Email does not exists!');
@@ -312,6 +321,7 @@ class User extends Eloquent
 			'password' => $password,
 			'reset_password' => 1
 		]);
+		AuditTrail::add('Successfully reset password');
 		
 		Redirect::to('reset-password-successful.php');
 	}
@@ -377,6 +387,7 @@ class User extends Eloquent
 			]);
 		}
 		
+		AuditTrail::add('Added a new client');
 
 		Session::flash('success', 'Successfully added client');
 		Redirect::to('clients.php');
@@ -442,8 +453,10 @@ class User extends Eloquent
 		$profile->delete();
 
 		if ($client->role_id) {
+			AuditTrail::add('delete a user');
 			$message = 'Successfully deleted user';
 		} else {
+			AuditTrail::add('delete a client');
 			$message = 'Successfully deleted client';
 		}
 
@@ -473,6 +486,8 @@ class User extends Eloquent
 
 		$unit = Unit::find($post['delete_unit']);
 		$unit->delete();
+
+		AuditTrail::add('Deleted a unit');
 
 		Session::flash('success', 'Successfully deleted unit');
 		Redirect::to('units.php');
@@ -557,6 +572,8 @@ class User extends Eloquent
 				$q->where('advisor_id', Session::get('user_id'));
 			})->whereNull('role_id')->get();
 
+		AuditTrail::add('Exported client list');
+
         //create new dompdf object
         $html = ' <!doctype html>
         <html>
@@ -633,7 +650,7 @@ class User extends Eloquent
 	public static function exportUsers() {
 		$user = User::find(Session::get('user_id'));
 		$users = self::seeUsers($user->role_id, 'export');
-
+		AuditTrail::add('Exported user list');
         //create new dompdf object
         $html = ' <!doctype html>
         <html>
@@ -731,7 +748,7 @@ class User extends Eloquent
 	
 	public static function exportDueDates() {
 		$clients = self::getDueDates();
-
+		AuditTrail::add('Exported due dates list');
         //create new dompdf object
         $html = ' <!doctype html>
         <html>

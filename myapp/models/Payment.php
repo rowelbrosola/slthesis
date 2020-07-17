@@ -7,6 +7,7 @@ use App\UserProfile;
 use App\Session;
 use App\Redirect;
 use App\Production;
+use App\AuditTrail;
 
 class Payment extends Eloquent
 {
@@ -47,7 +48,7 @@ class Payment extends Eloquent
             'created_by' => Session::get('user_id')
         ]);
 
-
+        AuditTrail::add('Added payment of client');
         Session::flash('success', 'Succesfully added new payment.');
 		Redirect::to('payments.php');
     }

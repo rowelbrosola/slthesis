@@ -4,6 +4,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Session;
 use App\Redirect;
+use App\AuditTrail;
 
 class People extends Eloquent
 {
@@ -43,6 +44,8 @@ class People extends Eloquent
                 'birthdate' => date('Y-m-d', strtotime($request['birthdate'])),
                 'status' => $request['status']
             ]);
+
+            AuditTrail::add('Added '.$request['status']);
     
             Session:: flash('success', 'Succesfully added!');
         } else {
@@ -55,6 +58,8 @@ class People extends Eloquent
         $id = $request['id'];
         $people = People::find($id);
         $people->delete();
+
+        AuditTrail::add('Deleted record from dashboard');
         Session:: flash('success', 'Succesfully deleted!');
         Redirect::to('index.php');
     }
@@ -69,6 +74,8 @@ class People extends Eloquent
         $people->birthdate = date('Y-m-d', strtotime($request['birthdate']));
         $people->status = $request['status'];
         $people->save();
+
+        AuditTrail::add('Updated '.$request['status'].'record');
         Session:: flash('success', 'Succesfully updated!');
         Redirect::to('index.php');
     }
@@ -77,6 +84,8 @@ class People extends Eloquent
         $people = People::find($request['id']);
         $people->status = self::FOLLOW_UP;
         $people->save();
+
+        AuditTrail::add('Moved prospect to follow up');
         Session:: flash('success', 'Succesfully moved to follow up!');
         Redirect::to('index.php');
     }

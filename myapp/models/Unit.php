@@ -4,6 +4,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use App\Session;
 use App\Redirect;
+use App\AuditTrail;
 
 class Unit extends Eloquent
 {
@@ -16,6 +17,7 @@ class Unit extends Eloquent
             'created_by' => Session::get('user_id')
         ]);
 
+        AuditTrail::add('Added new unit');
         Session::flash('success', 'Successfully added new unit');
         Redirect::to('units.php');
     }

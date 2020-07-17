@@ -13,6 +13,7 @@ use App\UserPolicy;
 use App\Payment;
 use App\Benefit;
 use App\Production;
+use App\AuditTrail;
 User::isLogged();
 $roles = Role::all();
 $status = Status::all();
@@ -31,6 +32,7 @@ if(isset($_GET['policy_id'])) {
 
     $policy = Policy::find($_GET['policy_id']);
 }
+$audit_trails = AuditTrail::get(Session::get('user_id'));
 $selected_user = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status')->find($_GET['id']);
 $advisor = UserProfile::where('user_id', $_GET['id'])->with('advisor')->first();
 $advisors = User::whereIn('role_id', [1, 2, 3, 4])->with('profile')->get();
@@ -496,18 +498,12 @@ $total_ytd = Production::userYTD($_GET['id']);
                     <div class="col-3 history-pane">
                         <h4>History</h4>
                         <ul class="timeline">
+                            <?php foreach ($audit_trails as $key => $value): ?>
                             <li>
-                                <a href="#">Created account</a>
-                                <a href="#" class="float-right">14 Feb, 2020</a>
+                                <a href="#"><?= $value->action ?></a>
+                                <a href="#" class="float-right"><?= date('d M, Y', strtotime($value->created_at)) ?></a>
                             </li>
-                            <li>
-                                <a href="#">Added to a unit</a>
-                                <a href="#" class="float-right">14 Feb, 2020</a>
-                            </li>
-                            <li>
-                                <a href="#">Set Status as Rookie</a>
-                                <a href="#" class="float-right">14 Feb, 2020</a>
-                            </li>
+                            <?php endforeach; ?>
                         </ul>
                     </div>
                 </div>

@@ -30,6 +30,7 @@ class UserPolicy extends Eloquent
 			]);
 		}
 
+        AuditTrail::add('Added policy to a client');
         Session::flash('success', 'Succesfully added new policy for this user.');
 		Redirect::to('profile.php?id='.$post['profile_user_id'].'&tab=policy');
     }
@@ -39,6 +40,7 @@ class UserPolicy extends Eloquent
         $user_policy->mode_of_payment = $request['mode_of_payment'];
         $user_policy->save();
 
+        AuditTrail::add('Updated client\'s policy');
         Session::flash('success', 'Succesfully updated policy for this user.');
         Redirect::to('profile.php?policy_id='.$user_policy->policy_id.'&id='.$user_policy->user_id.'&tab=policy');
 	}
