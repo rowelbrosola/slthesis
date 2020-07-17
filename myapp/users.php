@@ -190,15 +190,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                 <form method="post" id="export">
                                     <input type="hidden" name="export">
                                 </form>
-                                <table class="data-table data-table-feature payment-table">
+                                <table class="data-table data-table-feature">
                                     <thead>
                                         <tr>
                                             <th>Name</th>
                                             <th>Email</th>
                                             <th>Manager</th>
                                             <th>Unit Name</th>
-                                            <th>Status</th>
-                                            <!-- <th>Role</th> -->
+                                            <!-- <th>Status</th> -->
+                                            <th>Role</th>  
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -206,6 +206,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                     <?php
                                         include 'account-data.php';
                                         foreach ($clients as $key => $value):
+                                        if ($value->role_id !== 1):
                                     ?>
                                         <tr>
                                             <td><a href="profile.php?id=<?= $value->id.'&tab=profile' ?>"><?= $value->profile->firstname.' '.$value->profile->lastname ?></a></td>
@@ -222,18 +223,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                                 : null
                                                 ?>
                                             </td>
-                                            <td><?=
+                                            <!-- <td><?=
                                                 isset($value->profile->status)
                                                 ? $value->profile->status->name
                                                 : null
                                                 ?>
-                                            </td>
-                                            <!-- <td><?= $value->role->name ?></td> -->
+                                            </td> -->
+                                            <td><?= $value->role->name ?></td>
                                             <td>
                                                 <button onClick="deleteRecord(<?=$value->id ?>)" class="delete btn btn-danger" id="<?= 'delete-'.$value->id ?>"><i class="iconsminds-trash-with-men">Delete</i></button>
                                             </td>
                                         </tr>
-                                    <?php endforeach; ?>
+                                        <?php endif; endforeach; ?>
                                     </tbody>
                                 </table>
                             </div>

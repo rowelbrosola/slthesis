@@ -667,6 +667,7 @@ class User extends Eloquent
 						<th>Manager</th>
 						<th>Unit Name</th>
 						<th>Status</th>
+						<th>Role</th>
                     </tr>';
                     foreach($users as $key => $value) {
 						$user_firstname = '';
@@ -676,6 +677,7 @@ class User extends Eloquent
 						$advisor_lastname = '';
 						$unit_name = '';
 						$status = '';
+						$role = '';
 						if (isset($value->profile->firstname)) {
 							$user_firstname = $value->profile->firstname;
 						}
@@ -697,12 +699,16 @@ class User extends Eloquent
 						if (isset($value->profile->status->name)) {
 							$status = $value->profile->status->name;
 						}
+						if (isset($value->role->name)) {
+							$role = $value->role->name;
+						}
                         $html .= '<tr>
 							<td>'.$user_firstname.' '.$user_lastname.'</td>
 							<td>'.$email.'</td>
 							<td>'.$advisor_firstname.' '.$advisor_lastname.'</td>
 							<td>'.$unit_name.'</td>
 							<td>'.$status.'</td>
+							<td>'.$role.'</td>
                         </tr>';
                     }
         $html .= '</table>
