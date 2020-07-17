@@ -139,11 +139,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                 <h5 class="card-title">For Follow up (<?= $follow_ups->count() ?>)</h5>
                                 <div class="scroll dashboard-list-with-thumbs">
                                     <?php foreach ( $follow_ups as $key => $value): ?>
-                                    <div class="d-flex flex-row mb-3" style="float: left;">
+                                    <div class="d-flex flex-row mb-3">
                                         <div class="">
                                             <a href="#" onClick="showPeople(<?= $value->id ?>)">
                                                 <p class="list-item-heading"><?= $value->firstname.' '.$value->lastname ?></p>
                                                 <div class="pr-4 d-none d-sm-block">
+                                                    <p class="text-muted mb-1 text-small"><?= $value->contact ?></p>
                                                     <p class="text-muted mb-1 text-small"><?= $value->address ?></p>
                                                 </div>
                                                 <div class="text-primary text-small font-weight-medium d-none d-sm-block"><?= date('F j, Y', strtotime($value->created_at)) ?></div>

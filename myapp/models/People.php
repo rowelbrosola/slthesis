@@ -29,6 +29,7 @@ class People extends Eloquent
         if (!empty($request['firstname']) &&
             !empty($request['middlename']) &&
             !empty($request['lastname']) &&
+            !empty($request['contact']) &&
             !empty($request['address'])  &&
             !empty($request['birthdate'])
         ) {
@@ -36,6 +37,7 @@ class People extends Eloquent
                 'user_id' => Session::get('user_id'),
                 'firstname' => $request['firstname'],
                 'middlename' => $request['middlename'],
+                'contact' => $request['contact'],
                 'lastname' => $request['lastname'],
                 'address' => $request['address'],
                 'birthdate' => date('Y-m-d', strtotime($request['birthdate'])),
@@ -44,7 +46,7 @@ class People extends Eloquent
     
             Session:: flash('success', 'Succesfully added!');
         } else {
-            Session:: flash('error', 'Error encountred! Please try again.');
+            Session:: flash('error', 'Fill all required fields! Please try again.');
         }
         Redirect::to('index.php');
     }

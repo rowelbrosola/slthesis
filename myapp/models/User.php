@@ -467,21 +467,38 @@ class User extends Eloquent
 		Redirect::to('units.php');
 	}
 
-	public static function seeUsers($role)
+	public static function seeUsers($role, $action = null)
 	{
 		$users = [];
 		$user = User::with('profile')->find(Session::get('user_id'));
-		if ($role === 3) {
-			$users = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status')
-				->whereNotNull('role_id')
-				->whereHas('profile', function (Builder $query) use ($user) {
-					$query->where('unit_id', $user->profile->unit_id);
-				})
-				->get();
-		} else if ($role === 1 || $role === 4) {
-			$users = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status')
-				->whereNotNull('role_id')
-				->get();
+		if ($action) {
+			if ($role === 3) {
+				$users = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status')
+					->whereNotNull('role_id')
+					->whereHas('profile', function (Builder $query) use ($user) {
+						$query->where('unit_id', $user->profile->unit_id);
+					})
+					->where('role_id', '<>', 1)
+					->get();
+			} else if ($role === 1 || $role === 4) {
+				$users = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status')
+					->whereNotNull('role_id')
+					->where('role_id', '<>', 1)
+					->get();
+			}
+		} else {
+			if ($role === 3) {
+				$users = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status')
+					->whereNotNull('role_id')
+					->whereHas('profile', function (Builder $query) use ($user) {
+						$query->where('unit_id', $user->profile->unit_id);
+					})
+					->get();
+			} else if ($role === 1 || $role === 4) {
+				$users = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'profile.status')
+					->whereNotNull('role_id')
+					->get();
+			}
 		}
 
 		return $users;
@@ -604,7 +621,7 @@ class User extends Eloquent
 	
 	public static function exportUsers() {
 		$user = User::find(Session::get('user_id'));
-		$users = self::seeUsers($user->role_id);
+		$users = self::seeUsers($user->role_id, 'export');
 
         //create new dompdf object
         $html = ' <!doctype html>
