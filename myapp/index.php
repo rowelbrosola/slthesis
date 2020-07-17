@@ -1,6 +1,7 @@
 <?php
 $active = 'dashboard';
 require_once 'init.php';
+use Illuminate\Database\Eloquent\Builder;
 use App\Redirect;
 use App\User;
 use App\Session;
@@ -10,6 +11,9 @@ use App\Payment;
 
 $currentMonth = date('m');
 $new_clients = User::whereRaw('MONTH(created_at) = ?',[$currentMonth])
+    ->whereHas('profile', function (Builder $query) {
+        $query->where('advisor_id', Session::get('user_id'));
+    })
     ->whereNull('role_id')->get();
 
 $follow_ups = People::followUps();

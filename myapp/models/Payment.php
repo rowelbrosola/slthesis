@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 use App\UserProfile;
 use App\Session;
 use App\Redirect;
@@ -52,10 +53,14 @@ class Payment extends Eloquent
     }
 
     public static function paymentsDueThisMonth() {
-        $currentMonth = date('m');
-        $dues = People::whereRaw('MONTH(created_at) = ?',[$currentMonth])->get();
-
-        return $dues->count();
+        $clients = User::whereNull('role_id')
+			->with('profile', 'profile.userPolicy', 'profile.latestPayment', 'userPolicy' ,'userPolicy.policy')
+			->whereHas('profile', function (Builder $query) {
+				$query->where('advisor_id', Session::get('user_id'));
+			})
+            ->get();
+            
+        return $clients->count();
     }
 
     public function profile() {
