@@ -251,7 +251,7 @@ class User extends Eloquent
 	}
 
 	private static function sendMail($content) {
-		// try {
+		try {
 			// Create the Transport
 			$transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'tls'))
 			->setUsername(getenv('EMAIL'))
@@ -270,9 +270,9 @@ class User extends Eloquent
 
 		// Send the message
 		$result = $mailer->send($message);
-		// } catch (\Throwable $th) {
-		// 	//throw $th;
-		// }
+		} catch (\Throwable $th) {
+			//throw $th;
+		}
 		
 	}
 
