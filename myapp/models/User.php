@@ -253,7 +253,7 @@ class User extends Eloquent
 	private static function sendMail($content) {
 		try {
 			// Create the Transport
-			$transport = (new Swift_SmtpTransport('smtp.gmail.com', 587, 'tls'))
+			$transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
 			->setUsername(getenv('EMAIL'))
 			->setPassword(getenv('PASSWORD'))
 			;
