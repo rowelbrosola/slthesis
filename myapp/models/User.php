@@ -282,7 +282,7 @@ class User extends Eloquent
 			$token = md5(uniqid(rand(), true));
 			$today = time();
 			$token_expiry = date('Y-m-d H:i:s', strtotime('+1 day', $today));
-			
+
 			$user = User::find($user->id)
 			->update([
 				'token' =>  $token,
@@ -305,7 +305,6 @@ class User extends Eloquent
 			];
 	
 			self::sendMail($content);
-			Session::flash('error', 'Email does not exists!');
 			Redirect::to('reset-link.php');
 		} else {
 			Session::flash('error', 'Email does not exists!');
