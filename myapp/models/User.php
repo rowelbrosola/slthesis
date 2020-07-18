@@ -124,7 +124,7 @@ class User extends Eloquent
 				'body' => 'Use this as your temporary password: '.$random_password
 			];
 	
-			// self::sendMail($content);
+			self::sendMail($content);
 			AuditTrail::add('Added new user');
 			Session::flash('success', 'Succesfully added new user!');
 			if ($request['addtounit']) {
@@ -206,7 +206,7 @@ class User extends Eloquent
 			'body' => 'You have been appointed as a Unit Manager. To log in, use this as your temporary password: '.$random_password
 		];
 
-		// self::sendMail($content);
+		self::sendMail($content);
 
 		Session::flash('success', 'Succesfully added new user.');
 		Redirect::to('units.php');
@@ -253,7 +253,7 @@ class User extends Eloquent
 	private static function sendMail($content) {
 		try {
 			// Create the Transport
-			$transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
+			$transport = (new Swift_SmtpTransport('smtp.gmail.com', 587, 'ssl'))
 			->setUsername(getenv('EMAIL'))
 			->setPassword(getenv('PASSWORD'))
 			;
