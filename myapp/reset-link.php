@@ -13,8 +13,7 @@
             <br><br> <h2 style="color:#0fad00">Success</h2>
             <img style="height: 100px;" src="https://cdn3.iconfinder.com/data/icons/flat-actions-icons-9/792/Tick_Mark_Dark-512.png">
             <p style="font-size:20px;color:#5C5C5C;">
-            Password Updated!<p>
-            <p>Your password has been changed successfully.</p>
+            We have e-mailed your password reset link! Kindly check your email<p>
             <a href="https://slthesis.herokuapp.com/" class="btn btn-success">     Log in      </a>
         <br><br>
             </div>

@@ -301,15 +301,14 @@ class User extends Eloquent
 
 					'https://slthesis.herokuapp.com/myapp/reset-password.php?token='.$token.'
 					
-					
 					This link will expire in 24 hours, so be sure to use it right away.'
 			];
 	
 			self::sendMail($content);
-			AuditTrail::add('Requested for new password');
-			Redirect::to('reset-password-successful.php');
+			Session::flash('error', 'Email does not exists!');
+			Redirect::to('reset-link.php');
 		} else {
-			Session:: flash('error', 'Email does not exists!');
+			Session::flash('error', 'Email does not exists!');
 			Redirect::to('login.php');
 		}
 	}

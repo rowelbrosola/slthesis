@@ -7,10 +7,12 @@ class AuditTrail extends Eloquent
     protected $fillable = ['user_id', 'action'];
 
     public static function add($action) {
-        self::create([
-            'user_id' => Session::get('user_id'),
-            'action' => $action
-        ]);
+        if (Session::exists('user_id')) {
+            self::create([
+                'user_id' => Session::get('user_id'),
+                'action' => $action
+            ]);
+        }
     }
 
     public static function get($id) {
