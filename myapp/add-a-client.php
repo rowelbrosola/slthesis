@@ -137,8 +137,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                     <div class="tab">
                         <div class="form-group">
                             <label>Plan</label> 
-                            <select class="form-control select2" data-width="100%" name="product">
-                                <option label="&nbsp;">&nbsp;</option>
+                            <select class="form-control select2" data-width="100%" id="product" name="product">
+                                <option value=""></option>
                                 <?php foreach($policies as $key => $value): ?>
                                 <option value="<?= $value->id ?>"><?= $value->name ?></option>
                                 <?php endforeach; ?>
@@ -146,7 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                         </div>
                         <div class="form-group">
                             <label>Benefits</label> 
-                            <select class="form-control select2-multiple" multiple="multiple" data-width="100%" name="benefits[]">
+                            <select class="form-control select2-multiple" multiple="multiple" id="benefits" data-width="100%" name="benefits[]">
                                 <?php foreach($benefits as $key => $value): ?>
                                 <option value="<?= $value->id ?>"><?= $value->name ?></option>
                                 <?php endforeach; ?>
@@ -156,25 +156,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="annualPremium">Face Amount</label>
-                                    <input type="text" class="form-control" name="face_amount" oninput="this.className = ''" id="faceAmount" placeholder="Face Amount">
+                                    <input type="text" class="form-control" name="face_amount" oninput="this.className = 'form-control'" id="faceAmount" placeholder="Face Amount">
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="annualPremium">Annual Premium</label>
-                                    <input type="text" class="form-control" name="annual_premium" oninput="this.className = ''" id="annualPremium" placeholder="Annual Premium">
+                                    <input type="text" class="form-control" name="annual_premium" oninput="this.className = 'form-control'" id="annualPremium" placeholder="Annual Premium">
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="excessPremium">Excess Premium</label>
-                                    <input type="text" class="form-control" name="excess_premium" oninput="this.className = ''" id="excessPremium" placeholder="Excess Premium">
+                                    <input type="text" class="form-control" name="excess_premium" oninput="this.className = 'form-control'" id="excessPremium" placeholder="Excess Premium">
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="policyNumber">Policy Number</label>
-                                    <input type="text" class="form-control" name="policy_number" oninput="this.className = ''" id="policyNumber" placeholder="Policy Number">
+                                    <input type="text" class="form-control" name="policy_number" oninput="this.className = 'form-control'" id="policyNumber" placeholder="Policy Number">
                                 </div>
                             </div>
                             <div class="col-6">
@@ -191,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             <div class="col-6">
                                 <div class="form-group input-group date">
                                     <label>Issue Date</label>
-                                    <input type="text" class="form-control" oninput="this.className = ''"  name="issue_date" style="width: 100%;" placeholder="Issue Date">
+                                    <input type="text" class="form-control" id="issue_date" name="issue_date" style="width: 100%;" placeholder="Issue Date">
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
@@ -226,6 +226,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             $( "#dob" ).focus(function() {
                 $(this).removeClass("invalid");
             });
+            $( "#product" ).focus(function() {
+                $(this).removeClass("invalid");
+            });
+            $( "#issue_date" ).focus(function() {
+                $(this).removeClass("invalid");
+            });
             $('.addRow').on('click', function() {
                 addRow();
             });
@@ -235,19 +241,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             '<div class="col-3">'+
                                 '<div class="form-group">'+
                                     '<label for="fullname">Full Name</label>'+
-                                    '<input type="text" class="form-control" name="fullname[]" placeholder="Full Name">'+
+                                    '<input type="text" class="form-control" name="fullname[]" oninput="this.className = '+"'form-control'"+'" placeholder="Full Name">'+
                                 '</div>'+
                             '</div>'+
                             '<div class="col-3">'+
                                 '<div class="form-group">'+
                                     '<label for="fullname">Relationship</label>'+
-                                    '<input type="text" class="form-control" name="beneficiary_relationship[]" placeholder="Relationship">'+
+                                    '<input type="text" class="form-control" name="beneficiary_relationship[]" oninput="this.className = '+"'form-control'"+'" placeholder="Relationship">'+
                                 '</div>'+
                             '</div>'+
                             '<div class="col-3">'+
                                     '<div class="form-group">'+
                                         '<label>Designation</label> '+
-                                        '<select class="form-control select2" data-width="100%" name="designation[]">'+
+                                        '<select class="form-control select2" data-width="100%" name="designation[]" oninput="this.className = '+"'form-control'"+'" >'+
                                             '<option value="">Choose...</option>'+
                                             '<option value="Revocable">Revocable</option>'+
                                             '<option value="Irrevocable">Irrevocable</option>'+
@@ -257,7 +263,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             '<div class="col-3">'+
                                 '<div class="form-group input-group date">'+
                                     '<label>Date of Birth</label>'+
-                                    '<input type="date" class="form-control" name="beneficiaries_dob[]" style="width: 100%;" placeholder="Date of Birth">'+
+                                    '<input type="date" class="form-control" name="beneficiaries_dob[]" style="width: 100%;" placeholder="Date of Birth" oninput="this.className = '+"'form-control'"+'">'+
                                     '<span class="input-group-addon">'+
                                         '<span class="glyphicon glyphicon-calendar"></span>'+
                                     '</span>'+
