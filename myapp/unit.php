@@ -52,6 +52,7 @@ $totalManPower = Unit::totalManPower($_GET['unit_id']);
         <link rel="stylesheet" href="css/vendor/datatables.responsive.bootstrap4.min.css">
         <link rel="stylesheet" href="css/vendor/bootstrap.min.css">
         <link rel="stylesheet" href="css/vendor/bootstrap.rtl.only.min.css">
+        <link rel="stylesheet" href="css/vendor/component-custom-switch.min.css">
         <link rel="stylesheet" href="css/vendor/perfect-scrollbar.css">
         <link rel="stylesheet" href="css/vendor/bootstrap-datepicker3.min.css">
         <link rel="stylesheet" href="css/vendor/select2.min.css">
