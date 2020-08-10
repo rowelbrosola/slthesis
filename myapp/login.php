@@ -105,7 +105,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                 </div>
             </div>
         </div>
-        <script src="js/vendor/jquery-3.3.1.min.js"></script><script src="js/vendor/bootstrap.bundle.min.js"></script><script src="js/dore.script.js"></script><script src="js/scripts.js"></script>
+        <script src="js/vendor/jquery-3.3.1.min.js"></script>
+        <script src="js/vendor/bootstrap.bundle.min.js"></script>
+        <script src="js/dore.script.js"></script>
+        <script src="js/scripts.js"></script>
         <script>
              $('.alert-danger').fadeIn('fast').fadeOut(10000);
         </script>
