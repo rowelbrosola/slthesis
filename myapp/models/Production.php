@@ -139,118 +139,117 @@ class Production extends Eloquent
     }
 
     public static function exportUnits() {
-        // $units = Unit::with('creator', 'owner', 'members', 'production')->get();
-        // $production = Production::eachUnitProduction();
+        $units = Unit::with('creator', 'owner', 'members', 'production')->get();
+        $production = Production::eachUnitProduction();
         
-        // $total_sum = 0;
-        // $total = 0;
-        // $total_campaign = 0;
-        // $total_members = 0;
-        // foreach($units as $key => $value) {
-        //     $campaign = isset($production[$value->name]) ? $production[$value->name] : 0;
-        //     $members_count = isset($value->members) ? $value->members->count() : 0;
-        //     foreach($value->production as $k => $v)
-        //     {
-        //         $total_sum += $v->amount;
-        //     }
-        //     $total += $total_sum;
-        //     $total_campaign += $campaign;
-        //     $total_members += $members_count;
-        // }
+        $total_sum = 0;
+        $total = 0;
+        $total_campaign = 0;
+        $total_members = 0;
+        foreach($units as $key => $value) {
+            $campaign = isset($production[$value->name]) ? $production[$value->name] : 0;
+            $members_count = isset($value->members) ? $value->members->count() : 0;
+            foreach($value->production as $k => $v)
+            {
+                $total_sum += $v->amount;
+            }
+            $total += $total_sum;
+            $total_campaign += $campaign;
+            $total_members += $members_count;
+        }
 
 
-        // //create new dompdf object
-        // $html = ' <!doctype html>
-        // <html>
-        //     <head>
-        //         <meta charset="utf-8">
-        //         <title>Units Report</title>
-        //     </head>
-        //     <style>
-        //         table {
-        //             font-family: arial, sans-serif;
-        //             border-collapse: collapse;
-        //             width: 100%;
-        //         }
-        //         td, th {
-        //             border: 1px solid #dddddd;
-        //             text-align: left;
-        //             padding: 8px;
-        //         }
-        //         tr:nth-child(even) {
-        //             background-color: #dddddd;
-        //         }
-        //     </style>
-        //     <img src="img/sunlife-logo.png" />
-        //     <p style="position:absolute; top:0;right:0;">Date: '.date('Y-m-d', time()).'</p>
-        //     <body>
-        //         <table>
-        //             <tr>
-        //                 <th>Unit Name</th>
-        //                 <th>Advisor Code</th>
-        //                 <th>Unit Manager</th>
-        //                 <th>Man Power</th>
-        //                 <th>YTD Production</th>
-        //                 <th>Campaign</th>
-        //             </tr>';
-        //             foreach($units as $key => $value) {
-        //                 $sum = 0;
-        //                 $name = isset($value->name) ? $value->name : '';
-        //                 $owner_firstname = isset($value->owner->firstname) ? $value->owner->firstname : '';
-        //                 $owner_lastname = isset($value->owner->lastname) ? $value->owner->lastname : '';
-        //                 $members_count = isset($value->members) ? $value->members->count() : 0;
-        //                 $campaign = isset($production[$value->name]) ? $production[$value->name] : 'N/A';
-        //                 foreach($value->production as $k => $v)
-        //                 {
-        //                     $sum += $v->amount;
-        //                 }
-        //                 $html .= '<tr>
-        //                     <td>'.$name.'</td>
-        //                     <td>'.$value->owner->advisor_code.'</td>
-        //                     <td>'.$owner_firstname.' '.$owner_lastname.'</td>
-        //                     <td>'.$members_count.'</td>
-        //                     <td>'.$sum.'</td>
-        //                     <td>'.$campaign.'</td>
-        //                 </tr>';
-        //             }
-        //             $html .= '<tr>
-        //                         <td></td>
-        //                         <td></td>
-        //                         <td style="font-weight:700">Total</td>
-        //                         <td>'.$total_members.'</td>
-        //                         <td>'.$total.'</td>
-        //                         <td>'.$total_campaign.'</td>
-        //                     </tr>';
-        // $html .= '</table>
-        //     </body>
-        // </html> ' ;
+        //create new dompdf object
+        $html = ' <!doctype html>
+        <html>
+            <head>
+                <meta charset="utf-8">
+                <title>Units Report</title>
+            </head>
+            <style>
+                table {
+                    font-family: arial, sans-serif;
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+                td, th {
+                    border: 1px solid #dddddd;
+                    text-align: left;
+                    padding: 8px;
+                }
+                tr:nth-child(even) {
+                    background-color: #dddddd;
+                }
+            </style>
+            <img src="img/sunlife-logo.png" />
+            <p style="position:absolute; top:0;right:0;">Date: '.date('Y-m-d', time()).'</p>
+            <body>
+                <table>
+                    <tr>
+                        <th>Unit Name</th>
+                        <th>Advisor Code</th>
+                        <th>Unit Manager</th>
+                        <th>Man Power</th>
+                        <th>YTD Production</th>
+                        <th>Campaign</th>
+                    </tr>';
+                    foreach($units as $key => $value) {
+                        $sum = 0;
+                        $name = isset($value->name) ? $value->name : '';
+                        $owner_firstname = isset($value->owner->firstname) ? $value->owner->firstname : '';
+                        $owner_lastname = isset($value->owner->lastname) ? $value->owner->lastname : '';
+                        $members_count = isset($value->members) ? $value->members->count() : 0;
+                        $campaign = isset($production[$value->name]) ? $production[$value->name] : 'N/A';
+                        foreach($value->production as $k => $v)
+                        {
+                            $sum += $v->amount;
+                        }
+                        $html .= '<tr>
+                            <td>'.$name.'</td>
+                            <td>'.$value->owner->advisor_code.'</td>
+                            <td>'.$owner_firstname.' '.$owner_lastname.'</td>
+                            <td>'.$members_count.'</td>
+                            <td>'.$sum.'</td>
+                            <td>'.$campaign.'</td>
+                        </tr>';
+                    }
+                    $html .= '<tr>
+                                <td></td>
+                                <td></td>
+                                <td style="font-weight:700">Total</td>
+                                <td>'.$total_members.'</td>
+                                <td>'.$total.'</td>
+                                <td>'.$total_campaign.'</td>
+                            </tr>';
+        $html .= '</table>
+            </body>
+        </html> ' ;
 
-        // // instantiate and use the dompdf class
-        // $dompdf = new Dompdf();
-        // $dompdf->loadHtml($html);
+        // instantiate and use the dompdf class
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
 
-        // // (Optional) Setup the paper size and orientation
-        // $dompdf->setPaper('A4', 'landscape');
+        // (Optional) Setup the paper size and orientation
+        $dompdf->setPaper('A4', 'landscape');
 
-        // // Render the HTML as PDF
-        // $dompdf->render();
+        // Render the HTML as PDF
+        $dompdf->render();
 
-        // // Output the generated PDF to Browser
-        // $dompdf->stream('units-report');
-        // header("Content-Type: application/vnd.ms-excel");
-        $file_name = time().".xlsx";
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', 'Unit Name');
-        $sheet->setCellValue('B1', 'Advisor Code');
-        $sheet->setCellValue('C1', 'Unit Manager');
-        $sheet->setCellValue('D1', 'Man Power');
-        $sheet->setCellValue('E1', 'YTD Production');
-        $sheet->setCellValue('F1', 'Campaign');
+        // Output the generated PDF to Browser
+        $dompdf->stream('units-report');
+        // $file_name = time().".xlsx";
+        // $spreadsheet = new Spreadsheet();
+        // $sheet = $spreadsheet->getActiveSheet();
+        // $sheet->setCellValue('A1', 'Unit Name');
+        // $sheet->setCellValue('B1', 'Advisor Code');
+        // $sheet->setCellValue('C1', 'Unit Manager');
+        // $sheet->setCellValue('D1', 'Man Power');
+        // $sheet->setCellValue('E1', 'YTD Production');
+        // $sheet->setCellValue('F1', 'Campaign');
 
-        $writer = new Xlsx($spreadsheet);
-        $writer->save('docs/'.$file_name);
-        Redirect::to('docs/'.$file_name);
+        // $writer = new Xlsx($spreadsheet);
+        // $writer->save('docs/'.$file_name);
+        // Redirect::to('docs/'.$file_name);
         // Redirect::to('units');
     }
 
