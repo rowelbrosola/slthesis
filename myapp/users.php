@@ -33,7 +33,7 @@ $roles = Role::where('rank', '>', $logged_user->role->rank)->get();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
     if(isset($_POST['delete-user'])) {
-        User::deleteClient($_POST['delete-user']);
+        User::deleteClient($_POST);
     } else if (isset($_POST['export'])) {
         User::exportUsers();
     } else {
@@ -231,7 +231,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                             </td> -->
                                             <td><?= $value->role->name ?></td>
                                             <td>
-                                                <button onClick="deleteRecord(<?=$value->id ?>)" class="delete btn btn-danger" id="<?= 'delete-'.$value->id ?>"><i class="iconsminds-trash-with-men">Delete</i></button>
+                                                <button onClick="deleteRecord(<?=$value->id ?>)" class="delete btn btn-danger" id="<?= 'delete-'.$value->id ?>"><i class="iconsminds-trash-with-men">Inactive</i></button>
                                             </td>
                                         </tr>
                                         <?php endif; endforeach; ?>
@@ -252,7 +252,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                         </div>
                         <div class="modal-body">
                             <p>Do you really want to delete this record? This process cannot be undone.</p>
+                            <p>Select a reason as to why you want this user to be inactive</p>
                             <form method="POST" id="delete-user-form">
+                                <div class="form-group">
+                                    <label>Select</label> 
+                                    <select class="form-control select2-single" name="reason">
+                                        <option value="Retired">Retired</option>
+                                        <option value="Terminated">Terminated</option>
+                                        <option value="Deceased">Deceased</option>
+                                    </select>
+                                </div>
                                 <input type="hidden" id="delete-user" name="delete-user">
                             </form>
                         </div>

@@ -144,14 +144,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-check">
+                            <div>
+                                <label>Tick Benefits</label> 
+                            </div>
+                            <div>
+                                <input class="form-check-input" style="width: auto !important;" type="checkbox" name="benefits[]" value="1" id="addd">
+                                <label class="form-check-label" for="addd">
+                                    Accidental Death, Dismemberment, and Disablement Benefit (ADDD)
+                                </label>
+                                <br>
+                                <input class="form-check-input" style="width: auto !important;" type="checkbox" name="benefits[]" value="2" id="adb">
+                                <label class="form-check-label" for="adb">
+                                    Accidental Death Benefit (ADB)
+                                </label>
+                                <br>
+                                <input class="form-check-input" style="width: auto !important;" type="checkbox" name="benefits[]" value="3" id="tdb">
+                                <label class="form-check-label" for="tdb">
+                                    Total Disability Benefit (TDB)
+                                </label>
+                                <br>
+                                <input class="form-check-input" style="width: auto !important;" type="checkbox" name="benefits[]" value="4" id="cib">
+                                <label class="form-check-label" for="cib">
+                                    Critical Illness Benefit (CIB)
+                                </label>
+                                <br>
+                                <input class="form-check-input" style="width: auto !important;" type="checkbox" name="benefits[]" value="5" id="hib">
+                                <label class="form-check-label" for="hib">
+                                    Hospital Income Benefit (HIB)
+                                </label>
+                            </div>
+                        </div>
+                        <br>
+                        <!-- <div class="form-group">
                             <label>Benefits</label> 
                             <select class="form-control select2-multiple" multiple="multiple" id="benefits" data-width="100%" name="benefits[]">
                                 <?php foreach($benefits as $key => $value): ?>
                                 <option value="<?= $value->id ?>"><?= $value->name ?></option>
                                 <?php endforeach; ?>
                             </select>
-                        </div>
+                        </div> -->
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">

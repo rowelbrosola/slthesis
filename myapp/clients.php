@@ -23,7 +23,7 @@ $clients = User::with('profile', 'role', 'profile.advisor', 'profile.unit', 'pro
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
     if (isset($_POST['user_id'])) {
-        User::deleteClient($_POST['user_id']);
+        User::moveToOtherFA($_POST);
     } else if (isset($_POST['export'])) {
         User::exportClients();
     } else {
@@ -124,9 +124,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                             </td>
                                             <td>
                                                 <button class="btn" style="padding: 0px;">
-                                                    <a href="profile.php?id=<?= $value->id.'&tab=profile&edit=true' ?>" class=" btn btn-primary"><i class="iconsminds-trash-with-men">Edit</i></a>
+                                                    <a href="profile.php?id=<?= $value->id.'&tab=profile&edit=true' ?>" class=" btn btn-primary"><i class="iconsminds-file-edit">Edit</i></a>
                                                 </button>
-                                                <button onClick="deleteRecord(<?=$value->id ?>)" class="delete btn btn-danger" id="<?= 'delete-'.$value->id ?>"><i class="iconsminds-trash-with-men">Delete</i></button>
+                                                <button onClick="deleteRecord(<?=$value->id ?>)" class="delete btn btn-danger" id="<?= 'delete-'.$value->id ?>"><i class="iconsminds-arrow-from">Move</i></button>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -141,18 +141,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                 <div class="modal-dialog modal-confirm">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title">Are you sure?</h4>	
+                            <h4 class="modal-title">Move client to other Financial Advisor</h4>	
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         </div>
                         <div class="modal-body">
-                            <p>Do you really want to delete this record? This process cannot be undone.</p>
                             <form method="POST" id="delete-client-form">
+                                <div class="form-group position-relative info advisor">
+                                    <select class="form-control select2-single" name="advisor" data-width="100%">
+                                        <option value="0">Select Advisor</option>
+                                        <?php foreach($advisors as $key => $value): ?>
+                                            <option value="<?= $value->id ?>"><?= $value->profile->firstname.' '.$value->profile->lastname ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
                                 <input type="hidden" id="delete-client" name="user_id">
                             </form>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-danger" form="delete-client-form">Delete</button>
+                            <button type="submit" class="btn btn-danger" form="delete-client-form">Move</button>
                         </div>
                     </div>
                 </div>

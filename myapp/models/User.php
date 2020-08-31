@@ -439,29 +439,43 @@ class User extends Eloquent
 			}
 			$clients[$key]->premium_due_date = $premium_due_date->toDateString();
 		}
-
 		return $clients;
 	}
 
 	public static function deleteClient($request) {
-		$client = User::find($request);
+		$client = User::find($request['delete-user']);
+		$client->reason_deleted = $request['reason'];
+		$client->save();
 		$client->delete();
 
-		$profile = UserProfile::where('user_id', $request)->first();
+		$profile = UserProfile::where('user_id', $request['delete-user'])->first();
 		$profile->delete();
 
 		if ($client->role_id) {
 			AuditTrail::add('delete a user');
-			$message = 'Successfully deleted user';
+			$message = 'Successfully set user as inactive';
 		} else {
 			AuditTrail::add('delete a client');
-			$message = 'Successfully deleted client';
+			$message = 'Successfully set client inactive';
 		}
 
 		Session::flash('success', $message);
 		if ($client->role_id) {
 			Redirect::to('users.php');
 		} else {
+			Redirect::to('clients.php');
+		}
+	}
+
+	public static function moveToOtherFA($request) {
+		$profile = UserProfile::where('user_id', $request['user_id'])->first();
+		if ($profile) {
+			$profile->advisor_id = $request['advisor'];
+			$profile->save();
+			Session::flash('success', 'Successfully moved to another FA.');
+			Redirect::to('clients.php');
+		} else {
+			Session::flash('error', 'Something went wrong. Please try again.');
 			Redirect::to('clients.php');
 		}
 	}
