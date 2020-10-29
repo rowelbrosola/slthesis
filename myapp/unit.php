@@ -206,8 +206,8 @@ $totalManPower = Unit::totalManPower($_GET['unit_id']);
                                                             <?= isset($unit_manager) ? $unit_manager->profile->firstname.' '.$unit_manager->profile->lastname : null ?>
                                                         </a>
                                                     </td> -->
-                                                    <td><?= isset($value->production) ? number_format($sum) : '&#8369;0' ?></td>
-                                                    <td><?= number_format($current_production) ?></td>
+                                                    <td>&#8369;<?= isset($value->production) ? number_format($sum) : '0' ?></td>
+                                                    <td>&#8369;<?= number_format($current_production) ?></td>
                                                     <td></td>
                                                 </tr>
                                                 <?php endforeach; ?>

@@ -844,7 +844,54 @@ class User extends Eloquent
 
         // Output the generated PDF to Browser
         $dompdf->stream('due-dates-report');
-    }
+	}
+	
+	public static function getOverdue() {
+		$clients = User::whereNull('role_id')
+			->with('profile', 'profile.userPolicy', 'profile.latestPayment', 'userPolicy' ,'userPolicy.policy')
+			->whereHas('profile', function (Builder $query) {
+				$query->where('advisor_id', Session::get('user_id'));
+			})
+			->get();
+
+		$dues = [];
+		foreach ($clients as $key => $value) {
+			$latest_payment = isset($value->profile->latestPayment->created_at) ? $value->profile->latestPayment->created_at : $value->profile->userPolicy->issue_date;
+			$latest_payment = new Carbon($latest_payment);
+			switch ($value->profile->userPolicy->mode_of_payment) {
+				case 'Annual':
+					$premium_due_date = $latest_payment->addMonths(12);
+					break;
+				case 'Semi-Annual':
+					$premium_due_date = $latest_payment->addMonths(6);
+					break;
+				case 'Quarterly':
+					$premium_due_date = $latest_payment->addMonths(3);
+					break;
+				default:
+					$premium_due_date = $latest_payment->addMonths(1);
+					break;
+			}
+			$clients[$key]->premium_due_date = $premium_due_date->toDateString();
+		}
+
+		// foreach ($clients as $key => $value) {
+		// 	$now = strtotime("now");
+		// 	$due_date = strtotime($value->premium_due_date);
+		// 	if ($due_date > $now) {
+		// 		$dues = $value;
+		// 	}
+		// }
+
+		// // foreach($dues as $key => $value) {
+		// // 	print_r($value->premium_due_date);
+		// // 	print_r("\r\n");
+		// // }exit;
+
+		// echo "<pre>";
+		// print_r($dues);exit;
+		return $clients;
+	}
 
 	public function profile()
     {

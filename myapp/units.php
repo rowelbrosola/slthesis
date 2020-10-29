@@ -173,8 +173,8 @@ $total_manpower = Unit::totalManPower();
                                                         </a>
                                                     </td>
                                                     <td><?= $value->members->count() ?></td>
-                                                    <td><?= isset($value->production) ? number_format($sum) : '&#8369;0' ?></td>
-                                                    <td><?= isset($production[$value->name]) ? number_format($production[$value->name]) : null ?></td>
+                                                    <td>&#8369;<?= isset($value->production) ? number_format($sum) : '0' ?></td>
+                                                    <td>&#8369;<?= isset($production[$value->name]) ? number_format($production[$value->name]) : null ?></td>
                                                 </tr>
                                                 <?php endforeach; ?>
                                             </tbody>
